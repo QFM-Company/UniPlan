@@ -559,7 +559,7 @@
           "y": 93.46615441534342
         },
         "data": {
-          "label": "Person",
+          "label": "People",
           "isConnectable": false,
           "columns": [
             {
@@ -1912,18 +1912,24 @@
       }
     ],
     "viewport": {
-      "x": 733.3805771545559,
-      "y": 111.34060567626022,
+      "x": 744.3805771545559,
+      "y": 130.34060567626022,
       "zoom": 0.5
     }
   },
-  "name": "UniPlan",
+  "name": "ERD_UniPlan",
   "folder": {
-    "name": "Diagrams",
-    "folderType": 1,
-    "depth": 0,
-    "id": 307755
+    "name": "UniPlan",
+    "folderType": 2,
+    "parentFolder": {
+      "depth": 0,
+      "id": 313771,
+      "name": "Diagrams",
+      "folderType": 1
+    },
+    "depth": 1,
+    "id": 322951
   },
-  "id": 431611,
-  "updatedAtTimestamp": 1777727342
+  "id": 456248,
+  "updatedAtTimestamp": 1778786980
 }

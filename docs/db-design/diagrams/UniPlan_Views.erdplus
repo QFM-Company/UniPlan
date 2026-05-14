@@ -1,0 +1,150 @@
+{
+  "diagramType": 2,
+  "data": {
+    "nodes": [
+      {
+        "id": "eab791b3-83c4-4f56-a13c-1ab9f0e423f2",
+        "type": "Table",
+        "position": {
+          "x": 315,
+          "y": 142
+        },
+        "data": {
+          "label": "StudentProfiles_view",
+          "isConnectable": false,
+          "columns": [
+            {
+              "id": "6861cd4b-7dca-419c-bdb6-402c95df8c9d",
+              "name": "FullName",
+              "type": "VARCHAR(n)",
+              "position": 0,
+              "size": "150"
+            },
+            {
+              "id": "53f3903f-91c3-4d1e-b51e-34582af15f96",
+              "name": "PersonID",
+              "type": "INT",
+              "position": 0
+            },
+            {
+              "id": "d5e93cc4-c24c-4a19-9591-8e492715cfc3",
+              "name": "AccountName",
+              "type": "VARCHAR(n)",
+              "position": 0,
+              "size": "50"
+            },
+            {
+              "id": "da9170b2-3bc4-475d-a470-d5a231e517e5",
+              "name": "Email",
+              "type": "VARCHAR(n)",
+              "position": 0,
+              "size": "50"
+            },
+            {
+              "id": "b635c751-db74-42e6-9b1a-496ec660c834",
+              "name": "StudentID",
+              "type": "INT",
+              "position": 0
+            },
+            {
+              "id": "0be08cd5-dbb9-4db4-97e7-34e259f12758",
+              "name": "MajorName",
+              "type": "VARCHAR(n)",
+              "position": 0,
+              "size": "50"
+            }
+          ],
+          "isSelected": false
+        },
+        "measured": {
+          "width": 240,
+          "height": 174
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "id": "bdd315a9-c982-400c-9e9e-b1ebf3d71b06",
+        "type": "Table",
+        "position": {
+          "x": 688,
+          "y": 140
+        },
+        "data": {
+          "label": "AdminProfiles_view",
+          "isConnectable": false,
+          "columns": [
+            {
+              "id": "38b49f8f-77b2-47d0-aff4-82664e2d85a3",
+              "name": "FullName",
+              "type": "VARCHAR(n)",
+              "position": 0,
+              "size": "150"
+            },
+            {
+              "id": "45a9b1a3-019a-4864-a104-cb2614706856",
+              "name": "PersonID",
+              "type": "INT",
+              "position": 0
+            },
+            {
+              "id": "8d8a1b60-37cb-40e8-b571-07e41a88de0f",
+              "name": "AccountName",
+              "type": "VARCHAR(n)",
+              "position": 0,
+              "size": "50"
+            },
+            {
+              "id": "f8a510e4-5af1-4d67-8499-e614507d96ed",
+              "name": "Email",
+              "type": "VARCHAR(n)",
+              "position": 0,
+              "size": "50"
+            },
+            {
+              "id": "99d5e3ed-3c46-4d91-9c80-7c3ba160fd7d",
+              "name": "AdminID",
+              "type": "INT",
+              "position": 0
+            },
+            {
+              "id": "59a8c3a1-0a25-4a8d-8f28-4a5a8b7c86c7",
+              "name": "IsActive",
+              "type": "Custom",
+              "position": 0,
+              "size": "bit"
+            }
+          ],
+          "isSelected": false
+        },
+        "measured": {
+          "width": 240,
+          "height": 174
+        },
+        "selected": false,
+        "dragging": false
+      }
+    ],
+    "edges": [],
+    "viewport": {
+      "x": 103.78806814577251,
+      "y": 94.34391934351873,
+      "zoom": 1.0083524548945952
+    }
+  },
+  "name": "UniPlan_Views",
+  "folder": {
+    "name": "UniPlan",
+    "folderType": 2,
+    "parentFolder": {
+      "depth": 0,
+      "id": 313771,
+      "name": "Diagrams",
+      "folderType": 1
+    },
+    "depth": 1,
+    "id": 322951
+  },
+  "id": 456255,
+  "updatedAtTimestamp": 1778786940
+}
