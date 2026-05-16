@@ -7,7 +7,7 @@ Create Function ValidatPerson ( @FirstName nvarchar(255) , @MiddleName nvarchar(
 returns bit
 Begin
 
-IF @FirstName IS NULL OR @MiddleName IS NULL OR @LastName IS NULL
+IF @FirstName IS NULL OR @LastName IS NULL
 BEGIN
     RETURN 0;
 END
@@ -128,7 +128,7 @@ end
 	    END
 
         -- Validate Person information
-        IF dbo.ValidatAdministrator(@PersonID) = 0
+        IF dbo.ValidatAdministratorInfo(@PersonID) = 0
         BEGIN
              RAISERROR('Administrator validation failed', 16, 1);
         END
@@ -189,7 +189,7 @@ end
 	    END
 
         -- Validate Person information
-        IF dbo.ValidatAdministrator(@PersonID) = 0
+        IF dbo.ValidatAdministratorInfo(@PersonID) = 0
         BEGIN
              RAISERROR('Administrator validation failed', 16, 1);
         END
@@ -239,39 +239,17 @@ Go
 
 CREATE PROCEDURE SP_Admin_Profile_Delete
 
- @IsActive bit , @PersonID int , @AdministratorID int,
+ @PersonID int , @AdministratorID int, @AccountID int
 
- @AccountName nvarchar(50) , @Password nvarchar(255) , @Email nvarchar(255) , @AccountID int,
 
-  @FirstName nvarchar(255) , @MiddleName nvarchar(255) , @LastName nvarchar(255) 
 
  As
  Begin
      SET NOCOUNT ON;
 
-	 IF @IsActive IS NULL 
-Begin
-    set @IsActive = 1;
-end
-
         Declare @OldEmail NVARchar(255);
 		select @OldEmail = Accounts.Email from Accounts where AccountID = @AccountID;
 
-        IF dbo.ValidatAccountInfo(@AccountName, @Password, @Email , @OldEmail) = 0
-        BEGIN
-          RAISERROR('Account validation failed', 16, 1);
-	    END
-
-        -- Validate Person information
-        IF dbo.ValidatAdministrator(@PersonID) = 0
-        BEGIN
-             RAISERROR('Administrator validation failed', 16, 1);
-        END
-
-		IF dbo.ValidatPerson(@FirstName , @MiddleName , @LastName) = 0
-		BEGIN
-             RAISERROR('Person validation failed', 16, 1);
-        END
 
 
 	 Begin Try
