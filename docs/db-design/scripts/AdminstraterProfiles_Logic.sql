@@ -1,343 +1,385 @@
 USE [UniPlan];
 GO
 
-
-
-Create Function ValidatPerson ( @FirstName nvarchar(255) , @MiddleName nvarchar(255) , @LastName nvarchar(255))
-returns bit
-Begin
-
-IF @FirstName IS NULL OR @LastName IS NULL
-BEGIN
-    RETURN 0;
-END
-
-return 1;
-End;
-go
-
-
-
-
-
-
-Create Function Validat_New_AccountInfo (@AccountName nvarchar(50) , @Password nvarchar(255) , @Email nvarchar(255))
-returns bit
-Begin
-
-IF @AccountName IS NULL OR @Email IS NULL OR @Password IS NULL
-BEGIN
-    RETURN 0;
-END
-
--- Check for duplicate email/account name
-IF EXISTS (SELECT 1 FROM Accounts WHERE Email = @Email)
-BEGIN
-    RETURN 0;
-END
-
-return 1;
-End;
-go
-
-
-
-
-
-
-
-Create Function ValidatAccountInfo (@AccountName nvarchar(50) , @Password nvarchar(255) , @Email nvarchar(255) , @OldEmail nvarchar(255))
-returns bit
-Begin
-
-IF @AccountName IS NULL OR @Email IS NULL OR @Password IS NULL
-BEGIN
-    RETURN 0;
-END
-
--- Check for duplicate email/account name
-IF  (@Email != @OldEmail) And EXISTS(SELECT 1 FROM Accounts WHERE Email = @Email)
-BEGIN
-    RETURN 0;
-END
-
-return 1;
-End;
-go
-
-
-
-
-
-
-
-
-
-
-Create Function ValidatAdministratorInfo (@PersonID int)
-returns bit
-Begin
-
-
-IF @PersonID IS NULL OR @PersonID <= 0 
-BEGIN
-    RETURN 0;
-END
-
-
-
-IF NOT EXISTS (SELECT 1 FROM People WHERE PersonID = @PersonID)
-BEGIN
-    RETURN 0;
-END
-
-
-return 1;
-End;
-go
-
-
-
-
-
-
-
-
-
-
-
-CREATE PROCEDURE SP_Admin_Profile_Insert 
-
- @IsActive bit , @PersonID int , @AdministratorID int out,
-
- @AccountName nvarchar(50) , @Password nvarchar(255) , @Email nvarchar(255) , @AccountID int out
-
- As
- Begin
-     SET NOCOUNT ON;
-
-	 IF @IsActive IS NULL 
-Begin
-    set @IsActive = 1;
-end
-
-
-        IF dbo.Validat_New_AccountInfo(@AccountName, @Password, @Email) = 0
-        BEGIN
-          RAISERROR('Account validation failed', 16, 1);
-	    END
-
-        -- Validate Person information
-        IF dbo.ValidatAdministratorInfo(@PersonID) = 0
-        BEGIN
-             RAISERROR('Administrator validation failed', 16, 1);
-        END
-
-	 Begin Try
-	    Begin Transaction;
-
-		INsert into Accounts(AccountName , Password , Email) values (@AccountName , @Password , @Email);
-		set @AccountID = SCOPE_IDENTITY();
-
-		insert into Administrators(IsActive , PersonID , AccountID) values (@IsActive , @PersonID , @AccountID);
-
-		set @AdministratorID = SCOPE_IDENTITY();
-
-		commit Transaction;
-	 End Try
-	 Begin Catch
-	     IF @@TRANCOUNT > 0
-            ROLLBACK TRANSACTION;
-
-        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE @ErrorState INT = ERROR_STATE();
-
-        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
-    END CATCH
-End;
-Go
-
-
-
-
-
-
-CREATE PROCEDURE SP_Admin_Profile_Update
-
- @IsActive bit , @PersonID int , @AdministratorID int,
-
- @AccountName nvarchar(50) , @Password nvarchar(255) , @Email nvarchar(255) , @AccountID int,
-
- @FirstName nvarchar(255) , @MiddleName nvarchar(255) , @LastName nvarchar(255)
-
- As
- Begin
-     SET NOCOUNT ON;
-
-	 IF @IsActive IS NULL 
-Begin
-    set @IsActive = 1;
-end
-
-        Declare @OldEmail NVARchar(255);
-		select @OldEmail = Accounts.Email from Accounts where AccountID = @AccountID;
-
-        IF dbo.ValidatAccountInfo(@AccountName, @Password, @Email , @OldEmail) = 0
-        BEGIN
-          RAISERROR('Account validation failed', 16, 1);
-	    END
-
-        -- Validate Person information
-        IF dbo.ValidatAdministratorInfo(@PersonID) = 0
-        BEGIN
-             RAISERROR('Administrator validation failed', 16, 1);
-        END
-
-
-		IF dbo.ValidatPerson(@FirstName ,@MiddleName , @LastName) = 0
-		BEGIN
-             RAISERROR('Person validation failed', 16, 1);
-        END
-
-
-	 Begin Try
-	    Begin Transaction;
-
-		Update Accounts
-		set Accounts.AccountName = @AccountName , Accounts.Email = @Email , Accounts.Password = @Password
-		where Accounts.AccountID = @AccountID;
-		
-
-		Update Administrators
-		set Administrators.AccountID = @AccountID , Administrators.IsActive = @IsActive , Administrators.PersonID = @PersonID
-		where AdminID = @AdministratorID;
-
-		Update People
-		set people.FirstName = @FirstName , MiddleName = @MiddleName , LastName = @LastName 
-		where People.PersonID = @PersonID;
-
-		commit Transaction;
-	 End Try
-	 Begin Catch
-	     IF @@TRANCOUNT > 0
-            ROLLBACK TRANSACTION;
-
-        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE @ErrorState INT = ERROR_STATE();
-
-        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
-    END CATCH
-End;
-Go
-
-
-
-
-
-
-CREATE PROCEDURE SP_Admin_Profile_Delete
-
- @PersonID int , @AdministratorID int, @AccountID int
-
-
-
- As
- Begin
-     SET NOCOUNT ON;
-
-        Declare @OldEmail NVARchar(255);
-		select @OldEmail = Accounts.Email from Accounts where AccountID = @AccountID;
-
-
-
-	 Begin Try
-	    Begin Transaction;
-
-		Delete Accounts
-		where Accounts.AccountID = @AccountID;
-		
-
-		Delete Administrators
-		where AdminID = @AdministratorID;
-
-		Delete People
-		where People.PersonID = @PersonID;
-
-
-		commit Transaction;
-	 End Try
-	 Begin Catch
-	     IF @@TRANCOUNT > 0
-            ROLLBACK TRANSACTION;
-
-        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE @ErrorState INT = ERROR_STATE();
-
-        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
-    END CATCH
-End;
-Go
-
-
-
-
-
-Create View AdminProfiles_view As
-Select Administrators.AdminID , Accounts.AccountID , People.PersonID , Accounts.AccountName ,
-Accounts.Password , Accounts.Email , People.FirstName , People.MiddleName , People.LastName , Administrators.IsActive 
-
-from People inner join Administrators on People.PersonID = Administrators.PersonID
-inner join Accounts on Administrators.AccountID = Accounts.AccountID;
-
-
-go
-
-
-CREATE PROCEDURE SP_AdminProfile_GetAll 
-    @PageNumber INT = 1, @PageSize INT = 10
+CREATE OR ALTER FUNCTION ValidatPerson
+(
+    @FirstName nvarchar(255),
+    @MiddleName nvarchar(255),
+    @LastName nvarchar(255)
+)
+RETURNS bit
 AS
 BEGIN
+    -- CHANGED: Empty strings are now invalid, not only NULL values.
+    IF NULLIF(LTRIM(RTRIM(@FirstName)), '') IS NULL
+        OR NULLIF(LTRIM(RTRIM(@LastName)), '') IS NULL
+    BEGIN
+        RETURN 0;
+    END
+
+    RETURN 1;
+END;
+GO
+
+
+CREATE OR ALTER FUNCTION Validat_New_AccountInfo
+(
+    @AccountName nvarchar(50),
+    @Password nvarchar(255),
+    @Email nvarchar(255)
+)
+RETURNS bit
+AS
+BEGIN
+    -- CHANGED: Empty strings are now invalid, not only NULL values.
+    IF NULLIF(LTRIM(RTRIM(@AccountName)), '') IS NULL
+        OR NULLIF(LTRIM(RTRIM(@Email)), '') IS NULL
+        OR NULLIF(LTRIM(RTRIM(@Password)), '') IS NULL
+    BEGIN
+        RETURN 0;
+    END
+
+    -- CHANGED: This now checks duplicate AccountName too, not only Email.
+    IF EXISTS
+    (
+        SELECT 1
+        FROM Accounts
+        WHERE Email = @Email
+           OR AccountName = @AccountName
+    )
+    BEGIN
+        RETURN 0;
+    END
+
+    RETURN 1;
+END;
+GO
+
+
+CREATE OR ALTER FUNCTION ValidatAccountInfo
+(
+    @AccountName nvarchar(50),
+    @Password nvarchar(255),
+    @Email nvarchar(255),
+    @AccountID int -- CHANGED: Replaced @OldEmail with @AccountID.
+)
+RETURNS bit
+AS
+BEGIN
+    -- CHANGED: Validate that the account id is usable.
+    IF @AccountID IS NULL OR @AccountID <= 0
+    BEGIN
+        RETURN 0;
+    END
+
+    -- CHANGED: Empty strings are now invalid, not only NULL values.
+    IF NULLIF(LTRIM(RTRIM(@AccountName)), '') IS NULL
+        OR NULLIF(LTRIM(RTRIM(@Email)), '') IS NULL
+        OR NULLIF(LTRIM(RTRIM(@Password)), '') IS NULL
+    BEGIN
+        RETURN 0;
+    END
+
+    -- CHANGED: Make sure the account being updated actually exists.
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM Accounts
+        WHERE AccountID = @AccountID
+    )
+    BEGIN
+        RETURN 0;
+    END
+
+    -- CHANGED: Duplicate check now excludes the current account by AccountID.
+    -- This is safer than comparing @Email with @OldEmail.
+    IF EXISTS
+    (
+        SELECT 1
+        FROM Accounts
+        WHERE AccountID <> @AccountID
+          AND (Email = @Email OR AccountName = @AccountName)
+    )
+    BEGIN
+        RETURN 0;
+    END
+
+    RETURN 1;
+END;
+GO
+
+
+CREATE OR ALTER FUNCTION ValidatAdministratorInfo
+(
+    @PersonID int
+)
+RETURNS bit
+AS
+BEGIN
+    IF @PersonID IS NULL OR @PersonID <= 0
+    BEGIN
+        RETURN 0;
+    END
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM People
+        WHERE PersonID = @PersonID
+    )
+    BEGIN
+        RETURN 0;
+    END
+
+    RETURN 1;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE SP_Admin_Profile_Insert
+    @IsActive bit,
+    @PersonID int,
+    @AdministratorID int OUT,
+
+    @AccountName nvarchar(50),
+    @Password nvarchar(255),
+    @Email nvarchar(255),
+    @AccountID int OUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @IsActive IS NULL
+        SET @IsActive = 1;
+
+    -- CHANGED: THROW stops the procedure immediately.
+    -- RAISERROR in your original code raised the error but the procedure could continue.
+    IF dbo.Validat_New_AccountInfo(@AccountName, @Password, @Email) = 0
+        THROW 50001, 'Account validation failed', 1;
+
+    -- CHANGED: THROW stops execution immediately.
+    IF dbo.ValidatAdministratorInfo(@PersonID) = 0
+        THROW 50002, 'Administrator validation failed', 1;
+
+    -- CHANGED: Prevent creating two admin profiles for the same person.
+    IF EXISTS
+    (
+        SELECT 1
+        FROM Administrators
+        WHERE PersonID = @PersonID
+    )
+        THROW 50003, 'This person already has an administrator profile', 1;
 
     BEGIN TRY
-       
-        SELECT * FROM AdminProfiles_view
-        ORDER BY [AdminID]
-        OFFSET (@PageNumber - 1) * @PageSize ROWS
-        FETCH NEXT @PageSize ROWS ONLY;
+        BEGIN TRANSACTION;
 
+        INSERT INTO Accounts(AccountName, Password, Email)
+        VALUES (@AccountName, @Password, @Email);
+
+        -- CHANGED: Explicitly converts SCOPE_IDENTITY() to int.
+        SET @AccountID = CONVERT(int, SCOPE_IDENTITY());
+
+        INSERT INTO Administrators(IsActive, PersonID, AccountID)
+        VALUES (@IsActive, @PersonID, @AccountID);
+
+        -- CHANGED: Explicitly converts SCOPE_IDENTITY() to int.
+        SET @AdministratorID = CONVERT(int, SCOPE_IDENTITY());
+
+        COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
-        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE @ErrorState INT = ERROR_STATE();
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
 
-        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+        -- CHANGED: THROW keeps the original error details.
+        THROW;
     END CATCH
 END;
 GO
 
 
+CREATE OR ALTER PROCEDURE SP_Admin_Profile_Update
+    @IsActive bit,
+    @PersonID int,
+    @AdministratorID int,
 
-CREATE PROCEDURE SP_AdminProfile_GetById 
-    @AdminID INT
+    @AccountName nvarchar(50),
+    @Password nvarchar(255),
+    @Email nvarchar(255),
+    @AccountID int,
+
+    @FirstName nvarchar(255),
+    @MiddleName nvarchar(255),
+    @LastName nvarchar(255)
 AS
 BEGIN
+    SET NOCOUNT ON;
+
+    IF @IsActive IS NULL
+        SET @IsActive = 1;
+
+    -- CHANGED: Removed @OldEmail logic.
+    -- The validation function now receives @AccountID instead.
+
+    -- CHANGED: Uses @AccountID to detect duplicate email/account name correctly.
+    IF dbo.ValidatAccountInfo(@AccountName, @Password, @Email, @AccountID) = 0
+        THROW 50004, 'Account validation failed', 1;
+
+    -- CHANGED: THROW stops execution immediately.
+    IF dbo.ValidatAdministratorInfo(@PersonID) = 0
+        THROW 50005, 'Administrator validation failed', 1;
+
+    -- CHANGED: THROW stops execution immediately.
+    IF dbo.ValidatPerson(@FirstName, @MiddleName, @LastName) = 0
+        THROW 50006, 'Person validation failed', 1;
+
+    -- CHANGED: Make sure these three IDs belong to the same admin profile.
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM Administrators
+        WHERE AdminID = @AdministratorID
+          AND AccountID = @AccountID
+          AND PersonID = @PersonID
+    )
+        THROW 50007, 'Administrator profile does not match the supplied AccountID and PersonID', 1;
 
     BEGIN TRY
-       
-        SELECT * FROM AdminProfiles_view
-        WHERE AdminID = @AdminID;
+        BEGIN TRANSACTION;
 
+        UPDATE Accounts
+        SET AccountName = @AccountName,
+            Email = @Email,
+            Password = @Password
+        WHERE AccountID = @AccountID;
+
+        UPDATE Administrators
+        SET IsActive = @IsActive,
+            PersonID = @PersonID,
+            AccountID = @AccountID
+        WHERE AdminID = @AdministratorID;
+
+        UPDATE People
+        SET FirstName = @FirstName,
+            MiddleName = @MiddleName,
+            LastName = @LastName
+        WHERE PersonID = @PersonID;
+
+        COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
-        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE @ErrorState INT = ERROR_STATE();
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
 
-        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+        -- CHANGED: THROW keeps the original error details.
+        THROW;
     END CATCH
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE SP_Admin_Profile_Delete
+    @PersonID int,
+    @AdministratorID int,
+    @AccountID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- CHANGED: Removed unused @OldEmail.
+
+    -- CHANGED: Validate that all IDs belong to the same admin profile before deleting.
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM Administrators
+        WHERE AdminID = @AdministratorID
+          AND AccountID = @AccountID
+          AND PersonID = @PersonID
+    )
+        THROW 50008, 'Administrator profile does not match the supplied AccountID and PersonID', 1;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- CHANGED: Delete Administrators first because it references AccountID and PersonID.
+        DELETE FROM Administrators
+        WHERE AdminID = @AdministratorID;
+
+        -- CHANGED: Delete Account after Administrators.
+        DELETE FROM Accounts
+        WHERE AccountID = @AccountID;
+
+        -- WARNING: Only delete People if this person is not used anywhere else.
+        DELETE FROM People
+        WHERE PersonID = @PersonID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        -- CHANGED: THROW keeps the original error details.
+        THROW;
+    END CATCH
+END;
+GO
+
+
+CREATE OR ALTER VIEW AdminProfiles_view
+AS
+SELECT
+    Administrators.AdminID,
+    Accounts.AccountID,
+    People.PersonID,
+    Accounts.AccountName,
+    Accounts.Password,
+    Accounts.Email,
+    People.FirstName,
+    People.MiddleName,
+    People.LastName,
+    Administrators.IsActive
+FROM People
+INNER JOIN Administrators
+    ON People.PersonID = Administrators.PersonID
+INNER JOIN Accounts
+    ON Administrators.AccountID = Accounts.AccountID;
+GO
+
+
+CREATE OR ALTER PROCEDURE SP_AdminProfile_GetAll
+    @PageNumber int = 1,
+    @PageSize int = 10
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- CHANGED: Prevent invalid pagination values.
+    IF @PageNumber IS NULL OR @PageNumber < 1
+        SET @PageNumber = 1;
+
+    -- CHANGED: Prevent invalid page size.
+    IF @PageSize IS NULL OR @PageSize < 1
+        SET @PageSize = 10;
+
+    SELECT *
+    FROM AdminProfiles_view
+    ORDER BY AdminID
+    OFFSET (@PageNumber - 1) * @PageSize ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE SP_AdminProfile_GetById
+    @AdminID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM AdminProfiles_view
+    WHERE AdminID = @AdminID;
 END;
 GO
