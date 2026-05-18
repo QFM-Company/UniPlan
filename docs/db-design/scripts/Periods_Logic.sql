@@ -1,37 +1,120 @@
+
 USE [UniPlan];
 GO
 
 
 
+CREATE OR ALTER FUNCTION ValidatePeriod
+(
+    @StartTime time,
+    @EndTime time
+)
+RETURNS bit
+AS
+BEGIN
+    IF @StartTime IS NULL OR @EndTime IS NULL
+        RETURN 0;
 
-Create Or Alter Function ValidatePeriod(@StartTime time , @EndTime Time)
-returns bit
-begin 
+    IF @StartTime >= @EndTime
+        RETURN 0;
 
-IF NULLIF(LTRIM(RTRIM(@StartTime)), '') IS NULL
-    or NULLIF(LTRIM(RTRIM(@EndTime)), '') IS NULL
-	Begin 
-	  return 0;
-	End
-
-	return 1;
-End;
-go
-
-
-
-
-
+    RETURN 1;
+END;
+GO
 
 
+CREATE OR ALTER PROCEDURE SP_Period_Insert
+    @StartTime time,
+    @EndTime time,
+    @PeriodID int OUT
+AS
+BEGIN
+    SET NOCOUNT ON;
 
-create or Alter Procedure SP_Period_Insert
-@StartTime Time , @EndTime Time
-As
-Begin
+    IF dbo.ValidatePeriod(@StartTime, @EndTime) = 0
+        THROW 5201, 'Period validation failed', 1;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM Periods
+        WHERE StartTime = @StartTime
+          AND EndTime = @EndTime
+    )
+        THROW 5202, 'Period already exists', 1;
+
+    BEGIN TRY
+        INSERT INTO Periods(StartTime, EndTime)
+        VALUES (@StartTime, @EndTime);
+
+        SET @PeriodID = CONVERT(int, SCOPE_IDENTITY());
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END;
+GO
 
 
-select * from Periods;
+CREATE OR ALTER PROCEDURE SP_Period_Delete
+    @PeriodID int
+AS
+BEGIN
+    SET NOCOUNT ON;
 
-End;
-go
+    IF @PeriodID IS NULL OR @PeriodID <= 0
+        THROW 5203, 'Invalid PeriodID', 1;
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM Periods
+        WHERE PeriodID = @PeriodID
+    )
+        THROW 5204, 'Period does not exist', 1;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM TimeSlots
+        WHERE PeriodID = @PeriodID
+    )
+        THROW 5205, 'Cannot delete period because it is used by time slots', 1;
+
+    BEGIN TRY
+        DELETE FROM Periods
+        WHERE PeriodID = @PeriodID;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE SP_Period_GetAll
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * 
+    FROM Periods
+    ORDER BY PeriodID;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE SP_Period_GetById
+    @PeriodID int
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @PeriodID IS NULL OR @PeriodID <= 0
+        THROW 5203, 'Invalid PeriodID', 1;
+
+    SELECT *
+    FROM Periods
+    WHERE PeriodID = @PeriodID;
+END;
+GO

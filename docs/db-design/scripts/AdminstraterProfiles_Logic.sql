@@ -287,25 +287,22 @@ GO
 
 
 CREATE OR ALTER PROCEDURE SP_AdminProfile_Delete
-    @PersonID int,
-    @AdministratorID int,
-    @AccountID int
+
+    @AdministratorID int
+
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- CHANGED: Removed unused @OldEmail.
 
-    -- CHANGED: Validate that all IDs belong to the same admin profile before deleting.
-    IF NOT EXISTS
-    (
-        SELECT 1
-        FROM Administrators
-        WHERE AdminID = @AdministratorID
-          AND AccountID = @AccountID
-          AND PersonID = @PersonID
-    )
-        THROW 50007, 'Administrator profile does not match the supplied AccountID and PersonID', 1;
+	    Declare @AccountID int;
+		select @AccountID = Administrators.AccountID from Administrators where AdminID = @AdministratorID;
+
+		
+	    Declare @PersonID int;
+		select @PersonID = Administrators.PersonID from Administrators where AdminID = @AdministratorID;
+
+	   
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -319,8 +316,17 @@ BEGIN
         WHERE AccountID = @AccountID;
 
         -- WARNING: Only delete People if this person is not used anywhere else.
-        DELETE FROM People
+	    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM Students
+        WHERE PersonID = @PersonID
+    )
+    BEGIN
+         DELETE FROM People
         WHERE PersonID = @PersonID;
+    END
+       
 
         COMMIT TRANSACTION;
     END TRY
