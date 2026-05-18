@@ -136,7 +136,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE SP_Admin_Profile_Insert
+CREATE OR ALTER PROCEDURE SP_AdminProfile_Insert
     @IsActive bit,
     @PersonID int,
     @AdministratorID int OUT,
@@ -198,15 +198,14 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE SP_Admin_Profile_Update
+CREATE OR ALTER PROCEDURE SP_AdminProfile_Update
     @IsActive bit,
-    @PersonID int,
     @AdministratorID int,
 
     @AccountName nvarchar(50),
     @Password nvarchar(255),
     @Email nvarchar(255),
-    @AccountID int,
+    
 
     @FirstName nvarchar(255),
     @MiddleName nvarchar(255),
@@ -214,6 +213,15 @@ CREATE OR ALTER PROCEDURE SP_Admin_Profile_Update
 AS
 BEGIN
     SET NOCOUNT ON;
+
+	
+     Declare @PersonID int;
+	 select @PersonID = Administrators.PersonID from Administrators where AdminID = @AdministratorID;
+
+	 Declare @AccountID int;
+	 select @AccountID = Administrators.AccountID from Administrators where AdminID = @AdministratorID;
+
+
 
     IF @IsActive IS NULL
         SET @IsActive = 1;
@@ -223,11 +231,11 @@ BEGIN
 
     -- CHANGED: Uses @AccountID to detect duplicate email/account name correctly.
     IF dbo.ValidatAccountInfo(@AccountName, @Password, @Email, @AccountID) = 0
-        THROW 50004, 'Account validation failed', 1;
+        THROW 50001, 'Account validation failed', 1;
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatAdministratorInfo(@PersonID) = 0
-        THROW 50005, 'Administrator validation failed', 1;
+        THROW 50002, 'Administrator validation failed', 1;
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatPerson(@FirstName, @MiddleName, @LastName) = 0
@@ -278,7 +286,7 @@ END;
 GO
 
 
-CREATE OR ALTER PROCEDURE SP_Admin_Profile_Delete
+CREATE OR ALTER PROCEDURE SP_AdminProfile_Delete
     @PersonID int,
     @AdministratorID int,
     @AccountID int
@@ -297,7 +305,7 @@ BEGIN
           AND AccountID = @AccountID
           AND PersonID = @PersonID
     )
-        THROW 50008, 'Administrator profile does not match the supplied AccountID and PersonID', 1;
+        THROW 50007, 'Administrator profile does not match the supplied AccountID and PersonID', 1;
 
     BEGIN TRY
         BEGIN TRANSACTION;
