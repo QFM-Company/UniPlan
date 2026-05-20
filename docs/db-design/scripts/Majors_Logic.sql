@@ -9,8 +9,9 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NULLIF(LTRIM(RTRIM(@MajorName)), '') IS NULL
-        THROW 50011, 'Major validation failed', 1; 
+    IF NULLIF(LTRIM(RTRIM(@MajorName)), '') IS NULL OR @MajorID IS NULL OR @MajorID < 0
+    THROW 50500, 'Major validation failed', 1;
+ 
 
     BEGIN TRY
         INSERT INTO [dbo].[Majors] ([MajorName])

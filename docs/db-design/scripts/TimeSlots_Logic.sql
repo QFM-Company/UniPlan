@@ -10,7 +10,7 @@ BEGIN
     SET NOCOUNT ON;
 
     IF NULLIF(LTRIM(RTRIM(@Days)), '') IS NULL OR @PeriodID IS NULL OR @PeriodID <= 0
-        THROW 50011, 'TimeSlot validation failed', 1; 
+        THROW 50700, 'TimeSlot validation failed', 1; 
 
     BEGIN TRY
         INSERT INTO [dbo].[TimeSlots] ([DayNum], [PeriodID])
