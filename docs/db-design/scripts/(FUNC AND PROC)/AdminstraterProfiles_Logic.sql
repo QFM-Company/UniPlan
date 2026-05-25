@@ -286,6 +286,8 @@ END;
 GO
 
 
+
+--NO Need To Delete Person Or Account cuz Admin Still Exist but not Active anyMores
 CREATE OR ALTER PROCEDURE SP_AdminProfile_Delete
 
     @AdministratorID int
@@ -295,40 +297,11 @@ BEGIN
     SET NOCOUNT ON;
 
 
-	    Declare @AccountID int;
-		select @AccountID = Administrators.AccountID from Administrators where AdminID = @AdministratorID;
-
-		
-	    Declare @PersonID int;
-		select @PersonID = Administrators.PersonID from Administrators where AdminID = @AdministratorID;
-
-	   
-
     BEGIN TRY
-        BEGIN TRANSACTION;
 
-        -- CHANGED: Delete Administrators first because it references AccountID and PersonID.
         DELETE FROM Administrators
         WHERE AdminID = @AdministratorID;
 
-        -- CHANGED: Delete Account after Administrators.
-        DELETE FROM Accounts
-        WHERE AccountID = @AccountID;
-
-        -- WARNING: Only delete People if this person is not used anywhere else.
-	    IF NOT EXISTS
-    (
-        SELECT 1
-        FROM Students
-        WHERE PersonID = @PersonID
-    )
-    BEGIN
-         DELETE FROM People
-        WHERE PersonID = @PersonID;
-    END
-       
-
-        COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
@@ -417,69 +390,6 @@ where AdminID = @AdminID;
 End
 
 go
-
-
-
-
---Test Admin | Delete | --
-
--- in the future more tests will be Added
-
-
-insert into People (People.FirstName , MiddleName , LastName)
-values ('Fares' ,null , 'Oyion');
-
-Declare @PersonID int;
-
-set @PersonID = SCOPE_IDENTITY()
-
-insert into Accounts (Accounts.AccountName , Email ,Password)
-values ('Fares' , 'fares.oyion123@gmail.com' , '1234');
-
-Declare @AccountID int;
-
-set @AccountID = SCOPE_IDENTITY()
-
-
-
-insert into Administrators (AccountID , IsActive , PersonID)
-values (@AccountID , 1 ,@PersonID);
-
-Declare @AdmID int;
-
-set @AdmID = SCOPE_IDENTITY();
-
-delete Administrators 
-where AdminID = @AdmID;
-
-
-if(Exists( select * from AdminProfiles_view where AdminID = @AdmID And IsActive = 0))
-print 'Yes Delete IS Working';
-
-
-disable trigger TR_NonActive_Admin on Administrators;
-
-delete Administrators 
-where AdminID = @AdmID;
-
-enable Trigger TR_NonActive_Admin on Administrators;
-
-
-delete Accounts
-where AccountID = @AccountID;
-
-delete People
-where PersonID = @PersonID;
--- End Admin Tests --
-go
-
-
-
-
-
-
-
-
 
 
 
