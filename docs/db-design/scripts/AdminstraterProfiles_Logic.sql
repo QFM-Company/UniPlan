@@ -250,7 +250,7 @@ BEGIN
           AND AccountID = @AccountID
           AND PersonID = @PersonID
     )
-        THROW 50007, 'Administrator profile does not match the supplied AccountID and PersonID', 1;
+        THROW 50007, 'Profile Dose not Exist', 1;
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -397,3 +397,90 @@ BEGIN
     WHERE AdminID = @AdminID;
 END;
 GO
+
+
+
+Create or Alter Trigger TR_NonActive_Admin
+on Administrators
+instead of Delete
+As
+Begin 
+
+Declare @AdminID int;
+
+select @AdminID = deleted.AdminID from deleted;
+
+Update Administrators
+set IsActive = 0
+where AdminID = @AdminID;
+
+End
+
+go
+
+
+
+
+--Test Admin | Delete | --
+
+-- in the future more tests will be Added
+
+
+insert into People (People.FirstName , MiddleName , LastName)
+values ('Fares' ,null , 'Oyion');
+
+Declare @PersonID int;
+
+set @PersonID = SCOPE_IDENTITY()
+
+insert into Accounts (Accounts.AccountName , Email ,Password)
+values ('Fares' , 'fares.oyion123@gmail.com' , '1234');
+
+Declare @AccountID int;
+
+set @AccountID = SCOPE_IDENTITY()
+
+
+
+insert into Administrators (AccountID , IsActive , PersonID)
+values (@AccountID , 1 ,@PersonID);
+
+Declare @AdmID int;
+
+set @AdmID = SCOPE_IDENTITY();
+
+delete Administrators 
+where AdminID = @AdmID;
+
+
+if(Exists( select * from AdminProfiles_view where AdminID = @AdmID And IsActive = 0))
+print 'Yes Delete IS Working';
+
+
+disable trigger TR_NonActive_Admin on Administrators;
+
+delete Administrators 
+where AdminID = @AdmID;
+
+enable Trigger TR_NonActive_Admin on Administrators;
+
+
+delete Accounts
+where AccountID = @AccountID;
+
+delete People
+where PersonID = @PersonID;
+-- End Admin Tests --
+go
+
+
+
+
+
+
+
+
+
+
+
+
