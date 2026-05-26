@@ -10,9 +10,9 @@ namespace Core.Entities
     {
         public int AdminID { get; set; }
 
-        public Person? _Person { get; set; }
+        public Person? Person { get; set; }
 
-        public Account? _Account { get; set; }
+        public Account? Account { get; set; }
 
         public bool IsActive { get; set; }
 

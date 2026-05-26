@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
-    internal class AdminRepository : Core.Interfaces.Repositories.IAdminRepository
+    internal class AdminRepository //: Core.Interfaces.Repositories.IAdminRepository
     {
 
     }
