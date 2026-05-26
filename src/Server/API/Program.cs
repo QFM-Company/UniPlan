@@ -1,5 +1,7 @@
 using Core.Interfaces.ExternalServices;
+using Core.Interfaces.Repositories;
 using DataAccess;
+using DataAccess.Repositories;
 using Infrastructure.ExternalServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DBHelpers>();
 builder.Services.AddScoped<IExceptionService,ExceptionService>();
+builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 
 var app = builder.Build();
 
