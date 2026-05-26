@@ -9,11 +9,14 @@
   <ItemGroup>
     <Folder Include="DTOs\Responses\" />
     <Folder Include="DTOs\Requests\" />
-    <Folder Include="Interfaces\ExternalServices\" />
     <Folder Include="Interfaces\Services\" />
     <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Attributes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
   </ItemGroup>
 
 </Project>

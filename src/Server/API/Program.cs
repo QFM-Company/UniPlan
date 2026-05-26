@@ -1,4 +1,6 @@
+using Core.Interfaces.ExternalServices;
 using DataAccess;
+using Infrastructure.ExternalServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DBHelpers>();
+builder.Services.AddScoped<IExceptionService,ExceptionService>();
 
 var app = builder.Build();
 
