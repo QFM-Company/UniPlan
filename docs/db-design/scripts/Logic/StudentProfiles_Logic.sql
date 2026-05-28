@@ -30,11 +30,13 @@ GO
 CREATE OR ALTER PROCEDURE SP_StudentProfile_Insert
     @FirstName NVARCHAR(50), @MiddleName NVARCHAR(50), @LastName NVARCHAR(50), @PersonID INT OUT,
     @AccountName NVARCHAR(50), @Password NVARCHAR(255), @Email NVARCHAR(255), @AccountID INT OUT,
-    @StudentID INT, @MajorID INT
+    @StudentID INT, @MajorID INT , @Result BIT OUT
 AS
 BEGIN
     SET NOCOUNT ON;
     
+    DECLARE @RowsAffected INT = 0;
+
     -- CHANGED: THROW stops the procedure immediately.
     -- RAISERROR in your original code raised the error but the procedure could continue.
     IF dbo.Validat_New_AccountInfo(@AccountName, @Password, @Email) = 0
@@ -52,18 +54,31 @@ BEGIN
 
         INSERT INTO [dbo].[People] ([FirstName], [MiddleName], [LastName])
         VALUES (@FirstName, @MiddleName, @LastName);
-        
+         SET @RowsAffected = @RowsAffected + @@ROWCOUNT;
+
         SET @PersonID = CONVERT(int, SCOPE_IDENTITY());
 
         INSERT INTO [dbo].[Accounts] ([AccountName], [Password], [Email])
         VALUES (@AccountName, @Password, @Email);
+         SET @RowsAffected = @RowsAffected + @@ROWCOUNT;
 
         SET @AccountID = CONVERT(int, SCOPE_IDENTITY());
 
         INSERT INTO [dbo].[Students] ([StudentID], [PersonID], [AccountID], [MajorID])
         VALUES (@StudentID, @PersonID, @AccountID, @MajorID);
-        
-        COMMIT TRANSACTION;
+         SET @RowsAffected = @RowsAffected + @@ROWCOUNT;
+
+        IF @RowsAffected >= 3
+        BEGIN
+            COMMIT TRANSACTION;
+            SET @Result = 1;
+        END
+        ELSE
+        BEGIN
+            IF @@TRANCOUNT > 0
+                ROLLBACK TRANSACTION;
+            SET @Result = 0;
+        END
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
