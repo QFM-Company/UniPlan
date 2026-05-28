@@ -11,6 +11,10 @@ namespace Core.Entities
 
         public string Email { get; set; } = string.Empty;
 
-
+        public Account(string accountName, string email)
+        {
+            AccountName = accountName;
+            Email = email;
+        }
     }
 }
