@@ -53,7 +53,8 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@FirstName", student.Person?.FirstName);
                     command.Parameters.AddWithValue("@MiddleName", student.Person?.MiddleName != null ? student.Person?.MiddleName : DBNull.Value);
                     command.Parameters.AddWithValue("@LastName", student.Person?.LastName);
-                    
+
+                    await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
                     if (personID.Value != DBNull.Value && int.TryParse(personID.Value.ToString(), out int pID) && student.Person != null)
@@ -104,7 +105,8 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@FirstName", student.Person?.FirstName);
                     command.Parameters.AddWithValue("@MiddleName", student.Person?.MiddleName != null ? student.Person?.MiddleName : DBNull.Value);
                     command.Parameters.AddWithValue("@LastName", student.Person?.LastName);
-                    
+
+                    await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
                     if (result.Value != DBNull.Value && bool.TryParse(result.Value.ToString(), out bool res))
@@ -138,6 +140,7 @@ namespace DataAccess.Repositories
                     command.Parameters.Add(result);
                     command.Parameters.AddWithValue("@StudentID", studentID);
 
+                    await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
                     if (result.Value != DBNull.Value && bool.TryParse(result.Value.ToString(), out bool res))
@@ -166,10 +169,12 @@ namespace DataAccess.Repositories
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@StudentID", studentID);
 
-                    using(SqlDataReader reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         if(reader != null)
                         {
+                            await reader.ReadAsync();
                             if (!int.TryParse(reader["PersonID"]?.ToString(), out int personID))
                             {
                                 personID = 0;
@@ -198,7 +203,7 @@ namespace DataAccess.Repositories
 
         public async Task<IEnumerable<Student>?> GetAllStudents(int pageNumber = 1 , int pageSize = 10)
         {
-            IEnumerable<Student>? students = null;
+            List<Student>? students = new List<Student>();
 
             try
             {
@@ -210,11 +215,12 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@PageNumber", pageNumber);
                     command.Parameters.AddWithValue("@PageSize", pageSize);
 
+                    await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         if(reader != null)
                         {
-                           while(reader.Read())
+                           while(await reader.ReadAsync())
                            {
                                 if (!int.TryParse(reader["PersonID"]?.ToString(), out int personID))
                                 {
@@ -232,6 +238,7 @@ namespace DataAccess.Repositories
                                 string majorName = reader["MajorName"].ToString() ?? string.Empty;
 
                                 Student? student = new Student(studentID, new Person(personID, firstName, middleName, lastName), new Account(accountName, email), new Major { MajorName = majorName });
+                                students.Add(student);
                             }
                         }
                     }

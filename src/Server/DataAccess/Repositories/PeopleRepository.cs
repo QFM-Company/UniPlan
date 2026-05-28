@@ -34,6 +34,7 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@MiddleName", person.MiddleName != null ? person.MiddleName : DBNull.Value);
                     command.Parameters.AddWithValue("@LastName", person.LastName);
 
+                    await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
                     if (outPutParamater.Value != DBNull.Value && int.TryParse(outPutParamater.Value.ToString(), out int personID))
