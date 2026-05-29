@@ -17,7 +17,7 @@ builder.Services.AddScoped<DBHelpers>();
 builder.Services.AddScoped<IExceptionService,ExceptionService>();
 builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-
+builder.Services.AddScoped<ILogService, LogService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
