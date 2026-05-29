@@ -10,7 +10,7 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Infrastructure.ExternalServices
 {
-    public class LogService : ILog
+    public class LogService : ILogService
     {
         public void Log(string message, ExternalServicesEnums.LogType logType)
         { 
