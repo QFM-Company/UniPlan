@@ -1,24 +1,30 @@
 ﻿using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Core.Enums; 
 
 namespace DataAccess.Repositories
 {
     public class PeopleRepository : IPeopleRepository
     {
-        public readonly DBHelpers dBHelpers;
+        private readonly DBHelpers _DBHelpers;
+        private readonly ILog _Log;
+        private readonly IExceptionService _ExceptionService;
 
-        public PeopleRepository(DBHelpers dBHelpers)
+        public PeopleRepository(DBHelpers dBHelpers, ILog log, IExceptionService exceptionService)
         {
-            this.dBHelpers = dBHelpers;
+            _DBHelpers = dBHelpers;
+            _Log = log;
+            _ExceptionService = exceptionService;
         }
 
         public async Task<int> AddPerson(Person person)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(dBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_People_Insert",connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -45,7 +51,7 @@ namespace DataAccess.Repositories
             }
             catch(Exception ex)
             {
-                // log(ex);
+                _Log.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
             }
 
             return -1;
