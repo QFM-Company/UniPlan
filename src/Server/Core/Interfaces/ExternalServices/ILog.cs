@@ -4,19 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Core.Enums;
+
 namespace Core.Interfaces.ExternalServices
 {
-    internal interface ILog
+    public interface ILog
     {
-
-        enum LogType
-        {
-            Info,
-            Warning,
-            Error
-        }
-
-        void Log(string message , LogType type);
+        void Log(string message , ExternalServicesEnums.LogType type);
         void Log(Exception ex);
 
     }

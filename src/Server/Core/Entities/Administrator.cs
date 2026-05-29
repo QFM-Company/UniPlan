@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entities
 {
-    internal class Administrator
+    public class Administrator
     {
         public int AdminID { get; set; }
 
@@ -23,8 +23,8 @@ namespace Core.Entities
         public Administrator(int adminID, Person? person, Account? account, bool isActive)
         {
             AdminID = adminID;
-            _Person = person;
-            _Account = account;
+            Person = person;
+            Account = account;
             IsActive = isActive;
         }
 
