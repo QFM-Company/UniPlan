@@ -8,7 +8,7 @@ using Core.Enums;
 
 namespace Core.Interfaces.ExternalServices
 {
-    public interface ILog
+    public interface ILogService
     {
         void Log(string message , ExternalServicesEnums.LogType type);
         void Log(Exception ex);
