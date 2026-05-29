@@ -10,13 +10,13 @@ namespace DataAccess.Repositories
     public class PeopleRepository : IPeopleRepository
     {
         private readonly DBHelpers _DBHelpers;
-        private readonly ILog _Log;
+        private readonly ILogService _LogService;
         private readonly IExceptionService _ExceptionService;
 
-        public PeopleRepository(DBHelpers dBHelpers, ILog log, IExceptionService exceptionService)
+        public PeopleRepository(DBHelpers dBHelpers, ILogService logService, IExceptionService exceptionService)
         {
             _DBHelpers = dBHelpers;
-            _Log = log;
+            _LogService = logService;
             _ExceptionService = exceptionService;
         }
 
@@ -51,7 +51,7 @@ namespace DataAccess.Repositories
             }
             catch(Exception ex)
             {
-                _Log.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
             }
 
             return -1;

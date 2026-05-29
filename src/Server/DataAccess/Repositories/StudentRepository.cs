@@ -3,9 +3,7 @@ using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Data;
-using System.Security.Principal;
 
 
 namespace DataAccess.Repositories
@@ -13,13 +11,13 @@ namespace DataAccess.Repositories
     public class StudentRepository : IStudentRepository
     {
         public readonly DBHelpers _DBHelpers;
-        private readonly ILog _Log;
+        private readonly ILogService _LogService;
         private readonly IExceptionService _ExceptionService;
 
-        public StudentRepository(DBHelpers dBHelpers, ILog log, IExceptionService exceptionService)
+        public StudentRepository(DBHelpers dBHelpers, ILogService logService, IExceptionService exceptionService)
         {
             _DBHelpers = dBHelpers;
-            _Log = log;
+            _LogService = logService;
             _ExceptionService = exceptionService;
         }
 
@@ -81,7 +79,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _Log.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
             }
 
             return false;
@@ -123,7 +121,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _Log.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
             }
 
             return false;
@@ -157,7 +155,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _Log.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
             }
 
             return false;
@@ -201,7 +199,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _Log.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
             }
 
             return student;
@@ -254,7 +252,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _Log.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
             }
 
             return students;
