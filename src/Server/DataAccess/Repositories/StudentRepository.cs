@@ -201,7 +201,7 @@ namespace DataAccess.Repositories
             return student;
         }
 
-        public async Task<IEnumerable<Student>?> GetAllStudents(int pageNumber = 1 , int pageSize = 10)
+        public async Task<IEnumerable<Student>?> GetPagedStudents(int pageNumber = 1 , int pageSize = 10)
         {
             List<Student>? students = new List<Student>();
 

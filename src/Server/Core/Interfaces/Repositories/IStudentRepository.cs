@@ -10,7 +10,7 @@ namespace Core.Interfaces.Repositories
 
         Task<bool> UpdateStudent(Student student);
 
-        Task<IEnumerable<Student>?> GetAllStudents(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<Student>?> GetPagedStudents(int pageNumber = 1, int pageSize = 10);
 
         Task<Student?> GetStudentByID(int studentID);
     }

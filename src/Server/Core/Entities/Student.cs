@@ -23,7 +23,7 @@ namespace Core.Entities
 
         public Student()
         {
-            StudentID = default;
+            StudentID = -1;
             Person = null;
             Account = null;
             Major = null;
