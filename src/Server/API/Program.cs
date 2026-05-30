@@ -14,14 +14,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DBHelpers>();
-builder.Services.AddScoped<IExceptionService, ExceptionService>();
+builder.Services.AddScoped<IExceptionService,ExceptionService>();
 builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ILogService, LogService>();
-builder.Services.AddScoped<IPeriodRepository, PeriodRepository>();
-builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
-builder.Services.AddScoped<IHallRepository, HallRepository>();
-builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

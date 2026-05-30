@@ -1,17 +1,13 @@
-using Core.Entities;
+using System;
 
-public class Period
+namespace Core.Entities
 {
-    public int PeriodID { get; set; }
-    public string PeriodName { get; set; } = string.Empty;
-    public Major Major { get; set; } = new Major();
-
-    public Period(int periodID, string periodName, Major major)
+    public class Period
     {
-        PeriodID = periodID;
-        PeriodName = periodName;
-        Major = major;
-    }
+        public int PeriodID { get; set; }
 
-    public Period() { }
+        public TimeSpan StartTime { get; set; }
+
+        public TimeSpan EndTime { get; set; }
+    }
 }
