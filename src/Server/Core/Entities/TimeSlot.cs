@@ -1,11 +1,17 @@
-namespace Core.Entities
+using Core.Entities;
+
+public class TimeSlot
 {
-    public class TimeSlot
+    public int SlotID { get; set; }
+    public string SlotName { get; set; } = string.Empty;
+    public Period Period { get; set; } = new Period();
+
+    public TimeSlot(int slotID, string slotName, Period period)
     {
-        public int SlotID { get; set; }
-
-        public string DayName { get; set; } = "";
-
-        public int PeriodID { get; set; }
+        SlotID = slotID;
+        SlotName = slotName;
+        Period = period;
     }
+
+    public TimeSlot() { }
 }
