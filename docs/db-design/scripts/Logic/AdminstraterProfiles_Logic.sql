@@ -209,7 +209,10 @@ CREATE OR ALTER PROCEDURE SP_AdminProfile_Update
 
     @FirstName nvarchar(255),
     @MiddleName nvarchar(255),
-    @LastName nvarchar(255)
+    @LastName nvarchar(255) ,
+
+
+	@Result bit out
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -261,17 +264,36 @@ BEGIN
             Password = @Password
         WHERE AccountID = @AccountID;
 
+		 IF @@ROWCOUNT > 0
+        BEGIN
+            SET @Result = 1;
+        END
+        ELSE
+        BEGIN
+            SET @Result = 0;
+        END
+
         UPDATE Administrators
         SET IsActive = @IsActive,
             PersonID = @PersonID,
             AccountID = @AccountID
         WHERE AdminID = @AdministratorID;
 
+		 IF @@ROWCOUNT > 0
+        BEGIN
+            SET @Result = 1;
+        END
+
         UPDATE People
         SET FirstName = @FirstName,
             MiddleName = @MiddleName,
             LastName = @LastName
         WHERE PersonID = @PersonID;
+
+		IF @@ROWCOUNT > 0
+        BEGIN
+            SET @Result = 1;
+        END
 
         COMMIT TRANSACTION;
     END TRY
@@ -290,8 +312,8 @@ GO
 --NO Need To Delete Person Or Account cuz Admin Still Exist but not Active anyMores
 CREATE OR ALTER PROCEDURE SP_AdminProfile_Delete
 
-    @AdministratorID int
-
+    @AdministratorID int ,
+	@Result bit out
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -301,6 +323,15 @@ BEGIN
 
         DELETE FROM Administrators
         WHERE AdminID = @AdministratorID;
+
+				 IF @@ROWCOUNT > 0
+        BEGIN
+            SET @Result = 1;
+        END
+		else 
+		begin
+		   set @Result = 0;
+		end
 
     END TRY
     BEGIN CATCH
