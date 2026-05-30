@@ -3,10 +3,7 @@ using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
@@ -38,8 +35,8 @@ namespace DataAccess.Repositories
                     };
 
                     command.Parameters.Add(periodID);
-                    command.Parameters.AddWithValue("@StartTime", period.StartTime);
-                    command.Parameters.AddWithValue("@EndTime", period.EndTime);
+                    command.Parameters.AddWithValue("@PeriodName", period.PeriodName);
+                    command.Parameters.AddWithValue("@MajorID", period.Major.MajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -74,8 +71,8 @@ namespace DataAccess.Repositories
 
                     command.Parameters.Add(result);
                     command.Parameters.AddWithValue("@PeriodID", period.PeriodID);
-                    command.Parameters.AddWithValue("@StartTime", period.StartTime);
-                    command.Parameters.AddWithValue("@EndTime", period.EndTime);
+                    command.Parameters.AddWithValue("@PeriodName", period.PeriodName);
+                    command.Parameters.AddWithValue("@MajorID", period.Major.MajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -145,10 +142,13 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            TimeSpan startTime = reader["StartTime"] is TimeSpan start ? start : TimeSpan.Parse(reader["StartTime"].ToString()!);
-                            TimeSpan endTime = reader["EndTime"] is TimeSpan end ? end : TimeSpan.Parse(reader["EndTime"].ToString()!);
+                            if (!int.TryParse(reader["MajorID"]?.ToString(), out int majorID))
+                            {
+                                majorID = 0;
+                            }
+                            string periodName = reader["PeriodName"].ToString() ?? string.Empty;
 
-                            period = new Period(periodID, startTime, endTime);
+                            period = new Period(periodID, periodName, new Major { MajorID = majorID });
                         }
                     }
                 }
@@ -171,7 +171,6 @@ namespace DataAccess.Repositories
                 using (SqlCommand command = new SqlCommand("SP_Periods_GetAll", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-
                     command.Parameters.AddWithValue("@PageNumber", pageNumber);
                     command.Parameters.AddWithValue("@PageSize", pageSize);
 
@@ -186,10 +185,13 @@ namespace DataAccess.Repositories
                                 {
                                     periodID = 0;
                                 }
-                                TimeSpan startTime = reader["StartTime"] is TimeSpan start ? start : TimeSpan.Parse(reader["StartTime"].ToString()!);
-                                TimeSpan endTime = reader["EndTime"] is TimeSpan end ? end : TimeSpan.Parse(reader["EndTime"].ToString()!);
+                                if (!int.TryParse(reader["MajorID"]?.ToString(), out int majorID))
+                                {
+                                    majorID = 0;
+                                }
+                                string periodName = reader["PeriodName"].ToString() ?? string.Empty;
 
-                                Period period = new Period(periodID, startTime, endTime);
+                                Period period = new Period(periodID, periodName, new Major { MajorID = majorID });
                                 periods.Add(period);
                             }
                         }

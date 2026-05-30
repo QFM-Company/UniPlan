@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Core.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Interfaces.Repositories
 {
-    internal class IPeriodRepository
+    public interface IPeriodRepository
     {
+        Task<int> AddPeriod(Period period);
+        Task<bool> UpdatePeriod(Period period);
+        Task<bool> DeletePeriod(int periodID);
+        Task<Period?> GetPeriodByID(int periodID);
+        Task<IEnumerable<Period>?> GetPagedPeriods(int pageNumber = 1, int pageSize = 10);
     }
 }
