@@ -14,13 +14,11 @@ namespace DataAccess.Repositories
 
         private readonly DBHelpers dBHelpers;
         private readonly ILogService _LogService;
-        private readonly IExceptionService _ExceptionService;
 
         public AdminRepository(DBHelpers dBHelpers, ILogService logService, IExceptionService exceptionService)
         {
             this.dBHelpers = dBHelpers;
             _LogService = logService;
-            _ExceptionService = exceptionService;
         }
 
         public async Task<int> AddAdmin(Administrator admin)

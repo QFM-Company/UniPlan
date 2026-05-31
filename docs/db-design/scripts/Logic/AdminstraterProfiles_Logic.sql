@@ -155,11 +155,11 @@ BEGIN
     -- CHANGED: THROW stops the procedure immediately.
     -- RAISERROR in your original code raised the error but the procedure could continue.
     IF dbo.Validat_New_AccountInfo(@AccountName, @Password, @Email) = 0
-        THROW 50001, 'Account validation failed', 1;
+        THROW 50401, 'Account validation failed', 1;
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatAdministratorInfo(@PersonID) = 0
-        THROW 50002, 'Administrator validation failed', 1;
+        THROW 50201, 'Administrator validation failed', 1;
 
     -- CHANGED: Prevent creating two admin profiles for the same person.
     IF EXISTS
@@ -168,7 +168,7 @@ BEGIN
         FROM Administrators
         WHERE PersonID = @PersonID
     )
-        THROW 50003, 'This person already has an administrator profile', 1;
+        THROW 50202, 'This person already has an administrator profile', 1;
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -234,15 +234,15 @@ BEGIN
 
     -- CHANGED: Uses @AccountID to detect duplicate email/account name correctly.
     IF dbo.ValidatAccountInfo(@AccountName, @Password, @Email, @AccountID) = 0
-        THROW 50001, 'Account validation failed', 1;
+        THROW 50401, 'Account validation failed', 1;
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatAdministratorInfo(@PersonID) = 0
-        THROW 50002, 'Administrator validation failed', 1;
+        THROW 50201, 'Administrator validation failed', 1;
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatPerson(@FirstName, @MiddleName, @LastName) = 0
-        THROW 50006, 'Person validation failed', 1;
+        THROW 50101, 'Person validation failed', 1;
 
     -- CHANGED: Make sure these three IDs belong to the same admin profile.
     IF NOT EXISTS
@@ -253,7 +253,7 @@ BEGIN
           AND AccountID = @AccountID
           AND PersonID = @PersonID
     )
-        THROW 50007, 'Profile Dose not Exist', 1;
+        THROW 50203, 'Profile Dose not Exist', 1;
 
     BEGIN TRY
         BEGIN TRANSACTION;

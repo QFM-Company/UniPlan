@@ -32,7 +32,7 @@ BEGIN
     SET NOCOUNT ON;
 
     IF dbo.ValidatePeriod(@StartTime, @EndTime) = 0
-        THROW 5201, 'Period validation failed', 1;
+        THROW 50601, 'Period validation failed', 1;
 
     IF EXISTS
     (
@@ -41,7 +41,7 @@ BEGIN
         WHERE StartTime = @StartTime
           AND EndTime = @EndTime
     )
-        THROW 5202, 'Period already exists', 1;
+        THROW 50602, 'Period already exists', 1;
 
     BEGIN TRY
         INSERT INTO Periods(StartTime, EndTime)
@@ -63,7 +63,7 @@ BEGIN
     SET NOCOUNT ON;
 
     IF @PeriodID IS NULL OR @PeriodID <= 0
-        THROW 5203, 'Invalid PeriodID', 1;
+        THROW 50601, 'Period validation failed', 1;
 
     IF NOT EXISTS
     (
@@ -71,7 +71,7 @@ BEGIN
         FROM Periods
         WHERE PeriodID = @PeriodID
     )
-        THROW 5204, 'Period does not exist', 1;
+        THROW 50603, 'Period does not exist', 1;
 
     IF EXISTS
     (
@@ -79,7 +79,7 @@ BEGIN
         FROM TimeSlots
         WHERE PeriodID = @PeriodID
     )
-        THROW 5205, 'Cannot delete period because it is used by time slots', 1;
+        THROW 50604, 'Cannot delete period because it is used by time slots', 1;
 
     BEGIN TRY
         DELETE FROM Periods
@@ -111,7 +111,7 @@ BEGIN
     SET NOCOUNT ON;
 
     IF @PeriodID IS NULL OR @PeriodID <= 0
-        THROW 5203, 'Invalid PeriodID', 1;
+        THROW 50601, 'Invalid PeriodID', 1;
 
     SELECT *
     FROM Periods
