@@ -1,5 +1,4 @@
 ﻿using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.Data.SqlClient;
@@ -10,22 +9,20 @@ namespace DataAccess.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
-        public readonly DBHelpers _DBHelpers;
-        private readonly ILogService _LogService;
-        private readonly IExceptionService _ExceptionService;
+        public readonly DBHelpers _dBHelpers;
+        private readonly ILogService _logService;
 
-        public StudentRepository(DBHelpers dBHelpers, ILogService logService, IExceptionService exceptionService)
+        public StudentRepository(DBHelpers dBHelpers, ILogService logService)
         {
-            _DBHelpers = dBHelpers;
-            _LogService = logService;
-            _ExceptionService = exceptionService;
+            _dBHelpers = dBHelpers;
+            _logService = logService;
         }
 
         public async Task<bool> AddStudent(Student student)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_StudentProfile_Insert", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -79,7 +76,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -89,7 +86,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_StudentProfile_Update", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -121,7 +118,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -131,7 +128,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_StudentProfile_Delete", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -155,7 +152,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -167,7 +164,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_StudentProfile_GetById", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -199,7 +196,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return student;
@@ -211,7 +208,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_StudentProfile_GetAll", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -252,7 +249,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return students;

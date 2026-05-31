@@ -1,5 +1,4 @@
 ﻿using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.Data.SqlClient;
@@ -9,23 +8,21 @@ namespace DataAccess.Repositories
 {
     public class HallRepository : IHallRepository
     {
-        private readonly DBHelpers _DBHelpers;
-        private readonly ILogService _LogService;
-        private readonly IExceptionService _ExceptionService;
+        private readonly DBHelpers _dBHelpers;
+        private readonly ILogService _logService;
 
 
-        public HallRepository(DBHelpers dBHelpers, ILogService logService, IExceptionService exceptionService)
+        public HallRepository(DBHelpers dBHelpers, ILogService logService)
         {
-            _DBHelpers = dBHelpers;
-            _LogService = logService;
-            _ExceptionService = exceptionService;
+            _dBHelpers = dBHelpers;
+            _logService = logService;
         }
 
         public async Task<int> AddHall(Hall hall)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Halls_Insert", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -57,7 +54,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return -1;
@@ -67,7 +64,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Halls_Update", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -95,7 +92,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -105,7 +102,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Halls_Delete", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -129,7 +126,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -141,7 +138,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Halls_GetById", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -173,7 +170,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return hall;
@@ -185,7 +182,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Halls_GetAll", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -226,7 +223,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return halls;

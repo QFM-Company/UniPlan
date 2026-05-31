@@ -1,5 +1,4 @@
 using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.Data.SqlClient;
@@ -9,22 +8,20 @@ namespace DataAccess.Repositories
 {
     public class MajorRepository : IMajorRepository
     {
-        private readonly DBHelpers _DBHelpers;
-        private readonly ILogService _LogService;
-        private readonly IExceptionService _ExceptionService;
+        private readonly DBHelpers _dBHelpers;
+        private readonly ILogService _logService;
 
         public MajorRepository(DBHelpers dBHelpers, ILogService logService, IExceptionService exceptionService)
         {
-            _DBHelpers = dBHelpers;
-            _LogService = logService;
-            _ExceptionService = exceptionService;
+            _dBHelpers = dBHelpers;
+            _logService = logService;
         }
 
         public async Task<int> AddMajor(Major major)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Majors_Insert", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -48,7 +45,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return -1;
@@ -58,7 +55,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Majors_Update", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -83,7 +80,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -93,7 +90,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Majors_Delete", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -117,7 +114,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -129,7 +126,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Majors_GetById", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -149,7 +146,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return major;
@@ -161,7 +158,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Majors_GetAll", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -191,7 +188,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return majors;

@@ -2,19 +2,20 @@ USE [UniPlan];
 GO
 
 CREATE OR ALTER PROCEDURE SP_TimeSlots_Insert
-    @Days nvarchar(50),
+    @Day int,
     @PeriodID int,
     @SlotID int out
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NULLIF(LTRIM(RTRIM(@Days)), '') IS NULL OR @PeriodID IS NULL OR @PeriodID <= 0
-        THROW 50700, 'TimeSlot validation failed', 1; 
+   IF @Day IS NULL OR @Day < 0 OR @Day > 6 OR @PeriodID IS NULL OR @PeriodID <= 0
+        THROW 50700, 'TimeSlot validation failed', 1;
+    
 
     BEGIN TRY
         INSERT INTO [dbo].[TimeSlots] ([DayNum], [PeriodID])
-        VALUES (@Days, @PeriodID)
+        VALUES (@Day, @PeriodID)
         
         SET @SlotID = CONVERT(int, SCOPE_IDENTITY());
     END TRY
@@ -25,7 +26,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE SP_TimeSlots_Update
-    @Days nvarchar(50),
+    @Day nvarchar(50),
     @PeriodID int,
     @SlotID int,
     @Result bit out 
@@ -33,12 +34,12 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NULLIF(LTRIM(RTRIM(@Days)), '') IS NULL OR @PeriodID IS NULL OR @PeriodID <= 0 OR @SlotID < 0
-        THROW 50011, 'TimeSlot validation failed', 1; 
+   IF @Day IS NULL OR @Day < 0 OR @Day > 6 OR @PeriodID IS NULL OR @PeriodID <= 0
+        THROW 50700, 'TimeSlot validation failed', 1;
 
     BEGIN TRY
         UPDATE [dbo].[TimeSlots] 
-        SET [DayNum] = @Days,
+        SET [DayNum] = @Day,
             [PeriodID] = @PeriodID
         WHERE [SlotID] = @SlotID;
 
