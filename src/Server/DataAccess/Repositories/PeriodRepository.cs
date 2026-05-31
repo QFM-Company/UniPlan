@@ -1,33 +1,28 @@
 ﻿using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
+
 
 namespace DataAccess.Repositories
 {
     public class PeriodRepository : IPeriodRepository
     {
-        private readonly DBHelpers _DBHelpers;
-        private readonly ILogService _LogService;
-        private readonly IExceptionService _ExceptionService;
+        private readonly DBHelpers _dBHelpers;
+        private readonly ILogService _logService;
 
-        public PeriodRepository(DBHelpers dBHelpers, ILogService logService, IExceptionService exceptionService)
+        public PeriodRepository(DBHelpers dBHelpers, ILogService logService)
         {
-            _DBHelpers = dBHelpers;
-            _LogService = logService;
-            _ExceptionService = exceptionService;
+            _dBHelpers = dBHelpers;
+            _logService = logService;
         }
 
         public async Task<int> AddPeriod(Period period)
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Periods_Insert", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -52,7 +47,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return -1;
@@ -62,7 +57,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Periods_Update", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -88,7 +83,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -98,7 +93,7 @@ namespace DataAccess.Repositories
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Periods_Delete", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -122,7 +117,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return false;
@@ -134,7 +129,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Periods_GetById", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -155,7 +150,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return period;
@@ -167,7 +162,7 @@ namespace DataAccess.Repositories
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(_DBHelpers.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_Periods_GetAll", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -198,7 +193,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(_ExceptionService.GetExceptionMessage(ex), ExternalServicesEnums.LogType.Error);
+                await _logService.Log(ex);
             }
 
             return periods;

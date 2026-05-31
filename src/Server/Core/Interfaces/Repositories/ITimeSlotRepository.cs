@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.Entities;
 
 namespace Core.Interfaces.Repositories
 {
-    internal class ITimeSlotRepository
+    public interface ITimeSlotRepository
     {
+        Task<bool> DeleteTimeSlot(int timeSlotID);
+
+        Task<int> AddTimeSlot(TimeSlot timeSlot);
+
+        Task<bool> UpdateTimeSlot(TimeSlot timeSlot);
+
+        Task<IEnumerable<TimeSlot>?> GetPagedTimeSlots(int pageNumber = 1, int pageSize = 10);
+
+        Task<TimeSlot?> GetTimeSlotByID(int timeSlotID);
     }
 }

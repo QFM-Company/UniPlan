@@ -4,8 +4,15 @@ namespace Core.Entities
     {
         public int SlotID { get; set; }
 
-        public string DayName { get; set; } = "";
+        public DayOfWeek Day { get; set; } = DayOfWeek.Tuesday;
 
-        public int PeriodID { get; set; }
+        public Period? Period { get; set; }
+
+        public TimeSlot(int slotID, DayOfWeek day, Period? period)
+        {
+            SlotID = slotID;
+            Day = day;
+            Period = period;
+        }
     }
 }
