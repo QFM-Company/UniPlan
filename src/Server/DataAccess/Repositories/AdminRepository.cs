@@ -70,7 +70,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(ex);
+                await _LogService.Log(ex);
             }
 
             return -1;
@@ -115,7 +115,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(ex);
+                await _LogService.Log(ex);
             }
 
             return false;
@@ -149,7 +149,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(ex);
+                await _LogService.Log(ex);
             }
             return false;
         }
@@ -190,7 +190,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(ex);
+                await _LogService.Log(ex);
             }
 
             return admin;
@@ -238,7 +238,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _LogService.Log(ex);
+                await _LogService.Log(ex);
             }
 
             return admins;

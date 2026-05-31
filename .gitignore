@@ -62,3 +62,11 @@ nunit-*.xml
 *.suo
 *.userosscache
 *.sln.docstates
+
+
+# Logs 
+*.Log
+*.log
+
+
+
