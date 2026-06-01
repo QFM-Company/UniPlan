@@ -12,8 +12,7 @@ BEGIN
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatPerson(@FirstName, @MiddleName, @LastName) = 0
-        THROW 50006, 'Person validation failed', 1;  
-
+        THROW 50101, 'Person validation failed', 1;
     BEGIN TRY
         INSERT INTO [dbo].[People] ([FirstName], [MiddleName], [LastName])
         VALUES (@FirstName, @MiddleName, @LastName);
@@ -40,14 +39,14 @@ BEGIN
     -- CHANGED: THROW stops the procedure immediately.
     -- RAISERROR in your original code raised the error but the procedure could continue.
     IF dbo.Validat_New_AccountInfo(@AccountName, @Password, @Email) = 0
-        THROW 50001, 'Account validation failed', 1;
+        THROW 50401, 'Account validation failed', 1;
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatPerson(@FirstName, @MiddleName, @LastName) = 0
-        THROW 50006, 'Person validation failed', 1;   
+        THROW 50101, 'Person validation failed', 1;   
     
     IF EXISTS (SELECT 1 FROM Students WHERE StudentID = @StudentID)
-        THROW 50009, 'The StudentID already exists in the system.', 1;
+        THROW 50302, 'The StudentID already exists in the system.', 1;
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -106,15 +105,16 @@ BEGIN
         WHERE StudentID = @StudentID;
 
         IF @StudentID IS NULL OR @PersonID = 0 OR @AccountID = 0
-            THROW 50010, 'Student profile not found.', 1;
+            THROW 50303, 'Student profile not found.', 1;
 
         -- CHANGED: Uses @AccountID to detect duplicate email/account name correctly.
         IF dbo.ValidatAccountInfo(@AccountName, NULL, @Email, @AccountID) = 0
-            THROW 50001, 'Account validation failed', 1;
+            THROW 50401, 'Account validation failed', 1;
 
         -- CHANGED: THROW stops execution immediately.
         IF dbo.ValidatPerson(@FirstName, @MiddleName, @LastName) = 0
-            THROW 50006, 'Person validation failed', 1;
+            THROW 50101, 'Person validation failed', 1;
+
 
         BEGIN TRANSACTION;
 

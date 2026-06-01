@@ -10,9 +10,9 @@ CREATE OR ALTER PROCEDURE SP_Halls_Insert
 AS
 BEGIN
     SET NOCOUNT ON;
-
+    
     IF NULLIF(LTRIM(RTRIM(@HallName)), '') IS NULL
-        THROW 50011, 'Hall validation failed',1; 
+        THROW 50801, 'Hall validation failed', 1; 
 
     BEGIN TRY
         INSERT INTO [dbo].[Halls] ([HallName], [Building], [Floor] ,[CreatedByAdminID])
@@ -37,8 +37,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF NULLIF(LTRIM(RTRIM(@HallName)), '') IS NULL OR @HallID < 0
-        THROW 50011, 'Hall validation failed',1; 
+    IF NULLIF(LTRIM(RTRIM(@HallName)), '') IS NULL OR @HallID <= 0
+        THROW 50801, 'Hall validation failed', 1; 
 
     BEGIN TRY
      
@@ -87,7 +87,6 @@ BEGIN
     END CATCH
 END;
 GO
-
 
 CREATE OR ALTER PROCEDURE SP_Halls_GetAll 
     @PageNumber INT = 1, 
