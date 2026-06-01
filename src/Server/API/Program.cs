@@ -1,5 +1,7 @@
+using Business.Services;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using Business.Interfaces;
 using DataAccess;
 using DataAccess.Repositories;
 using Infrastructure.ExternalServices;
@@ -22,6 +24,9 @@ builder.Services.AddScoped<IHallRepository, HallRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 builder.Services.AddScoped<IPeriodRepository, PeriodRepository>();
 builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
+
+builder.Services.AddScoped<IPeopleService, PeopleService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
