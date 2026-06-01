@@ -95,16 +95,21 @@ BEGIN TRY
     VALUES (1, @PersonID, @AccountID);
 
     DECLARE @AdminID int = CONVERT(int, SCOPE_IDENTITY());
+	    DECLARE @Result bit;
+
 
     -- Act
     EXEC dbo.SP_AdminProfile_Delete
-        @AdministratorID = @AdminID;
+        @AdministratorID = @AdminID ,
+		@Result = @Result out;
+
 
     -- Assert
     IF (
         not EXISTS(SELECT 1 FROM Administrators WHERE AdminID = @AdminID And IsActive = 1)
         AND EXISTS (SELECT 1 FROM People WHERE PersonID = @PersonID)
         AND EXISTS (SELECT 1 FROM Accounts WHERE AccountID = @AccountID)
+		And @Result = 1
     )
     BEGIN
         PRINT '{ Delete Procedure IS Working }';
@@ -163,6 +168,8 @@ BEGIN TRY
 
     DECLARE @AdminID int = CONVERT(int, SCOPE_IDENTITY());
 
+    DECLARE @Result bit;
+
     -- Act
     EXEC dbo.SP_AdminProfile_Update
         @IsActive = 0,
@@ -172,7 +179,8 @@ BEGIN TRY
         @Email = @NewEmail,
         @FirstName = 'NewFirst',
         @MiddleName = 'NewMiddle',
-        @LastName = 'NewLast';
+        @LastName = 'NewLast' , 
+		@Result = @Result out;
 
     -- Assert
     IF (
@@ -199,7 +207,7 @@ BEGIN TRY
               AND FirstName = 'NewFirst'
               AND MiddleName = 'NewMiddle'
               AND LastName = 'NewLast'
-        )
+        ) And @Result = 1
     )
     BEGIN
         PRINT '{ Update Procedure IS Working }';

@@ -10,7 +10,7 @@ BEGIN
     SET NOCOUNT ON;
 
    IF @Day IS NULL OR @Day < 0 OR @Day > 6 OR @PeriodID IS NULL OR @PeriodID <= 0
-        THROW 50700, 'TimeSlot validation failed', 1;
+        THROW 50701, 'TimeSlot validation failed', 1;
     
 
     BEGIN TRY
@@ -35,7 +35,7 @@ BEGIN
     SET NOCOUNT ON;
 
    IF @Day IS NULL OR @Day < 0 OR @Day > 6 OR @PeriodID IS NULL OR @PeriodID <= 0
-        THROW 50700, 'TimeSlot validation failed', 1;
+        THROW 50701, 'TimeSlot validation failed', 1;
 
     BEGIN TRY
         UPDATE [dbo].[TimeSlots] 
