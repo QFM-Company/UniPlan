@@ -10,7 +10,7 @@ using Core.Interfaces.Repositories;
 using Business.Interfaces;
 namespace Business.Services
 {
-    public class TimeSlotsService
+    public class TimeSlotsService : ITimeSlotsService
     {
 
         private ITimeSlotRepository _TimeSlotsRepository;

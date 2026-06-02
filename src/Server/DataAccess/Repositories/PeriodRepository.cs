@@ -94,7 +94,7 @@ namespace DataAccess.Repositories
             try
             {
                 using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Periods_Delete", connection))
+                using (SqlCommand command = new SqlCommand("SP_Period_Delete", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -130,7 +130,7 @@ namespace DataAccess.Repositories
             try
             {
                 using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Periods_GetById", connection))
+                using (SqlCommand command = new SqlCommand("SP_Period_GetById", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@PeriodID", periodID);
@@ -163,7 +163,7 @@ namespace DataAccess.Repositories
             try
             {
                 using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Periods_GetAll", connection))
+                using (SqlCommand command = new SqlCommand("SP_Period_GetAll", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 

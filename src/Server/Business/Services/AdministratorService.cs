@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Business.DTOs.Requests;
 using Business.DTOs.Responses;
+using Business.Interfaces;
 using Core.Entities;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
 {
-    public class AdministratorService
+    public class AdministratorService : IAdministratorService
     {
         
         private IAdminRepository _AdminRepository;
