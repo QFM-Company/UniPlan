@@ -26,6 +26,7 @@ builder.Services.AddScoped<IPeriodRepository, PeriodRepository>();
 builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
 
 builder.Services.AddScoped<IPeopleService, PeopleService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 
 var app = builder.Build();
 

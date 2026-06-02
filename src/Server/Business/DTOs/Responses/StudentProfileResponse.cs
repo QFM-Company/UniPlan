@@ -17,5 +17,17 @@
         public string Email { get; set; } = string.Empty;
         
         public string MajorName { get; set; } = string.Empty;
+
+        public StudentProfileResponse(int personID, int studentID, string firstName, string middleName, string lastName, string accountName, string email, string majorName)
+        {
+            PersonID = personID;
+            StudentID = studentID;
+            FirstName = firstName;
+            MiddleName = middleName;
+            LastName = lastName;
+            AccountName = accountName;
+            Email = email;
+            MajorName = majorName;
+        }
     }
 }
