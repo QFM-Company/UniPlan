@@ -18,7 +18,7 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<bool> AddStudent(Student student)
+        public async Task<bool> AddStudentAsync(Student student)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace DataAccess.Repositories
             return false;
         }
 
-        public async Task<bool> UpdateStudent(Student student)
+        public async Task<bool> UpdateStudentAsync(Student student)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace DataAccess.Repositories
             return false;
         }
 
-        public async Task<bool> DeleteStudent(int studentID)
+        public async Task<bool> DeleteStudentAsync(int studentID)
         {
             try
             {
@@ -158,7 +158,7 @@ namespace DataAccess.Repositories
             return false;
         }
 
-        public async Task<Student?> GetStudentByID(int studentID)
+        public async Task<Student?> GetStudentByIDAsync(int studentID)
         {
             Student? student = null;
 
@@ -202,7 +202,7 @@ namespace DataAccess.Repositories
             return student;
         }
 
-        public async Task<IEnumerable<Student>?> GetPagedStudents(int pageNumber = 1 , int pageSize = 10)
+        public async Task<IEnumerable<Student>?> GetPagedStudentsAsync(int pageNumber = 1 , int pageSize = 10)
         {
             List<Student>? students = new List<Student>();
 

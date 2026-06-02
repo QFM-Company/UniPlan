@@ -9,44 +9,25 @@ namespace Business.Services
     public class PeopleService : IPeopleService
     {
         private IPeopleRepository _peopleRepository;
-        private Mode _mode;
         private Person? _person;
         
         public PeopleService(IPeopleRepository peopleRepository)
         {
             _peopleRepository = peopleRepository;
             _person = null;
-            _mode = Mode.Add;
         }
 
-        public async Task<bool> AddNewPerson()
+        public async Task<bool> AddPersonAsync(PersonRequest request)
         {
-            if(_person != null)
+            _person = new Person(request.PersonID, request.FirstName, request.MiddleName, request.LastName);
+
+            if (_person != null)
             {
-                _person.PersonID = await _peopleRepository.AddPerson(_person);
+                _person.PersonID = await _peopleRepository.AddPersonAsync(_person);
                 return _person?.PersonID != -1;
             }
 
             return false;
-        }
-
-        public async Task<bool> Save(PersonRequest request)
-        {
-            _person = new Person(request.PersonID, request.FirstName, request.MiddleName, request.LastName);
-
-            switch (_mode)
-            {
-                case Mode.Add:
-                    if (await AddNewPerson())
-                    {
-                        _mode = Mode.Update;
-                        return true;
-                    }
-                    else
-                        return false;
-
-                default: return false;        
-            }
         }
     }
 }

@@ -4,14 +4,14 @@ namespace Core.Interfaces.Repositories
 {
     public interface IHallRepository
     {
-        Task<bool> DeleteHall(int hallID);
+        Task<bool> DeleteHallAsync(int hallID);
 
-        Task<int> AddHall(Hall hall);
+        Task<int> AddHallAsync(Hall hall);
 
-        Task<bool> UpdateHall(Hall hall);
+        Task<bool> UpdateHallAsync(Hall hall);
 
-        Task<IEnumerable<Hall>?> GetPagedHalls(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<Hall>?> GetPagedHallsAsync(int pageNumber = 1, int pageSize = 10);
 
-        Task<Hall?> GetHallByID(int hallID);
+        Task<Hall?> GetHallByIDAsync(int hallID);
     }
 }

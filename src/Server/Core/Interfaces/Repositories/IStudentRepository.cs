@@ -4,14 +4,14 @@ namespace Core.Interfaces.Repositories
 {
     public interface IStudentRepository
     {
-        Task<bool> DeleteStudent(int studentID);
+        Task<bool> DeleteStudentAsync(int studentID);
 
-        Task<bool> AddStudent(Student student);
+        Task<bool> AddStudentAsync(Student student);
 
-        Task<bool> UpdateStudent(Student student);
+        Task<bool> UpdateStudentAsync(Student student);
 
-        Task<IEnumerable<Student>?> GetPagedStudents(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<Student>?> GetPagedStudentsAsync(int pageNumber = 1, int pageSize = 10);
 
-        Task<Student?> GetStudentByID(int studentID);
+        Task<Student?> GetStudentByIDAsync(int studentID);
     }
 }

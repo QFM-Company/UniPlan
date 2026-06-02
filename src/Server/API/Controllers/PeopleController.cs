@@ -16,10 +16,10 @@ namespace API.Controllers
             _peopleService = peopleService;
         }
 
-        [HttpGet(Name = "AddNewPerson")]
-        public async Task<bool> AddNewPerson(PersonRequest request)
+        [HttpPost(Name = "AddPersonAsync")]
+        public async Task<bool> AddPersonAsync(PersonRequest request)
         {
-            return await _peopleService.Save(request);
+            return await _peopleService.AddPersonAsync(request);
         }
     }
 }

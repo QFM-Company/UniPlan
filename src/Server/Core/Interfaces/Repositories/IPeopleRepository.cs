@@ -4,6 +4,6 @@ namespace Core.Interfaces.Repositories
 {
     public interface IPeopleRepository
     {
-        Task<int> AddPerson(Person person);
+        Task<int> AddPersonAsync(Person person);
     }
 }

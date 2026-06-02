@@ -17,7 +17,7 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<int> AddMajor(Major major)
+        public async Task<int> AddMajorAsync(Major major)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace DataAccess.Repositories
             return -1;
         }
 
-        public async Task<bool> UpdateMajor(Major major)
+        public async Task<bool> UpdateMajorAsync(Major major)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace DataAccess.Repositories
             return false;
         }
 
-        public async Task<bool> DeleteMajor(int majorID)
+        public async Task<bool> DeleteMajorAsync(int majorID)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace DataAccess.Repositories
             return false;
         }
 
-        public async Task<Major?> GetMajorByID(int majorID)
+        public async Task<Major?> GetMajorByIDAsync(int majorID)
         {
             Major? major = null;
 
@@ -152,7 +152,7 @@ namespace DataAccess.Repositories
             return major;
         }
 
-        public async Task<IEnumerable<Major>?> GetPagedMajors(int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Major>?> GetPagedMajorsAsync(int pageNumber = 1, int pageSize = 10)
         {
             List<Major> majors = new List<Major>();
 

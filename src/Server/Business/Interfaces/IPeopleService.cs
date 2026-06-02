@@ -4,6 +4,6 @@ namespace Business.Interfaces
 {
     public interface IPeopleService
     {
-        Task<bool> Save(PersonRequest request);
+        Task<bool> AddPersonAsync(PersonRequest request);
     }
 }

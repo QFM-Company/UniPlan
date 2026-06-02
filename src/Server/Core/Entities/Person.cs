@@ -21,5 +21,12 @@ namespace Core.Entities
             MiddleName = middleName;
             LastName = lastName;
         }
+
+        public Person(string firstName, string middleName, string lastName)
+        {
+            FirstName = firstName;
+            MiddleName = middleName;
+            LastName = lastName;
+        }
     }
 }

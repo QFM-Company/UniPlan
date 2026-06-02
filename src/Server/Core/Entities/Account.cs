@@ -16,5 +16,10 @@ namespace Core.Entities
             AccountName = accountName;
             Email = email;
         }
+
+        public Account(string accountName, string password, string email) : this(accountName, email)
+        {
+            Password = password;
+        }
     }
 }

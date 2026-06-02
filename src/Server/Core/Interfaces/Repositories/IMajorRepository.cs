@@ -4,14 +4,14 @@ namespace Core.Interfaces.Repositories
 {
     public interface IMajorRepository
     {
-        Task<int> AddMajor(Major major);
+        Task<int> AddMajorAsync(Major major);
 
-        Task<bool> UpdateMajor(Major major);
+        Task<bool> UpdateMajorAsync(Major major);
 
-        Task<bool> DeleteMajor(int majorID);
+        Task<bool> DeleteMajorAsync(int majorID);
 
-        Task<Major?> GetMajorByID(int majorID);
+        Task<Major?> GetMajorByIDAsync(int majorID);
 
-        Task<IEnumerable<Major>?> GetPagedMajors(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<Major>?> GetPagedMajorsAsync(int pageNumber = 1, int pageSize = 10);
     }
 }

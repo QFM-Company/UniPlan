@@ -18,7 +18,7 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<int> AddHall(Hall hall)
+        public async Task<int> AddHallAsync(Hall hall)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace DataAccess.Repositories
             return -1;
         }
 
-        public async Task<bool> UpdateHall(Hall hall)
+        public async Task<bool> UpdateHallAsync(Hall hall)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace DataAccess.Repositories
             return false;
         }
 
-        public async Task<bool> DeleteHall(int hallID)
+        public async Task<bool> DeleteHallAsync(int hallID)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace DataAccess.Repositories
             return false;
         }
 
-        public async Task<Hall?> GetHallByID(int hallID)
+        public async Task<Hall?> GetHallByIDAsync(int hallID)
         {
             Hall? hall = null;
 
@@ -176,7 +176,7 @@ namespace DataAccess.Repositories
             return hall;
         }
 
-        public async Task<IEnumerable<Hall>?> GetPagedHalls(int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Hall>?> GetPagedHallsAsync(int pageNumber = 1, int pageSize = 10)
         {
             List<Hall>? halls = new List<Hall>();
 

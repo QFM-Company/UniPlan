@@ -17,7 +17,7 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<int> AddPerson(Person person)
+        public async Task<int> AddPersonAsync(Person person)
         {
             try
             {
