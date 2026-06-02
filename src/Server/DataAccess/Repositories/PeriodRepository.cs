@@ -23,7 +23,7 @@ namespace DataAccess.Repositories
             try
             {
                 using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Periods_Insert", connection))
+                using (SqlCommand command = new SqlCommand("SP_Period_Insert", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
