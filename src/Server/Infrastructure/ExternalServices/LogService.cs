@@ -19,16 +19,16 @@ namespace Infrastructure.ExternalServices
             _exceptionService = exceptionService;
         }
 
-        public async Task Log(string message, ExternalServicesEnums.LogType logType)
+        public async Task LogAsync(string message, ExternalServicesEnums.LogType logType)
         {
             // Because your interface is sync, we call the async method safely.
             await WriteLogAsync(message, logType);
         }
 
-        public async Task Log(Exception exception)
+        public async Task LogAsync(Exception exception)
         {
             if (exception == null) return;
-            await Log(_exceptionService.GetExceptionMessage(exception), ExternalServicesEnums.LogType.Error);
+            await LogAsync(_exceptionService.GetExceptionMessage(exception), ExternalServicesEnums.LogType.Error);
         }
 
         private async Task WriteLogAsync(

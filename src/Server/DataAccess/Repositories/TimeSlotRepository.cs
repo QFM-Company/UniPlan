@@ -17,7 +17,7 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<int> AddTimeSlot(TimeSlot timeSlot)
+        public async Task<int> AddTimeSlotAsync(TimeSlot timeSlot)
         {
             try
             {
@@ -46,13 +46,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return -1;
         }
 
-        public async Task<bool> UpdateTimeSlot(TimeSlot timeSlot)
+        public async Task<bool> UpdateTimeSlotAsync(TimeSlot timeSlot)
         {
             try
             {
@@ -82,13 +82,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return false;
         }
 
-        public async Task<bool> DeleteTimeSlot(int slotID)
+        public async Task<bool> DeleteTimeSlotAsync(int slotID)
         {
             try
             {
@@ -116,13 +116,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return false;
         }
 
-        public async Task<TimeSlot?> GetTimeSlotByID(int slotID)
+        public async Task<TimeSlot?> GetTimeSlotByIDAsync(int slotID)
         {
             TimeSlot? timeSlot = null;
 
@@ -155,13 +155,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return timeSlot;
         }
 
-        public async Task<IEnumerable<TimeSlot>?> GetPagedTimeSlots(int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<TimeSlot>?> GetPagedTimeSlotsAsync(int pageNumber = 1, int pageSize = 10)
         {
             List<TimeSlot> timeSlots = new List<TimeSlot>();
 
@@ -204,7 +204,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return timeSlots;

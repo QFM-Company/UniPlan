@@ -10,8 +10,8 @@ namespace Core.Interfaces.ExternalServices
 {
     public interface ILogService
     {
-        Task Log(string message , ExternalServicesEnums.LogType type);
-        Task Log(Exception ex);
+        Task LogAsync(string message , ExternalServicesEnums.LogType type);
+        Task LogAsync(Exception ex);
 
     }
 }
