@@ -7,7 +7,7 @@ using Core.Entities;
 
 namespace Business.DTOs.Responses
 {
-    internal class TimeSlotResponse
+    public class TimeSlotResponse
     {
         public int SlotID { get; set; }
 

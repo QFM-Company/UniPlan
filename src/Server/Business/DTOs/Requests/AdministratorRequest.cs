@@ -7,7 +7,7 @@ using Core.Entities;
 
 namespace Business.DTOs.Requests
 {
-    internal class AdministratorRequest
+    public class AdministratorRequest
     {
         public Person? Person { get; set; }
 

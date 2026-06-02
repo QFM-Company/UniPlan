@@ -7,7 +7,7 @@ using Core.Entities;
 
 namespace Business.DTOs.Responses
 {
-    internal class AdministratorResponse
+    public class AdministratorResponse
     {
         public int AdminID { get; set; }
 

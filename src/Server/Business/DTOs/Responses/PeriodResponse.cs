@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Business.DTOs.Responses
 {
-    internal class PeriodResponse
+    public class PeriodResponse
     {
         public int PeriodID { get; set; }
         public TimeSpan StartTime { get; set; }
