@@ -9,5 +9,13 @@
         public string MiddleName { get; set; } = string.Empty;
 
         public string LastName { get; set; } = string.Empty;
+
+        public PersonRequest(int personID, string firstName, string middleName, string lastName)
+        {
+            PersonID = personID;
+            FirstName = firstName;
+            MiddleName = middleName;
+            LastName = lastName;
+        }
     }
 }

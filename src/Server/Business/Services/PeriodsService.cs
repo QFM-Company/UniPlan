@@ -68,7 +68,7 @@ namespace Business.Services
         {
             var periods = await _PeriodRepository.GetPagedPeriodsAsync(pageNumber, pageSize);
 
-            var responses = periods?.Select(period => PeriodToResponse(period));
+            var responses = periods?.Select(period => PeriodToResponse(period)).Where(per => per != null);
 
             return responses?.Select(response => response!).ToList() ?? new List<PeriodResponse>();
         }

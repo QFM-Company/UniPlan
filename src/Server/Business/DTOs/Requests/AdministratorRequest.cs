@@ -9,13 +9,13 @@ namespace Business.DTOs.Requests
 {
     public class AdministratorRequest
     {
-        public Person? Person { get; set; }
+        public PersonRequest? Person { get; set; }
 
-        public Account? Account { get; set; }
+        public AccountRequest? Account { get; set; }
 
         public bool IsActive { get; set; }
 
-        public AdministratorRequest(Person? person, Account? account, bool isActive)
+        public AdministratorRequest(PersonRequest? person, AccountRequest? account, bool isActive)
         {
             Person = person;
             Account = account;

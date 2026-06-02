@@ -10,7 +10,7 @@ using Core.Interfaces.Repositories;
 using Business.Interfaces;
 namespace Business.Services
 {
-    internal class TimeSlotsService
+    public class TimeSlotsService
     {
 
         private ITimeSlotRepository _TimeSlotsRepository;
@@ -63,11 +63,21 @@ namespace Business.Services
             return TimeSlotToResponse(_timeSlot) ?? null;
         }
 
+        public async Task<bool> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest request)
+        {
+            _timeSlot = RequestToTimeSlot(request, timeSlotID);
+            if (_timeSlot != null)
+            {
+                return await _TimeSlotsRepository.UpdateTimeSlotAsync(_timeSlot);
+            }
+            return false;
+        }
+
         public async Task<IEnumerable<TimeSlotResponse>> GetPageTimeSlotsAsync(int pageNumber = 1, int pageSize = 10)
         {
             var timeSlots = await _TimeSlotsRepository.GetPagedTimeSlotsAsync(pageNumber, pageSize);
 
-            var responses = timeSlots?.Select(timeSlot => TimeSlotToResponse(timeSlot));
+            var responses = timeSlots?.Select(timeSlot => TimeSlotToResponse(timeSlot)).Where(tm => tm != null);
 
             return responses?.Select(response => response!).ToList() ?? new List<TimeSlotResponse>();
         }
