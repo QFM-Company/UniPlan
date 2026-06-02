@@ -25,19 +25,19 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddStudentAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentProfileResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> AddStudentAsync(CreateStudentRequest request)
+        public async Task<ActionResult<StudentProfileResponse?>> AddStudentAsync(CreateStudentRequest request)
         {
             try
             {
-                bool res = await _studentService.AddStudentAsync(request);
+                StudentProfileResponse? response = await _studentService.AddStudentAsync(request);
 
-                if (res)
+                if (response != null)
                 {
                     await _logService.LogAsync("Student added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    return Ok(response);
                 }
 
                 await _logService.LogAsync("Failed to add Student.", ExternalServicesEnums.LogType.Warning);
@@ -50,19 +50,19 @@ namespace API.Controllers
         }
 
         [HttpPut("update", Name = "UpdateStudentAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentProfileResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> UpdateStudentAsync(UpdateStudentRequest request)
+        public async Task<ActionResult<StudentProfileResponse?>> UpdateStudentAsync(UpdateStudentRequest request)
         {
             try
             {
-                bool res = await _studentService.UpdateStudentAsync(request);
+                StudentProfileResponse? response = await _studentService.UpdateStudentAsync(request);
 
-                if (res)
+                if (response != null)
                 {
                     await _logService.LogAsync("Student updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    return Ok(response);
                 }
 
                 await _logService.LogAsync("Failed to update Student.", ExternalServicesEnums.LogType.Warning);
