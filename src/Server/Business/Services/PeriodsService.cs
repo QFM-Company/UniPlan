@@ -46,7 +46,7 @@ namespace Business.Services
             _period = RequestToPeriod(request);
             if (_period != null)
             {
-                _period.PeriodID = await _PeriodRepository.AddPeriod(_period);
+                _period.PeriodID = await _PeriodRepository.AddPeriodAsync(_period);
                 return _period?.PeriodID != -1;
             }
 
@@ -55,18 +55,18 @@ namespace Business.Services
 
         public async Task<bool> DeletePeriodAsync(int periodID)
         {
-            return await _PeriodRepository.DeletePeriod(periodID);
+            return await _PeriodRepository.DeletePeriodAsync(periodID);
         }
 
         public async Task<PeriodResponse?> GetPeriodByIdAsync(int periodID)
         {
-            _period = await _PeriodRepository.GetPeriodByID(periodID);
+            _period = await _PeriodRepository.GetPeriodByIDAsync(periodID);
             return PeriodToResponse(_period) ?? null;
         }
 
         public async Task<IEnumerable<PeriodResponse>> GetPagePeriodsAsync(int pageNumber = 1, int pageSize = 10)
         {
-            var periods = await _PeriodRepository.GetPagedPeriods(pageNumber, pageSize);
+            var periods = await _PeriodRepository.GetPagedPeriodsAsync(pageNumber, pageSize);
 
             var responses = periods?.Select(period => PeriodToResponse(period));
 
