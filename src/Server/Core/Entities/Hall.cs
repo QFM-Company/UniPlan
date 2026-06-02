@@ -23,6 +23,14 @@ namespace Core.Entities
             CreatedByAdminID = createdByAdminID;
         }
 
+        public Hall(string hallName, string building, int floor, int createdByAdminID)
+        {
+            HallName = hallName;
+            Building = building;
+            Floor = floor;
+            CreatedByAdminID = createdByAdminID;
+        }
+
         public Hall()
         {
             HallID = -1;

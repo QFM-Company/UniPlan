@@ -1,9 +1,10 @@
 ﻿using Business.DTOs.Requests;
+using Business.DTOs.Responses;
 
 namespace Business.Interfaces
 {
     public interface IPeopleService
     {
-        Task<bool> AddPersonAsync(PersonRequest request);
+        Task<PersonResponse?> AddPersonAsync(PersonRequest request);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Business.DTOs.Requests;
+using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
 using Core.Interfaces.ExternalServices;
@@ -24,19 +25,19 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddPersonAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PersonResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> AddPersonAsync(PersonRequest request)
+        public async Task<ActionResult<PersonResponse?>> AddPersonAsync(PersonRequest request)
         {
             try
             {
-                bool res = await _peopleService.AddPersonAsync(request);
+                PersonResponse? response = await _peopleService.AddPersonAsync(request);
 
-                if (res)
+                if (response != null)
                 {
                     await _logService.LogAsync("Person added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    return Ok(response);
                 }
 
                 await _logService.LogAsync("Failed to add person.", ExternalServicesEnums.LogType.Warning);

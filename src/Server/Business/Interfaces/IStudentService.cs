@@ -7,9 +7,9 @@ namespace Business.Interfaces
     {
         Task<bool> DeleteStudentAsync(int studentID);
 
-        Task<bool> AddStudentAsync(CreateStudentRequest request);
+        Task<StudentProfileResponse?> AddStudentAsync(CreateStudentRequest request);
 
-        Task<bool> UpdateStudentAsync(UpdateStudentRequest request);
+        Task<StudentProfileResponse?> UpdateStudentAsync(UpdateStudentRequest request);
 
         Task<IEnumerable<StudentProfileResponse>?> GetPagedStudentsAsync(int pageNumber = 1, int pageSize = 10);
 

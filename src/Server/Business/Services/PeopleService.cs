@@ -1,8 +1,8 @@
 ﻿using Business.DTOs.Requests;
 using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.Repositories;
 using Business.Interfaces;
+using Business.DTOs.Responses;
 
 namespace Business.Services
 {
@@ -17,17 +17,11 @@ namespace Business.Services
             _person = null;
         }
 
-        public async Task<bool> AddPersonAsync(PersonRequest request)
+        public async Task<PersonResponse?> AddPersonAsync(PersonRequest request)
         {
             _person = new Person(request.PersonID, request.FirstName, request.MiddleName, request.LastName);
-
-            if (_person != null)
-            {
-                _person.PersonID = await _peopleRepository.AddPersonAsync(_person);
-                return _person?.PersonID != -1;
-            }
-
-            return false;
+            _person.PersonID = await _peopleRepository.AddPersonAsync(_person);
+            return new PersonResponse(_person.PersonID, _person.FirstName, _person.MiddleName, _person.LastName);
         }
     }
 }

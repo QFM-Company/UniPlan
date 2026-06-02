@@ -60,28 +60,34 @@ namespace Business.Services
             return response;
         }
 
-        public async Task<bool> AddStudentAsync(CreateStudentRequest request)
+        public async Task<StudentProfileResponse?> AddStudentAsync(CreateStudentRequest request)
         {
             _student = _CreateRequestToStudent(request);
 
             if(_student != null)
             {
-                return await _studentRepository.AddStudentAsync(_student);
+                if(await _studentRepository.AddStudentAsync(_student))
+                {
+                    return _StudentToResponse(_student);
+                }
             }
 
-            return false;
+            return null;
         }
 
-        public async Task<bool> UpdateStudentAsync(UpdateStudentRequest request)
+        public async Task<StudentProfileResponse?> UpdateStudentAsync(UpdateStudentRequest request)
         {
             _student = _UpdateRequestToStudent(request);
 
             if (_student != null)
             {
-                return await _studentRepository.UpdateStudentAsync(_student);
+                if(await _studentRepository.UpdateStudentAsync(_student))
+                {
+                    return _StudentToResponse(_student);
+                }
             }
 
-            return false;
+            return null;
         }
 
         public async Task<StudentProfileResponse?> GetStudentByIDAsync(int studentID)
@@ -105,16 +111,10 @@ namespace Business.Services
 
         public async Task<IEnumerable<StudentProfileResponse>?> GetPagedStudentsAsync(int pageNumber = 1, int pageSize = 10)
         {
-            List<StudentProfileResponse>? responses = null;
-
             IEnumerable<Student>? students = await _studentRepository.GetPagedStudentsAsync(pageNumber, pageSize);
-            
-            if(students != null)
-            {
-                responses = (List<StudentProfileResponse>) students.Select(s => _StudentToResponse(s));
-            }
+            var responses = students?.ToList();
 
-            return responses;
+            return students?.Select(s => _StudentToResponse(s)).OfType<StudentProfileResponse>();
         }
     }
 }
