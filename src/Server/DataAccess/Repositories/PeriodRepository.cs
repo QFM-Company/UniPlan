@@ -18,7 +18,7 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<int> AddPeriod(Period period)
+        public async Task<int> AddPeriodAsync(Period period)
         {
             try
             {
@@ -47,13 +47,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return -1;
         }
 
-        public async Task<bool> UpdatePeriod(Period period)
+        public async Task<bool> UpdatePeriodAsync(Period period)
         {
             try
             {
@@ -83,13 +83,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return false;
         }
 
-        public async Task<bool> DeletePeriod(int periodID)
+        public async Task<bool> DeletePeriodAsync(int periodID)
         {
             try
             {
@@ -117,13 +117,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return false;
         }
 
-        public async Task<Period?> GetPeriodByID(int periodID)
+        public async Task<Period?> GetPeriodByIDAsync(int periodID)
         {
             Period? period = null;
 
@@ -150,13 +150,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return period;
         }
 
-        public async Task<IEnumerable<Period>?> GetPagedPeriods(int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Period>?> GetPagedPeriodsAsync(int pageNumber = 1, int pageSize = 10)
         {
             List<Period> periods = new List<Period>();
 
@@ -193,7 +193,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _logService.Log(ex);
+                await _logService.LogAsync(ex);
             }
 
             return periods;

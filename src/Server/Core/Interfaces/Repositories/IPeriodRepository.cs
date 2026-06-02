@@ -4,14 +4,14 @@ namespace Core.Interfaces.Repositories
 {
     public interface IPeriodRepository
     {
-        Task<bool> DeletePeriod(int periodID);
+        Task<bool> DeletePeriodAsync(int periodID);
 
-        Task<int> AddPeriod(Period period);
+        Task<int> AddPeriodAsync(Period period);
 
-        Task<bool> UpdatePeriod(Period period);
+        Task<bool> UpdatePeriodAsync(Period period);
 
-        Task<IEnumerable<Period>?> GetPagedPeriods(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<Period>?> GetPagedPeriodsAsync(int pageNumber = 1, int pageSize = 10);
 
-        Task<Period?> GetPeriodByID(int periodID);
+        Task<Period?> GetPeriodByIDAsync(int periodID);
     }
 }

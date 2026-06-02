@@ -21,7 +21,7 @@ namespace DataAccess.Repositories
             _LogService = logService;
         }
 
-        public async Task<int> AddAdmin(Administrator admin)
+        public async Task<int> AddAdminAsync(Administrator admin)
         {
             try
             {
@@ -68,14 +68,14 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _LogService.Log(ex);
+                await _LogService.LogAsync(ex);
             }
 
             return -1;
         }
 
 
-        public async Task<bool> UpdateAdmin(Administrator admin)
+        public async Task<bool> UpdateAdminAsync(Administrator admin)
         {
             try
             {
@@ -113,13 +113,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _LogService.Log(ex);
+                await _LogService.LogAsync(ex);
             }
 
             return false;
         }
 
-        public async Task<bool> DeleteAdmin(int adminID)
+        public async Task<bool> DeleteAdminAsync(int adminID)
         {
             try
             {
@@ -147,12 +147,12 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _LogService.Log(ex);
+                await _LogService.LogAsync(ex);
             }
             return false;
         }
 
-        public async Task<Administrator?> GetAdminByID(int adminID)
+        public async Task<Administrator?> GetAdminByIDAsync(int adminID)
         {
             Administrator? admin = null;
 
@@ -188,13 +188,13 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _LogService.Log(ex);
+                await _LogService.LogAsync(ex);
             }
 
             return admin;
         }
 
-        public async Task<IReadOnlyCollection<Administrator>?> GetPageAdmins(int pageNumber = 1, int pageSize = 10)
+        public async Task<IReadOnlyCollection<Administrator>?> GetPageAdminsAsync(int pageNumber = 1, int pageSize = 10)
         {
             List<Administrator>? admins = new List<Administrator>();
 
@@ -236,7 +236,7 @@ namespace DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                await _LogService.Log(ex);
+                await _LogService.LogAsync(ex);
             }
 
             return admins;

@@ -4,14 +4,14 @@ namespace Core.Interfaces.Repositories
 {
     public interface ITimeSlotRepository
     {
-        Task<bool> DeleteTimeSlot(int timeSlotID);
+        Task<bool> DeleteTimeSlotAsync(int timeSlotID);
 
-        Task<int> AddTimeSlot(TimeSlot timeSlot);
+        Task<int> AddTimeSlotAsync(TimeSlot timeSlot);
 
-        Task<bool> UpdateTimeSlot(TimeSlot timeSlot);
+        Task<bool> UpdateTimeSlotAsync(TimeSlot timeSlot);
 
-        Task<IEnumerable<TimeSlot>?> GetPagedTimeSlots(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<TimeSlot>?> GetPagedTimeSlotsAsync(int pageNumber = 1, int pageSize = 10);
 
-        Task<TimeSlot?> GetTimeSlotByID(int timeSlotID);
+        Task<TimeSlot?> GetTimeSlotByIDAsync(int timeSlotID);
     }
 }
