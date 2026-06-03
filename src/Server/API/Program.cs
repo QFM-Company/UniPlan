@@ -5,6 +5,7 @@ using Business.Interfaces;
 using DataAccess;
 using DataAccess.Repositories;
 using Infrastructure.ExternalServices;
+using Core.Interfaces.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +25,14 @@ builder.Services.AddScoped<IHallRepository, HallRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 builder.Services.AddScoped<IPeriodRepository, PeriodRepository>();
 builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
-
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IPeriodService, PeriodsService>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IMajorService, MajorService>();
 builder.Services.AddScoped<IHallService, HallService>();
+builder.Services.AddScoped<IAdministratorService, AdministratorService>();
+builder.Services.AddScoped<ITimeSlotsService, TimeSlotsService>();
 
 var app = builder.Build();
 

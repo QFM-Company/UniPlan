@@ -57,7 +57,9 @@ GO
 
 
 CREATE OR ALTER PROCEDURE SP_Period_Delete
-    @PeriodID int
+    @PeriodID int,
+	@Result bit out
+
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -84,6 +86,15 @@ BEGIN
     BEGIN TRY
         DELETE FROM Periods
         WHERE PeriodID = @PeriodID;
+
+		IF @@ROWCOUNT > 0
+        BEGIN
+            SET @Result = 1;
+        END
+		else 
+		begin
+		   set @Result = 0;
+		end
     END TRY
     BEGIN CATCH
         THROW;
@@ -93,13 +104,23 @@ GO
 
 
 CREATE OR ALTER PROCEDURE SP_Period_GetAll
+  @PageNumber INT = 1, 
+    @PageSize INT = 10
 AS
 BEGIN
     SET NOCOUNT ON;
+	
+        IF @PageNumber IS NULL OR @PageNumber < 1
+            SET @PageNumber = 1;
+
+        IF @PageSize IS NULL OR @PageSize < 1
+            SET @PageSize = 10;
 
     SELECT * 
     FROM Periods
-    ORDER BY PeriodID;
+    ORDER BY PeriodID
+	 OFFSET (@PageNumber - 1) * @PageSize ROWS
+        FETCH NEXT @PageSize ROWS ONLY;
 END;
 GO
 
@@ -118,3 +139,4 @@ BEGIN
     WHERE PeriodID = @PeriodID;
 END;
 GO
+
