@@ -46,6 +46,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
+                throw;
             }
 
             return -1;
@@ -81,6 +82,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
+                throw;
             }
 
             return false;
@@ -115,6 +117,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
+                throw;
             }
 
             return false;
@@ -147,6 +150,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
+                throw;
             }
 
             return major;
@@ -189,6 +193,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
+                throw;
             }
 
             return majors;

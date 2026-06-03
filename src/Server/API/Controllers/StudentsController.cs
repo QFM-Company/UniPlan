@@ -6,6 +6,7 @@ using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
@@ -43,6 +44,10 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to add Student.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add Student.");
             }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -67,6 +72,10 @@ namespace API.Controllers
 
                 await _logService.LogAsync("Failed to update Student.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to update Student.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -93,6 +102,10 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to delete Student.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete Student.");
             }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -118,6 +131,10 @@ namespace API.Controllers
                 await _logService.LogAsync($"Student with ID {studentID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Student with ID {studentID} was not found.");
             }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -142,6 +159,10 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No students found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"No students found on page {pageNumber}.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {

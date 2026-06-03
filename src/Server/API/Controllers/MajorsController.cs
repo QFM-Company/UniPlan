@@ -5,6 +5,7 @@ using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
@@ -42,6 +43,10 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to add Major.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add Major.");
             }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -66,6 +71,10 @@ namespace API.Controllers
 
                 await _logService.LogAsync("Failed to update Major.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to update Major.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -92,6 +101,10 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to delete Major.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete Major.");
             }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -117,6 +130,10 @@ namespace API.Controllers
                 await _logService.LogAsync($"Major with ID {majorID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Major with ID {majorID} was not found.");
             }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -141,6 +158,10 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No majors found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"No majors found on page {pageNumber}.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {

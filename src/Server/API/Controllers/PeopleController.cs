@@ -5,6 +5,7 @@ using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System.Runtime.InteropServices.Marshalling;
 
 namespace API.Controllers
@@ -43,7 +44,11 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to add person.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add person.");
             }
-            catch(Exception ex)
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
