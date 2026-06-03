@@ -18,7 +18,6 @@ namespace Business.DTOs.Responses
 
         public bool IsActive { get; set; }
 
-
         public AdministratorResponse(int adminID, PersonRequest? person, AccountResponse? account, bool isActive)
         {
             AdminID = adminID;

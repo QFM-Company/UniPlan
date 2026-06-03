@@ -21,5 +21,19 @@ namespace Core.Entities
         {
             Password = password;
         }
+
+        public Account(int accountID, string accountName, string password, string email)
+        {
+            AccountID = accountID;
+            AccountName = accountName;
+            Password = password;
+            Email = email;
+        }
+        public Account(int accountID, string accountName, string email)
+        {
+            AccountID = accountID;
+            AccountName = accountName;
+            Email = email;
+        }
     }
 }

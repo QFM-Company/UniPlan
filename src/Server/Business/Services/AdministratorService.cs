@@ -31,9 +31,9 @@ namespace Business.Services
                 {
                     if (request.Account != null)
                     {
-                        Person person = new Person(request.Person.FirstName, request.Person.MiddleName, request.Person.LastName);
-                        Account account = new Account(request.Account.AccountName, request.Account.Email);
-                        return new Administrator(adminID, person, account, request.IsActive);
+                        Person person = new Person(request.Person.PersonID ,request.Person.FirstName, request.Person.MiddleName, request.Person.LastName);
+                        Account account = new Account(request.Account.AccountName, request.Account.Password, request.Account.Email);
+                        return new Administrator(adminID, person, account , true);
                     }
                 }
             }
@@ -49,7 +49,7 @@ namespace Business.Services
                     if (admin.Account != null)
                     {
                         PersonRequest person = new PersonRequest(admin.Person.PersonID, admin.Person.FirstName, admin.Person.MiddleName, admin.Person.LastName);
-                        AccountResponse account = new AccountResponse(admin.Account.AccountName, admin.Account.Email);
+                        AccountResponse account = new AccountResponse(admin.Account.AccountID , admin.Account.AccountName, admin.Account.Email);
                         return new AdministratorResponse(admin.AdminID, person, account, admin.IsActive);
                     }
                 }

@@ -12,19 +12,13 @@ namespace Business.DTOs.Responses
 
         public string AccountName { get; set; } = string.Empty;
 
-        public string Password { get; set; } = string.Empty;
-
         public string Email { get; set; } = string.Empty;
 
-        public AccountResponse(string accountName, string email)
+        public AccountResponse(int accountID ,string accountName, string email) 
         {
+            AccountID = accountID;
             AccountName = accountName;
             Email = email;
-        }
-
-        public AccountResponse(string accountName, string password, string email) : this(accountName, email)
-        {
-            Password = password;
         }
     }
 }

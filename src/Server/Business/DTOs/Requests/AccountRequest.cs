@@ -14,14 +14,10 @@ namespace Business.DTOs.Requests
 
         public string Email { get; set; } = string.Empty;
 
-        public AccountRequest(string accountName, string email)
+        public AccountRequest(string accountName, string password, string email) 
         {
             AccountName = accountName;
             Email = email;
-        }
-
-        public AccountRequest(string accountName, string password, string email) : this(accountName, email)
-        {
             Password = password;
         }
     }

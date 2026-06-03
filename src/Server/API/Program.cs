@@ -31,6 +31,7 @@ builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IMajorService, MajorService>();
 builder.Services.AddScoped<IHallService, HallService>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 builder.Services.AddScoped<ITimeSlotsService, TimeSlotsService>();
 

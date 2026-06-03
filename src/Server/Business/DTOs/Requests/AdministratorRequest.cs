@@ -13,13 +13,10 @@ namespace Business.DTOs.Requests
 
         public AccountRequest? Account { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public AdministratorRequest(PersonRequest? person, AccountRequest? account, bool isActive)
+        public AdministratorRequest(PersonRequest? person, AccountRequest? account)
         {
             Person = person;
             Account = account;
-            IsActive = isActive;
         }
     }
 }

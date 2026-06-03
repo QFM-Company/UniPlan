@@ -13,6 +13,8 @@ BEGIN
     -- CHANGED: Empty strings are now invalid, not only NULL values.
     IF NULLIF(LTRIM(RTRIM(@FirstName)), '') IS NULL
         OR NULLIF(LTRIM(RTRIM(@LastName)), '') IS NULL
+
+
     BEGIN
         RETURN 0;
     END
@@ -152,6 +154,8 @@ BEGIN
     IF @IsActive IS NULL
         SET @IsActive = 1;
 
+
+
     -- CHANGED: THROW stops the procedure immediately.
     -- RAISERROR in your original code raised the error but the procedure could continue.
     IF dbo.Validat_New_AccountInfo(@AccountName, @Password, @Email) = 0
@@ -160,6 +164,7 @@ BEGIN
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatAdministratorInfo(@PersonID) = 0
         THROW 50201, 'Administrator validation failed', 1;
+
 
     -- CHANGED: Prevent creating two admin profiles for the same person.
     IF EXISTS
@@ -218,12 +223,14 @@ BEGIN
     SET NOCOUNT ON;
 
 	
+    if(NULLIF(LTRIM(RTRIM(@MiddleName)), '') is null)
+	  set @MiddleName = null;
+	
      Declare @PersonID int;
 	 select @PersonID = Administrators.PersonID from Administrators where AdminID = @AdministratorID;
 
 	 Declare @AccountID int;
 	 select @AccountID = Administrators.AccountID from Administrators where AdminID = @AdministratorID;
-
 
 
     IF @IsActive IS NULL
@@ -283,6 +290,7 @@ BEGIN
         BEGIN
             SET @Result = 1;
         END
+
 
         UPDATE People
         SET FirstName = @FirstName,
@@ -352,17 +360,16 @@ SELECT
     Accounts.AccountID,
     People.PersonID,
     Accounts.AccountName,
-    Accounts.Password,
     Accounts.Email,
     People.FirstName,
     People.MiddleName,
-    People.LastName,
-    Administrators.IsActive
+    People.LastName
 FROM People
 INNER JOIN Administrators
     ON People.PersonID = Administrators.PersonID
 INNER JOIN Accounts
-    ON Administrators.AccountID = Accounts.AccountID;
+    ON Administrators.AccountID = Accounts.AccountID
+	where IsActive = 1;
 GO
 
 

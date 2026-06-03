@@ -17,7 +17,7 @@ BEGIN TRY
     DECLARE @TestAccount nvarchar(50) = 'acc_' + @UniqueSuffix;
     
     INSERT INTO People (FirstName, MiddleName, LastName)
-    VALUES ('TestFirst', NULL, 'TestLast');
+    VALUES ('TestFirst', null, 'TestLast');
     
     DECLARE @PersonID int = SCOPE_IDENTITY();
     DECLARE @AdminID int;
@@ -178,7 +178,7 @@ BEGIN TRY
         @Password = 'newsecurepass',
         @Email = @NewEmail,
         @FirstName = 'NewFirst',
-        @MiddleName = 'NewMiddle',
+        @MiddleName = NULL,
         @LastName = 'NewLast' , 
 		@Result = @Result out;
 
@@ -205,7 +205,7 @@ BEGIN TRY
             FROM People
             WHERE PersonID = @PersonID
               AND FirstName = 'NewFirst'
-              AND MiddleName = 'NewMiddle'
+              AND MiddleName is null 
               AND LastName = 'NewLast'
         ) And @Result = 1
     )

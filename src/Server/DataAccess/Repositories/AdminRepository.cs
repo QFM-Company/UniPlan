@@ -80,7 +80,7 @@ namespace DataAccess.Repositories
             try
             {
                 using (SqlConnection connection = new SqlConnection(dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Admin_Profile_Update", connection))
+                using (SqlCommand command = new SqlCommand("SP_AdminProfile_Update", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -173,13 +173,12 @@ namespace DataAccess.Repositories
                             
                             int personID = reader["PersonID"] != DBNull.Value ? Convert.ToInt32(reader["PersonID"]) : -1; 
                             int accountID = reader["AccountID"] != DBNull.Value ? Convert.ToInt32(reader["AccountID"]) : -1; 
-                            bool isActive = reader["IsActive"] != DBNull.Value ? Convert.ToBoolean(reader["IsActive"]) : false;
                             string accoutName = reader["AccountName"].ToString() ?? string.Empty;
                             string email = reader["Email"].ToString() ?? string.Empty;
                             string firstName = reader["FirstName"].ToString() ?? string.Empty;
                             string lastName = reader["LastName"].ToString() ?? string.Empty;
                             string middelName = reader["MiddleName"].ToString() ?? string.Empty;
-                            admin = new Administrator(adminID , new Person(personID , firstName , middelName , lastName) , new Account(accoutName , email) , isActive);
+                            admin = new Administrator(adminID , new Person(personID , firstName , middelName , lastName) , new Account(accountID ,accoutName , email) , true);
                         }
                     }
 
@@ -201,7 +200,7 @@ namespace DataAccess.Repositories
             try
             {
                 using (SqlConnection connection = new SqlConnection(dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Administrators_GetAll", connection))
+                using (SqlCommand command = new SqlCommand("SP_AdminProfile_GetAll", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -218,14 +217,13 @@ namespace DataAccess.Repositories
                                 int adminID = reader["AdminID"] != DBNull.Value ? Convert.ToInt32(reader["AdminID"]) : -1;
                                 int personID = reader["PersonID"] != DBNull.Value ? Convert.ToInt32(reader["PersonID"]) : -1;
                                 int accountID = reader["AccountID"] != DBNull.Value ? Convert.ToInt32(reader["AccountID"]) : -1;
-                                bool isActive = reader["IsActive"] != DBNull.Value ? Convert.ToBoolean(reader["IsActive"]) : false;
                                 string accoutName = reader["AccountName"].ToString() ?? string.Empty;
                                 string email = reader["Email"].ToString() ?? string.Empty;
                                 string firstName = reader["FirstName"].ToString() ?? string.Empty;
                                 string lastName = reader["LastName"].ToString() ?? string.Empty;
                                 string middelName = reader["MiddleName"].ToString() ?? string.Empty;
                        
-                                Administrator admin = new Administrator(adminID, new Person(personID, firstName, middelName, lastName), new Account(accoutName, email), isActive);
+                                Administrator admin = new Administrator(adminID, new Person(personID, firstName, middelName, lastName), new Account(accountID,accoutName, email), true);
                                 admins.Add(admin);
                             }
                         }
