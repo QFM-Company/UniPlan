@@ -100,7 +100,6 @@ namespace DataAccess.Repositories
                     command.Parameters.Add(result);
 
                     command.Parameters.AddWithValue("@AccountName", student.Account?.AccountName);
-                    command.Parameters.AddWithValue("@Password", student.Account?.Password);
                     command.Parameters.AddWithValue("@Email", student.Account?.Email);
                     command.Parameters.AddWithValue("@StudentID", student.StudentID);
                     command.Parameters.AddWithValue("@MajorID", student.Major?.MajorID);
@@ -176,9 +175,8 @@ namespace DataAccess.Repositories
                     await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if(reader != null)
+                        if(reader != null && await reader.ReadAsync())
                         {
-                            await reader.ReadAsync();
                             if (!int.TryParse(reader["PersonID"]?.ToString(), out int personID))
                             {
                                 personID = 0;

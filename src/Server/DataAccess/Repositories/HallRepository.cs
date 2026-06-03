@@ -77,11 +77,11 @@ namespace DataAccess.Repositories
 
                     command.Parameters.Add(result);
 
+                    command.Parameters.AddWithValue("@HallID", hall.HallID);
                     command.Parameters.AddWithValue("@HallName", hall.HallName);
                     command.Parameters.AddWithValue("@Building", hall.Building ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Floor", hall.Floor != 0 ? hall.Floor : DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedByAdminID", hall.CreatedByAdminID != -1 ? hall.CreatedByAdminID : DBNull.Value);
-
+                    
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
@@ -150,9 +150,8 @@ namespace DataAccess.Repositories
                     await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader != null)
+                        if (reader != null && await reader.ReadAsync())
                         {
-                            await reader.ReadAsync();
                             if (!int.TryParse(reader["CreatedByAdminID"]?.ToString(), out int createdByAdminID))
                             {
                                 createdByAdminID = 0;

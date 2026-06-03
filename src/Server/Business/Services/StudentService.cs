@@ -68,7 +68,7 @@ namespace Business.Services
             {
                 if(await _studentRepository.AddStudentAsync(_student))
                 {
-                    return _StudentToResponse(_student);
+                    return await GetStudentByIDAsync(_student.StudentID);
                 }
             }
 
@@ -83,7 +83,7 @@ namespace Business.Services
             {
                 if(await _studentRepository.UpdateStudentAsync(_student))
                 {
-                    return _StudentToResponse(_student);
+                    return await GetStudentByIDAsync(_student.StudentID);
                 }
             }
 

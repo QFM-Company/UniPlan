@@ -39,5 +39,13 @@ namespace Core.Entities
             Floor = default;
             CreatedByAdminID = -1;
         }
+
+        public Hall(int hallID, string hallName, string building, int floor)
+        {
+            HallID = hallID;
+            HallName = hallName;
+            Building = building;
+            Floor = floor;
+        }
     }
 }

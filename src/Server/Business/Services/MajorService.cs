@@ -17,9 +17,9 @@ namespace Business.Services
             _major = null;
         }
 
-        private Major _RequestToMajor(MajorRequest request)
+        private Major _RequestToMajor(MajorRequest request , int majorID = -1)
         {
-            return new Major { MajorName = request.MajorName};
+            return new Major(majorID, request.MajorName);
         }
 
         private MajorResponse? _MajorToResponse(Major Major)
@@ -46,13 +46,13 @@ namespace Business.Services
             return majorResponse;
         }
 
-        public async Task<MajorResponse?> UpdateMajorAsync(MajorRequest request, int MajorID)
+        public async Task<MajorResponse?> UpdateMajorAsync(MajorRequest request, int majorID)
         {
             MajorResponse? majorResponse = null;
 
             if (request != null)
             {
-                _major = _RequestToMajor(request);
+                _major = _RequestToMajor(request, majorID);
                 await _majorRepository.UpdateMajorAsync(_major);
                 majorResponse = _MajorToResponse(_major);
             }

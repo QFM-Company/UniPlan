@@ -28,7 +28,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HallResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<HallResponse?>> AddHallAsync(HallRequest request)
+        public async Task<ActionResult<HallResponse?>> AddHallAsync(CreateHallRequest request)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HallResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<HallResponse?>> UpdateHallHallAsync(HallRequest request, int hallID)
+        public async Task<ActionResult<HallResponse?>> UpdateHallHallAsync(UpdateHallRequest request, int hallID)
         {
             try
             {

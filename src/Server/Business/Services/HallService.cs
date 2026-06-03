@@ -17,9 +17,14 @@ namespace Business.Services
             _hall = null;
         }
 
-        private Hall _RequestToHall(HallRequest request)
+        private Hall _CreateRequestToHall(CreateHallRequest request)
         {
             return new Hall(request.HallName, request.Building, request.Floor, request.CreatedByAdminID);
+        }
+
+        private Hall _UpdateRequestToHall(UpdateHallRequest request,int hallID = -1)
+        {
+            return new Hall(hallID,request.HallName, request.Building, request.Floor);
         }
 
         private HallResponse? _HallToResponse(Hall hall)
@@ -32,13 +37,13 @@ namespace Business.Services
             return await _hallRepository.DeleteHallAsync(hallID);
         }
 
-        public async Task<HallResponse?> AddHallAsync(HallRequest request)
+        public async Task<HallResponse?> AddHallAsync(CreateHallRequest request)
         {
             HallResponse? hallResponse = null;
 
             if(request != null)
             {
-                _hall = _RequestToHall(request);
+                _hall = _CreateRequestToHall(request);
                 _hall.HallID = await _hallRepository.AddHallAsync(_hall);
                 hallResponse = _HallToResponse(_hall);
             }
@@ -46,15 +51,15 @@ namespace Business.Services
             return hallResponse;
         }
 
-        public async Task<HallResponse?> UpdateHallAsync(HallRequest request, int hallID)
+        public async Task<HallResponse?> UpdateHallAsync(UpdateHallRequest request, int hallID)
         {
             HallResponse? hallResponse = null;
 
             if (request != null)
             {
-                _hall = _RequestToHall(request);
+                _hall = _UpdateRequestToHall(request,hallID);
                 await _hallRepository.UpdateHallAsync(_hall);
-                hallResponse = _HallToResponse(_hall);
+                hallResponse = await GetHallByIDAsync(hallID);
             }
 
             return hallResponse;

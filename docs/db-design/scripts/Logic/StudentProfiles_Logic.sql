@@ -108,7 +108,7 @@ BEGIN
             THROW 50303, 'Student profile not found.', 1;
 
         -- CHANGED: Uses @AccountID to detect duplicate email/account name correctly.
-        IF dbo.ValidatAccountInfo(@AccountName, NULL, @Email, @AccountID) = 0
+        IF dbo.ValidatAccountInfo(@AccountName,'password', @Email, @AccountID) = 0
             THROW 50401, 'Account validation failed', 1;
 
         -- CHANGED: THROW stops execution immediately.

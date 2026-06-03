@@ -71,7 +71,7 @@ namespace Infrastructure.ExternalServices
                     return $"A database conflict occurred. Please try the operation again.\n(Error code: {ex.Number})"; 
                 default:
                     // Generic fallback message
-                    return $"An unexpected database error occurred.\n(Error code: {ex.Number})";
+                    return $"{ex.Message}\n(Error code: {ex.Number})";
             }
         }
         
@@ -100,7 +100,7 @@ namespace Infrastructure.ExternalServices
                     return "An invalid argument or value was provided.";
 
                 default:
-                    return "An unexpected error occurred. Please try again or contact support.";
+                    return $"{ex.Message}";
             }
         }
 

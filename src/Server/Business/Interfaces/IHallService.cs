@@ -7,9 +7,9 @@ namespace Business.Interfaces
     {
         Task<bool> DeleteHallAsync(int hallID);
 
-        Task<HallResponse?> AddHallAsync(HallRequest request);
+        Task<HallResponse?> AddHallAsync(CreateHallRequest request);
 
-        Task<HallResponse?> UpdateHallAsync(HallRequest request, int hallID);
+        Task<HallResponse?> UpdateHallAsync(UpdateHallRequest request, int hallID);
 
         Task<IEnumerable<HallResponse>?> GetPagedHallsAsync(int pageNumber = 1, int pageSize = 10);
 

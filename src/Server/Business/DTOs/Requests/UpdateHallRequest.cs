@@ -1,6 +1,6 @@
 ﻿namespace Business.DTOs.Requests
 {
-    public class HallRequest
+    public class UpdateHallRequest
     {
         public string HallName { get; set; } = string.Empty;
 
@@ -8,14 +8,11 @@
 
         public int Floor { get; set; }
 
-        public int CreatedByAdminID { get; set; }
-
-        public HallRequest(string hallName, string building, int floor, int createdByAdminID)
+        public UpdateHallRequest(string hallName, string building, int floor)
         {
             HallName = hallName;
             Building = building;
             Floor = floor;
-            CreatedByAdminID = createdByAdminID;
         }
     }
 }
