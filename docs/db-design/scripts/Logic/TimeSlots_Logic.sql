@@ -25,6 +25,7 @@ BEGIN
 END;
 GO
 
+
 CREATE OR ALTER PROCEDURE SP_TimeSlots_Update
     @Day nvarchar(50),
     @PeriodID int,
@@ -90,8 +91,8 @@ BEGIN
         IF @PageSize IS NULL OR @PageSize < 1
             SET @PageSize = 10;
 
-        SELECT [SlotID], [DayNum], [PeriodID] 
-        FROM [dbo].[TimeSlots]
+        SELECT [SlotID], [DayNum], TimeSlots.[PeriodID] , Periods.StartTime , Periods.EndTime
+        FROM [dbo].[TimeSlots] inner join Periods on TimeSlots.PeriodID = Periods.PeriodID 
         ORDER BY [SlotID]
         OFFSET (@PageNumber - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY;
@@ -118,3 +119,11 @@ BEGIN
     END CATCH
 END;
 GO
+
+
+
+
+
+
+
+

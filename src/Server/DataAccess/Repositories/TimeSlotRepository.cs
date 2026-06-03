@@ -26,7 +26,7 @@ namespace DataAccess.Repositories
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    var timeSlotID = new SqlParameter("@TimeSlotID", SqlDbType.Int)
+                    var timeSlotID = new SqlParameter("@SlotID", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Output
                     };
@@ -148,6 +148,7 @@ namespace DataAccess.Repositories
                                 periodID = 0;
                             }
 
+
                             timeSlot = new TimeSlot(slotID, (DayOfWeek) day, new Period() { PeriodID = periodID });
                         }
                     }
@@ -195,7 +196,10 @@ namespace DataAccess.Repositories
                                     periodID = 0;
                                 }
 
-                                TimeSlot timeSlot = new TimeSlot(slotID, (DayOfWeek)day, new Period() { PeriodID = periodID });
+                                TimeSpan startTime = reader["StartTime"] is TimeSpan start ? start : TimeSpan.Parse(reader["StartTime"].ToString()!);
+                                TimeSpan endTime = reader["EndTime"] is TimeSpan end ? end : TimeSpan.Parse(reader["EndTime"].ToString()!);
+
+                                TimeSlot timeSlot = new TimeSlot(slotID, (DayOfWeek)day, new Period(periodID , startTime , endTime));
                                 timeSlots.Add(timeSlot);
                             }
                         }

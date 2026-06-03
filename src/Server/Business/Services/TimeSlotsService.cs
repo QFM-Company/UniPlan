@@ -14,12 +14,14 @@ namespace Business.Services
     {
 
         private ITimeSlotRepository _TimeSlotsRepository;
+        private IPeriodRepository _PeriodRepository;
         private TimeSlot? _timeSlot;
 
-        public TimeSlotsService(ITimeSlotRepository timeSlotsRepository)
+        public TimeSlotsService(ITimeSlotRepository timeSlotsRepository, IPeriodRepository periodRepository)
         {
             _TimeSlotsRepository = timeSlotsRepository;
             _timeSlot = null;
+            _PeriodRepository = periodRepository;
         }
 
         private TimeSlot? RequestToTimeSlot(TimeSlotRequest? request, int timeSlotID = -1)
@@ -60,6 +62,8 @@ namespace Business.Services
         public async Task<TimeSlotResponse?> GetTimeSlotByIdAsync(int timeSlotID)
         {
             _timeSlot = await _TimeSlotsRepository.GetTimeSlotByIDAsync(timeSlotID);
+            if (_timeSlot != null)
+                _timeSlot.Period = await _PeriodRepository.GetPeriodByIDAsync(_timeSlot?.Period?.PeriodID ?? -1);
             return TimeSlotToResponse(_timeSlot) ?? null;
         }
 
@@ -77,7 +81,7 @@ namespace Business.Services
         {
             var timeSlots = await _TimeSlotsRepository.GetPagedTimeSlotsAsync(pageNumber, pageSize);
 
-            var responses = timeSlots?.Select(timeSlot => TimeSlotToResponse(timeSlot)).Where(tm => tm != null);
+            var responses = timeSlots?.Select(timeSlot => TimeSlotToResponse(timeSlot)).Where(tm => tm != null); 
 
             return responses?.Select(response => response!).ToList() ?? new List<TimeSlotResponse>();
         }
