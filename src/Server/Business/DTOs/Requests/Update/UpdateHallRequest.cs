@@ -1,4 +1,4 @@
-﻿namespace Business.DTOs.Requests
+﻿namespace Business.DTOs.Requests.Update
 {
     public class UpdateHallRequest
     {

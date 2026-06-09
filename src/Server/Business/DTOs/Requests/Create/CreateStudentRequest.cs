@@ -1,4 +1,6 @@
-﻿namespace Business.DTOs.Requests
+﻿using Business.DTOs.Requests.Update;
+
+namespace Business.DTOs.Requests.Create
 {
     public class CreateStudentRequest : UpdateStudentRequest
     {
