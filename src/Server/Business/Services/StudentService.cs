@@ -113,8 +113,6 @@ namespace Business.Services
         public async Task<IEnumerable<StudentProfileResponse>?> GetPagedStudentsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<Student>? students = await _studentRepository.GetPagedStudentsAsync(pageNumber, pageSize);
-            var responses = students?.ToList();
-
             return students?.Select(s => _StudentToResponse(s)).OfType<StudentProfileResponse>();
         }
     }

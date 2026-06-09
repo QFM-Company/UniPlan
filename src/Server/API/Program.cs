@@ -17,23 +17,36 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DBHelpers>();
+
+//  External Services 
+builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IExceptionService,ExceptionService>();
+
+// Repositories
 builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IHallRepository, HallRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 builder.Services.AddScoped<IPeriodRepository, PeriodRepository>();
 builder.Services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<ILectureRepository, LectureRepository>();
+builder.Services.AddScoped<IAcademicTermRepository, AcademicTermRepository>();
+builder.Services.AddScoped<ICourseOfferingRepository, CourseOfferingRepository>();
+
+// Services
 builder.Services.AddScoped<IPeriodService, PeriodsService>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IMajorService, MajorService>();
 builder.Services.AddScoped<IHallService, HallService>();
-builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 builder.Services.AddScoped<ITimeSlotsService, TimeSlotsService>();
+builder.Services.AddScoped<ILectureService, LectureService>();
+builder.Services.AddScoped<IAcademicTermService, AcademicTermService>();
+builder.Services.AddScoped<ICourseOfferingService, CourseOfferingService>();
+
+
 
 var app = builder.Build();
 

@@ -1,6 +1,6 @@
 using Core.Enums;
 
-namespace UniPlan.Business.DTOs.Requests
+namespace Business.DTOs.Requests
 {
     public class LectureRequest
     {

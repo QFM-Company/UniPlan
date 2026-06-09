@@ -69,8 +69,7 @@ namespace Business.Services
         public async Task<IEnumerable<HallResponse>?> GetPagedHallsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<Hall>? halls = await _hallRepository.GetPagedHallsAsync(pageNumber, pageSize);
-            var responses = halls?.ToList();
-            return responses?.Select(h => _HallToResponse(h)).OfType<HallResponse>();
+            return halls?.Select(h => _HallToResponse(h)).OfType<HallResponse>();
         }
 
         public async Task<HallResponse?> GetHallByIDAsync(int hallID)

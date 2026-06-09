@@ -1,20 +1,23 @@
-using Core.Enums;
+﻿using Core.Enums;
 
-namespace Business.DTOs.Requests
+namespace Core.Entities
 {
-    public class AcademicTermRequest
+    public class AcademicTerm
     {
+        public int TermID { get; set; }
         public TermType TermType { get; set; }
         public int TermYear { get; set; }
 
-        public AcademicTermRequest()
+        public AcademicTerm()
         {
+            TermID = default;
             TermType = TermType.First;
             TermYear = default;
         }
 
-        public AcademicTermRequest(TermType termType, int termYear)
+        public AcademicTerm(int termID, TermType termType, int termYear)
         {
+            TermID = termID;
             TermType = termType;
             TermYear = termYear;
         }
