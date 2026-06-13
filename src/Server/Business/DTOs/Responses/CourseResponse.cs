@@ -9,14 +9,14 @@ namespace Business.DTOs.Responses
         public int CourseID { get; set; }
         public string? CourseName { get; set; }
         public int CreditHours {  get; set; }
-        public Major Major {  get; set; }
+        public int MajorID {  get; set; }
 
-        public CourseResponse(int courseID, string? courseName, int creditHours, Major major)
+        public CourseResponse(int courseID, string? courseName, int creditHours, int majorID)
         {
             CourseID = courseID;
             CourseName = courseName;
             CreditHours = creditHours;
-            Major = major;
+            MajorID = majorID;
         }
     }
 }

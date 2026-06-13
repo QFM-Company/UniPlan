@@ -33,6 +33,7 @@ builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<ILectureRepository, LectureRepository>();
 builder.Services.AddScoped<IAcademicTermRepository, AcademicTermRepository>();
 builder.Services.AddScoped<ICourseOfferingRepository, CourseOfferingRepository>();
+builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
 
 // Services
 builder.Services.AddScoped<IPeriodService, PeriodsService>();
@@ -45,6 +46,7 @@ builder.Services.AddScoped<ITimeSlotsService, TimeSlotsService>();
 builder.Services.AddScoped<ILectureService, LectureService>();
 builder.Services.AddScoped<IAcademicTermService, AcademicTermService>();
 builder.Services.AddScoped<ICourseOfferingService, CourseOfferingService>();
+builder.Services.AddScoped<ICoursesService, CoursesService>();
 
 
 

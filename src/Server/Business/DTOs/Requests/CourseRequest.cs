@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Business.DTOs.Responses;
+using Core.Entities;
 
 namespace Business.DTOs.Requests
 {
@@ -6,13 +7,13 @@ namespace Business.DTOs.Requests
     {
         public string? CourseName { get; set; }
         public int CreditHours { get; set; }
-        public Major Major { get; set; }
+        public int MajorID { get; set; }
 
-        public CourseRequest(string? courseName, int creditHours, Major major)
+        public CourseRequest(string? courseName, int creditHours, int majorID)
         {
             CourseName = courseName;
             CreditHours = creditHours;
-            Major = major;
+            MajorID = majorID;
         }
     }
 }
