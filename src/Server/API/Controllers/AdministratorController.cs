@@ -27,13 +27,13 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> AddAdminAsync(AdministratorRequest request)
+        public async Task<ActionResult<AdministratorResponse>> AddAdminAsync(AdministratorRequest request)
         {
             try
             {
-                bool res = await _adminSevice.AddAdministratorAsync(request);
+                var res = await _adminSevice.AddAdministratorAsync(request);
 
-                if (res)
+                if (res != null)
                 {
                     await _logService.LogAsync("admin added successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(res);
@@ -58,9 +58,9 @@ namespace API.Controllers
         {
             try
             {
-                bool response = await _adminSevice.UpdateAdministratorAsync(adminID, request);
+                var response = await _adminSevice.UpdateAdministratorAsync(adminID, request);
 
-                if (response)
+                if (response != null)
                 {
                     await _logService.LogAsync("admin updated successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(response);

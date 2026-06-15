@@ -41,16 +41,17 @@ namespace Business.Services
             return null;
         }
 
-        public async Task<bool> AddPeriodAsync(PeriodRequest request)
+        public async Task<PeriodResponse?> AddPeriodAsync(PeriodRequest request)
         {
             _period = RequestToPeriod(request);
             if (_period != null)
             {
                 _period.PeriodID = await _PeriodRepository.AddPeriodAsync(_period);
-                return _period?.PeriodID != -1;
+                if (_period.PeriodID > 0)
+                     return PeriodToResponse(_period);
             }
 
-            return false;
+            return null;
         }
 
         public async Task<bool> DeletePeriodAsync(int periodID)

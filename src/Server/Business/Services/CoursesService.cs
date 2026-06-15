@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Business.DTOs.Requests;
 using Business.DTOs.Responses;
@@ -68,20 +69,23 @@ namespace Business.Services
             return course != null ? _CourseToResponse(course) : null;
         }
 
-        public async Task<bool> AddCourseAsync(CourseRequest courseRequest)
+        public async Task<CourseResponse?> AddCourseAsync(CourseRequest courseRequest)
         {
-            if (courseRequest == null) return false;
+            if (courseRequest == null) return null;
 
             Course course = _RequestToCourse(courseRequest);
-            return await _courseRepository.AddCourseAsync(course);
+            course.CourseID = await _courseRepository.AddCourseAsync(course);
+            if(course.CourseID <= 0) return null;
+            return _CourseToResponse(course);
         }
 
-        public async Task<bool> UpdateCourseAsync(int courseID, CourseRequest courseRequest)
+        public async Task<CourseResponse?> UpdateCourseAsync(int courseID, CourseRequest courseRequest)
         {
-            if (courseRequest == null) return false;
+            if (courseRequest == null) return null;
 
             Course course = _RequestToCourse(courseRequest, courseID);
-            return await _courseRepository.UpdateCourseAsync(course);
+            if(await _courseRepository.UpdateCourseAsync(course)) { return _CourseToResponse(course); }
+            return null;
         }
 
         public async Task<bool> DeleteCourseAsync(int courseID)

@@ -29,13 +29,13 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> AddTimeSlotAsync(TimeSlotRequest request)
+        public async Task<ActionResult<TimeSlotResponse>> AddTimeSlotAsync(TimeSlotRequest request)
         {
             try
             {
-                bool res = await _timeSlotsSevice.AddTimeSlotAsync(request);
+                var res = await _timeSlotsSevice.AddTimeSlotAsync(request);
 
-                if (res)
+                if (res != null)
                 {
                     await _logService.LogAsync("time slot added successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(res);
@@ -60,9 +60,9 @@ namespace API.Controllers
         {
             try
             {
-                bool response = await _timeSlotsSevice.UpdateTimeSlotAsync(timeSlotID , request);
+                var response = await _timeSlotsSevice.UpdateTimeSlotAsync(timeSlotID , request);
 
-                if (response)
+                if (response != null)
                 {
                     await _logService.LogAsync("time slot updated successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(response);

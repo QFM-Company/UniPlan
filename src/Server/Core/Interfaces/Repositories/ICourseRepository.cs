@@ -8,7 +8,7 @@ namespace Core.Interfaces.Repositories
     {
         Task<IEnumerable<Course>> GetPagedCoursesAsync(int pageNumber, int pageSize);
         Task<Course?> GetCourseByIDAsync(int courseID);
-        Task<bool> AddCourseAsync(Course course);
+        Task<int> AddCourseAsync(Course course);
         Task<bool> UpdateCourseAsync(Course course);
         Task<bool> DeleteCourseAsync(int courseID);
     }

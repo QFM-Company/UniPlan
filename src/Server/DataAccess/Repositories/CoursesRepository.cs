@@ -24,7 +24,7 @@ namespace DataAccess.Repositories
         }
 
 
-        public async Task<bool> AddCourseAsync(Course course)
+        public async Task<int> AddCourseAsync(Course course)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace DataAccess.Repositories
                     command.Parameters.Add(courseID);
                     command.Parameters.AddWithValue("@CourseName", course.CourseName);
                     command.Parameters.AddWithValue("@CreditHours", course.CreditHours);
-                    command.Parameters.AddWithValue("@MajorID", course.Major.MajorID);
+                    command.Parameters.AddWithValue("@MajorID", course.Major?.MajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -49,7 +49,7 @@ namespace DataAccess.Repositories
                     if (courseID.Value != DBNull.Value &&
                         int.TryParse(courseID.Value.ToString(), out int cID))
                     {
-                        return cID > 0;
+                        return cID;
                     }
                 }
             }
@@ -59,7 +59,7 @@ namespace DataAccess.Repositories
                 throw;
             }
 
-            return false;
+            return -1;
         }
 
 

@@ -12,8 +12,8 @@ namespace Business.Interfaces
     {
         Task<IEnumerable<TimeSlotResponse>> GetPageTimeSlotsAsync(int pageNumber, int pageSize);
         Task<TimeSlotResponse?> GetTimeSlotByIdAsync(int timeSlotID);
-        Task<bool> AddTimeSlotAsync(TimeSlotRequest timeSlot);
-        Task<bool> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest timeSlot);
+        Task<TimeSlotResponse?> AddTimeSlotAsync(TimeSlotRequest timeSlot);
+        Task<TimeSlotResponse?> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest timeSlot);
         Task<bool> DeleteTimeSlotAsync(int timeSlotID);
 
     }

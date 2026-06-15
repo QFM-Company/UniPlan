@@ -26,13 +26,13 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> AddPeriodAsync(PeriodRequest request)
+        public async Task<ActionResult<PeriodResponse>> AddPeriodAsync(PeriodRequest request)
         {
             try
             {
-                bool res = await _periodService.AddPeriodAsync(request);
+                var res = await _periodService.AddPeriodAsync(request);
 
-                if (res)
+                if (res != null)
                 {
                     await _logService.LogAsync("Period added successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(res);

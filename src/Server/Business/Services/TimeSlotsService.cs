@@ -42,16 +42,17 @@ namespace Business.Services
             return null;
         }
 
-        public async Task<bool> AddTimeSlotAsync(TimeSlotRequest request)
+        public async Task<TimeSlotResponse?> AddTimeSlotAsync(TimeSlotRequest request)
         {
             _timeSlot = RequestToTimeSlot(request);
             if (_timeSlot != null)
             {
                 _timeSlot.SlotID = await _TimeSlotsRepository.AddTimeSlotAsync(_timeSlot);
-                return _timeSlot?.SlotID != -1;
+                if(_timeSlot.SlotID > 0)
+                    return TimeSlotToResponse(_timeSlot);
             }
 
-            return false;
+            return null;
         }
 
         public async Task<bool> DeleteTimeSlotAsync(int timeSlotID)
@@ -67,14 +68,17 @@ namespace Business.Services
             return TimeSlotToResponse(_timeSlot) ?? null;
         }
 
-        public async Task<bool> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest request)
+        public async Task<TimeSlotResponse?> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest request)
         {
             _timeSlot = RequestToTimeSlot(request, timeSlotID);
             if (_timeSlot != null)
             {
-                return await _TimeSlotsRepository.UpdateTimeSlotAsync(_timeSlot);
+                if(await _TimeSlotsRepository.UpdateTimeSlotAsync(_timeSlot))
+                {
+                    return TimeSlotToResponse(_timeSlot);
+                }
             }
-            return false;
+            return null;
         }
 
         public async Task<IEnumerable<TimeSlotResponse>> GetPageTimeSlotsAsync(int pageNumber = 1, int pageSize = 10)

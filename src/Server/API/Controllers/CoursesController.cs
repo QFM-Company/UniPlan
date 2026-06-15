@@ -32,13 +32,13 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> AddCourseAsync(CourseRequest request)
+        public async Task<ActionResult<CourseResponse>> AddCourseAsync(CourseRequest request)
         {
             try
             {
-                bool result = await _coursesService.AddCourseAsync(request);
+                var result = await _coursesService.AddCourseAsync(request);
 
-                if (result)
+                if (result != null)
                 {
                     await _logService.LogAsync("Course added successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(result);
@@ -61,13 +61,13 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> UpdateCourseAsync(int courseID, CourseRequest request)
+        public async Task<ActionResult<CourseResponse>> UpdateCourseAsync(int courseID, CourseRequest request)
         {
             try
             {
-                bool result = await _coursesService.UpdateCourseAsync(courseID, request);
+                var result = await _coursesService.UpdateCourseAsync(courseID, request);
 
-                if (result)
+                if (result != null)
                 {
                     await _logService.LogAsync($"Course with ID {courseID} updated successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(result);

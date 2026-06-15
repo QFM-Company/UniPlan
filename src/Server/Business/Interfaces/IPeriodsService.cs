@@ -12,7 +12,7 @@ namespace Core.Interfaces.Services
     {
         Task<IEnumerable<PeriodResponse>> GetPagePeriodsAsync(int pageNumber, int pageSize);
         Task<PeriodResponse?> GetPeriodByIdAsync(int periodID);
-        Task<bool> AddPeriodAsync(PeriodRequest period);
+        Task<PeriodResponse?> AddPeriodAsync(PeriodRequest period);
         Task<bool> DeletePeriodAsync(int periodID);
     }
 }

@@ -58,16 +58,17 @@ namespace Business.Services
         }
 
 
-        public async Task<bool> AddAdministratorAsync(AdministratorRequest request)
+        public async Task<AdministratorResponse?> AddAdministratorAsync(AdministratorRequest request)
         {
             _admin = RequestToAdministrator(request);
             if (_admin != null)
             {
                 _admin.AdminID = await _AdminRepository.AddAdminAsync(_admin);
-                return _admin?.AdminID != -1;
+                if (_admin.AdminID > 0)
+                    return AdministratorToResponse(_admin)!;
             }
 
-            return false;
+            return null;
         }
 
         public async Task<bool> DeleteAdministratorAsync(int adminID)
@@ -81,14 +82,18 @@ namespace Business.Services
             return AdministratorToResponse(_admin) ?? null;
         }
 
-        public async Task<bool> UpdateAdministratorAsync(int adminID, AdministratorRequest request)
+        public async Task<AdministratorResponse?> UpdateAdministratorAsync(int adminID, AdministratorRequest request)
         {
             _admin = RequestToAdministrator(request, adminID);
             if (_admin != null)
             {
-                return await _AdminRepository.UpdateAdminAsync(_admin);
+                bool result = await _AdminRepository.UpdateAdminAsync(_admin);
+                if (result)
+                {
+                    return AdministratorToResponse(_admin)!;
+                }
             }
-            return false;
+            return null;
         }
 
         public async Task<IEnumerable<AdministratorResponse>> GetPageAdministratorsAsync(int pageNumber = 1, int pageSize = 10)
