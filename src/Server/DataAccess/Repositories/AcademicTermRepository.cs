@@ -2,6 +2,7 @@
 using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -112,16 +113,7 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            if (!int.TryParse(reader["TermYear"]?.ToString(), out int termYear))
-                            {
-                                termYear = 0;
-                            }
-                            if (!int.TryParse(reader["TermType"]?.ToString(), out int termType))
-                            {
-                                termType = 0;
-                            }
-
-                            term = new AcademicTerm(termID, (TermType)termType, termYear);
+                            term = reader.ToAcademicTerm();
                         }
                     }
 
@@ -158,20 +150,7 @@ namespace DataAccess.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                if (!int.TryParse(reader["TermID"]?.ToString(), out int termID))
-                                {
-                                    termID = 0;
-                                }
-                                if (!int.TryParse(reader["TermYear"]?.ToString(), out int termYear))
-                                {
-                                    termYear = 0;
-                                }
-                                if (!int.TryParse(reader["TermType"]?.ToString(), out int termType))
-                                {
-                                    termType = 0;
-                                }
-
-                                AcademicTerm term = new AcademicTerm(termID, (TermType)termType, termYear);
+                                AcademicTerm term = reader.ToAcademicTerm();
                                 terms.Add(term);
                             }
                         }

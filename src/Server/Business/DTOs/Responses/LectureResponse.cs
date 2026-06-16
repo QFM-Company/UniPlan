@@ -17,12 +17,12 @@ namespace Business.DTOs.Responses
             CourseInfo = null;
         }
 
-        public LectureResponse(int lectureID, LectureType lectureType, int durationValue/*, CourseResponse courseInfo*/)
+        public LectureResponse(int lectureID, LectureType lectureType, int durationValue, CourseResponse courseInfo)
         {
             LectureID = lectureID;
             LectureType = lectureType;
             DurationValue = durationValue;
-            //CourseInfo = courseInfo;
+            CourseInfo = courseInfo;
         }
     }
 }

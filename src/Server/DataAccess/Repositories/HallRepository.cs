@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -152,18 +153,7 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            if (!int.TryParse(reader["CreatedByAdminID"]?.ToString(), out int createdByAdminID))
-                            {
-                                createdByAdminID = 0;
-                            }
-                            if (!int.TryParse(reader["Floor"]?.ToString(), out int floor))
-                            {
-                                floor = 0;
-                            }
-                            string hallName = reader["HallName"].ToString() ?? string.Empty;
-                            string building = reader["Building"].ToString() ?? string.Empty;
-
-                            hall = new Hall(hallID, hallName, building, floor, createdByAdminID);
+                            hall = reader.ToHall();
                         }
                     }
 
@@ -200,22 +190,7 @@ namespace DataAccess.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                if (!int.TryParse(reader["HallID"]?.ToString(), out int hallID))
-                                {
-                                    hallID = 0;
-                                }
-                                if (!int.TryParse(reader["CreatedByAdminID"]?.ToString(), out int createdByAdminID))
-                                {
-                                    createdByAdminID = 0;
-                                }
-                                if (!int.TryParse(reader["Floor"]?.ToString(), out int floor))
-                                {
-                                    floor = 0;
-                                }
-                                string hallName = reader["HallName"].ToString() ?? string.Empty;
-                                string building = reader["Building"].ToString() ?? string.Empty;
-
-                                Hall hall = new Hall(hallID, hallName, building, floor, createdByAdminID);
+                                Hall hall = reader.ToHall();
                                 halls.Add(hall);
                             }
                         }

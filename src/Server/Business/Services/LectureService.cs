@@ -19,12 +19,18 @@ namespace Business.Services
 
         private Lecture _RequestToLecture(LectureRequest request, int lectureID = -1)
         {
-            return new Lecture(lectureID, request.LectureType, request.DurationValue);
+            return new Lecture(lectureID, request.LectureType, request.DurationValue, new Course { CourseID = request.CourseID });
         }
 
         private LectureResponse? _LectureToResponse(Lecture lecture)
         {
-            return new LectureResponse(lecture.LectureID, lecture.LectureType, lecture.DurationValue);
+            if(lecture.Course != null && lecture.Course.Major != null)
+            {
+                CourseResponse course = new CourseResponse(lecture.Course.CourseID, lecture.Course.CourseName, lecture.Course.CreditHours, lecture.Course.Major.MajorID);
+                return new LectureResponse(lecture.LectureID, lecture.LectureType, lecture.DurationValue, course);
+            }
+
+            return null;
         }
 
         public async Task<bool> DeleteLectureAsync(int lectureID)

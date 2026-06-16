@@ -1,6 +1,7 @@
 using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -140,9 +141,7 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
-
-                            major = new Major(majorID, majorName);
+                            major = reader.ToMajor();
                         }
                     }
                 }
@@ -177,14 +176,7 @@ namespace DataAccess.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                if (!int.TryParse(reader["MajorID"]?.ToString(), out int majorID))
-                                {
-                                    majorID = 0;
-                                }
-                                string majorName = reader["MajorName"].ToString() ?? string.Empty;
-
-                                Major major = new Major(majorID, majorName);
-                                majors.Add(major);
+                                majors.Add(reader.ToMajor());
                             }
                         }
                     }

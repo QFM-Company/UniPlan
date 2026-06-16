@@ -205,7 +205,7 @@ CREATE OR ALTER VIEW StudentProfiles_view
 AS
 SELECT 
     S.StudentID, P.PersonID, P.FirstName, P.MiddleName, P.LastName,
-    A.AccountName, A.Email, M.MajorName 
+    A.AccountID,A.AccountName, A.Email,M.MajorID ,M.MajorName 
 FROM Students S
 INNER JOIN People P ON S.PersonID = P.PersonID
 INNER JOIN Accounts A ON S.AccountID = A.AccountID

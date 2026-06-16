@@ -17,13 +17,19 @@ namespace Core.Entities
             Course = null;
         }
 
-        public Lecture(int lectureID, LectureType lectureType, int durationValue/*, Course course*/)
+        public Lecture(int lectureID, LectureType lectureType, int durationValue, Course course)
         {
             LectureID = lectureID;
             LectureType = lectureType;
             DurationValue = durationValue;
-            //Course = course;
+            Course = course;
         }
-    
+
+        public Lecture(int lectureID, LectureType lectureType, int durationValue)
+        {
+            LectureID = lectureID;
+            LectureType = lectureType;
+            DurationValue = durationValue;
+        }
     }
 }

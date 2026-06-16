@@ -21,7 +21,7 @@ namespace Business.Services
         private CourseOffering _CreateRequestToCourseOffering(CreateCourseOfferingRequest request)
         {
             return new CourseOffering(-1, request.SectionNumber, request.CreatedByAdminID, 
-                new AcademicTerm { TermID = request.TermID}, new Lecture { LectureID = request.LectureID });
+                new AcademicTerm { TermID = request.TermID}, new Lecture { LectureID = request.LectureID, Course = new Course { CourseID = request.CourseID } });
         }
 
         private CourseOffering _UpdateRequestToCourseOffering(UpdateCourseOfferingRequest request, int offeringID = -1)
@@ -35,12 +35,13 @@ namespace Business.Services
             LectureResponse lecture = new LectureResponse();
             AcademicTermResponse academicTerm = new AcademicTermResponse();
 
-            if(offering.Lecture != null)
+            if (lecture != null && lecture.CourseInfo != null)
             {
-                lecture = new LectureResponse(offering.Lecture.LectureID, offering.Lecture.LectureType, offering.Lecture.DurationValue);
+                CourseResponse course = new CourseResponse(lecture.CourseInfo.CourseID, lecture.CourseInfo.CourseName, lecture.CourseInfo.CreditHours, lecture.CourseInfo.MajorID);
+                lecture = new LectureResponse(lecture.LectureID, lecture.LectureType, lecture.DurationValue, course);
             }
 
-            if(offering.Term != null)
+            if (offering.Term != null)
             {
                 academicTerm = new AcademicTermResponse(offering.Term.TermID, offering.Term.TermType, offering.Term.TermYear);
             }

@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -177,18 +178,7 @@ namespace DataAccess.Repositories
                     {
                         if(reader != null && await reader.ReadAsync())
                         {
-                            if (!int.TryParse(reader["PersonID"]?.ToString(), out int personID))
-                            {
-                                personID = 0;
-                            }
-                            string firstName = reader["FirstName"].ToString() ?? string.Empty;
-                            string middleName = reader["MiddleName"].ToString() ?? string.Empty;
-                            string lastName = reader["LastName"].ToString() ?? string.Empty;
-                            string accountName = reader["AccountName"].ToString() ?? string.Empty;
-                            string email = reader["Email"].ToString() ?? string.Empty;
-                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
-
-                            student = new Student(studentID, new Person(personID, firstName, middleName, lastName), new Account(accountName, email), new Major { MajorName = majorName});
+                            student = reader.ToStudent();
                         }
                     }
 
@@ -225,24 +215,8 @@ namespace DataAccess.Repositories
                         {
                            while(await reader.ReadAsync())
                            {
-                                if (!int.TryParse(reader["PersonID"]?.ToString(), out int personID))
-                                {
-                                    personID = 0;
-                                }
-                                if (!int.TryParse(reader["StudentID"]?.ToString(), out int studentID))
-                                {
-                                    studentID = 0;
-                                }
-                                string firstName = reader["FirstName"].ToString() ?? string.Empty;
-                                string middleName = reader["MiddleName"].ToString() ?? string.Empty;
-                                string lastName = reader["LastName"].ToString() ?? string.Empty;
-                                string accountName = reader["AccountName"].ToString() ?? string.Empty;
-                                string email = reader["Email"].ToString() ?? string.Empty;
-                                string majorName = reader["MajorName"].ToString() ?? string.Empty;
-
-                                Student? student = new Student(studentID, new Person(personID, firstName, middleName, lastName), new Account(accountName, email), new Major { MajorName = majorName });
-                                students.Add(student);
-                            }
+                                students.Add(reader.ToStudent());
+                           }
                         }
                     }
 
