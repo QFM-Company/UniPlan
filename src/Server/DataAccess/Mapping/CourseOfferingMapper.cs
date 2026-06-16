@@ -23,7 +23,7 @@ namespace DataAccess.Mapping
                 createdByAdminID = 0;
             }
 
-            return new CourseOffering(offeringID, sectionNumber, term, lecture);
+            return new CourseOffering(offeringID, sectionNumber, createdByAdminID, term, lecture);
         }
     }
 }

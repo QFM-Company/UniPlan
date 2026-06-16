@@ -85,7 +85,7 @@ GO
 CREATE OR ALTER VIEW CourseOfferings_view
 AS
 SELECT C.CourseID, C.CourseName, C.CreditHours, C.MajorID 
-,L.LectureID, L.DurationValue, L.LectureType, T.TermID
+,L.LectureID, L.DurationValue, L.LectureType, T.TermID, T.TermYear
 ,T.TermType, O.OfferingID, O.CreatedByAdminID, O.SectionNumber
 FROM CourseOfferings O
 INNER JOIN Lectures L ON O.LectureID = L.LectureID

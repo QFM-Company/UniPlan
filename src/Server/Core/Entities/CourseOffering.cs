@@ -18,6 +18,11 @@ namespace Core.Entities
             Lecture = new Lecture();
         }
 
+        public CourseOffering(int offeringID)
+        {
+            OfferingID = offeringID;
+        }
+
         public CourseOffering(int offeringID, int sectionNumber, int createdByAdminID, AcademicTerm term, Lecture lecture)
         {
             OfferingID = offeringID;

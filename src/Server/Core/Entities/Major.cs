@@ -10,6 +10,15 @@ namespace Core.Entities
             MajorName = majorName;
         }
 
-        public Major() { }
+        public Major() 
+        {
+            MajorID = -1;
+            MajorName = string.Empty;
+        }
+
+        public Major(int majorID)
+        {
+            MajorID = majorID;
+        }
     }
 }

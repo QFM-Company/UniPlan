@@ -14,6 +14,16 @@ namespace Core.Entities
 
         public string FullName => FirstName + " " + MiddleName + " " + LastName;
 
+        public Person()
+        {
+
+        }
+
+        public Person(int personID)
+        {
+            PersonID = personID;
+        }
+
         public Person(int personID, string firstName, string middleName, string lastName)
         {
             PersonID = personID;

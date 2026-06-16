@@ -1,6 +1,7 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
+using Business.Mapper;
 using Core.Entities;
 using Core.Interfaces.Repositories;
 
@@ -17,16 +18,6 @@ namespace Business.Services
             _major = null;
         }
 
-        private Major _RequestToMajor(MajorRequest request , int majorID = -1)
-        {
-            return new Major(majorID, request.MajorName);
-        }
-
-        private MajorResponse? _MajorToResponse(Major major)
-        {
-            return new MajorResponse(major.MajorID, major.MajorName);
-        }
-
         public async Task<bool> DeleteMajorAsync(int majorID)
         {
             return await _majorRepository.DeleteMajorAsync(majorID);
@@ -34,42 +25,41 @@ namespace Business.Services
 
         public async Task<MajorResponse?> AddMajorAsync(MajorRequest request)
         {
-            MajorResponse? majorResponse = null;
+            _major = new Major();
+            _major = _major.RequestToMajor(request);
 
-            if (request != null)
+            if(_major != null)
             {
-                _major = _RequestToMajor(request);
                 _major.MajorID = await _majorRepository.AddMajorAsync(_major);
-                majorResponse = _MajorToResponse(_major);
+
+                if (_major.MajorID != -1)
+                    return _major.MajorToResponse();
             }
 
-            return majorResponse;
+            return null;
         }
 
         public async Task<MajorResponse?> UpdateMajorAsync(MajorRequest request, int majorID)
         {
-            MajorResponse? majorResponse = null;
+            _major = new Major();
+            _major = _major.RequestToMajor(request, majorID);
 
-            if (request != null)
-            {
-                _major = _RequestToMajor(request, majorID);
-                await _majorRepository.UpdateMajorAsync(_major);
-                majorResponse = _MajorToResponse(_major);
-            }
+            if (_major != null && await _majorRepository.UpdateMajorAsync(_major))
+                return _major.MajorToResponse();
 
-            return majorResponse;
+            return null;
         }
 
         public async Task<IEnumerable<MajorResponse>?> GetPagedMajorsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<Major>? majors = await _majorRepository.GetPagedMajorsAsync(pageNumber, pageSize);
-            return majors?.Select(h => _MajorToResponse(h)).OfType<MajorResponse>();
+            return majors?.Select(m => m.MajorToResponse()).OfType<MajorResponse>();
         }
 
         public async Task<MajorResponse?> GetMajorByIDAsync(int majorID)
         {
             _major = await _majorRepository.GetMajorByIDAsync(majorID);
-            return _major != null ? _MajorToResponse(_major) : null;
+            return _major != null ? _major.MajorToResponse() : null;
         }
     }
 }

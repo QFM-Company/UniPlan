@@ -72,7 +72,9 @@ namespace DataAccess.Repositories
                         Direction = ParameterDirection.Output
                     };
 
+                    
                     command.Parameters.Add(result);
+                    command.Parameters.AddWithValue("@OfferingID", offering.OfferingID);
                     command.Parameters.AddWithValue("@SectionNumber", offering.SectionNumber);
                     command.Parameters.AddWithValue("@TermID", offering.Term?.TermID);
                     command.Parameters.AddWithValue("@LectureID", offering.Lecture?.LectureID);
@@ -141,7 +143,7 @@ namespace DataAccess.Repositories
                 using (SqlCommand command = new SqlCommand("SP_CourseOfferings_GetById", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@CourseOfferingID", offeringID);
+                    command.Parameters.AddWithValue("@OfferingID", offeringID);
 
                     await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())

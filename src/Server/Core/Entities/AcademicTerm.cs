@@ -15,6 +15,11 @@ namespace Core.Entities
             TermYear = default;
         }
 
+        public AcademicTerm(int termID)
+        {
+            TermID = termID;
+        }
+
         public AcademicTerm(int termID, TermType termType, int termYear)
         {
             TermID = termID;

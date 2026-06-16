@@ -17,6 +17,14 @@ namespace Core.Entities
             Course = null;
         }
 
+        public Lecture(int lectureID, int courseID)
+        {
+            LectureID = lectureID;
+
+            Course = new Course(/*courseID*/);
+            Course.CourseID = courseID;
+        }
+
         public Lecture(int lectureID, LectureType lectureType, int durationValue, Course course)
         {
             LectureID = lectureID;

@@ -1,6 +1,7 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
+using Business.Mapper;
 using Core.Entities;
 using Core.Interfaces.Repositories;
 
@@ -17,16 +18,6 @@ namespace Business.Services
             _term = null;
         }
 
-        private AcademicTerm _RequestToAcademicTerm(AcademicTermRequest request, int termID = -1)
-        {
-            return new AcademicTerm(termID, request.TermType, request.TermYear);
-        }
-
-        private AcademicTermResponse? _AcademicTermToResponse(AcademicTerm term)
-        {
-            return new AcademicTermResponse(term.TermID, term.TermType, term.TermYear);
-        }
-
         public async Task<bool> DeleteAcademicTermAsync(int AcademicTermID)
         {
             return await _termRepository.DeleteAcademicTermAsync(AcademicTermID);
@@ -34,28 +25,30 @@ namespace Business.Services
 
         public async Task<AcademicTermResponse?> AddAcademicTermAsync(AcademicTermRequest request)
         {
-            AcademicTermResponse? termResponse = null;
+            _term = new AcademicTerm();
+            _term = _term.RequestToAcademicTerm(request);
 
-            if (request != null)
+            if(_term != null)
             {
-                _term = _RequestToAcademicTerm(request);
                 _term.TermID = await _termRepository.AddAcademicTermAsync(_term);
-                termResponse = _AcademicTermToResponse(_term);
+
+                if (_term.TermID != -1)
+                    return _term.AcademicTermToResponse();
             }
 
-            return termResponse;
+            return null;
         }
 
         public async Task<IEnumerable<AcademicTermResponse>?> GetPagedAcademicTermsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<AcademicTerm>? terms = await _termRepository.GetPagedAcademicTermsAsync(pageNumber, pageSize);
-            return terms?.Select(h => _AcademicTermToResponse(h)).OfType<AcademicTermResponse>();
+            return terms?.Select(m => m.AcademicTermToResponse()).OfType<AcademicTermResponse>();
         }
 
-        public async Task<AcademicTermResponse?> GetAcademicTermByIDAsync(int AcademicTermID)
+        public async Task<AcademicTermResponse?> GetAcademicTermByIDAsync(int termID)
         {
-            _term = await _termRepository.GetAcademicTermByIDAsync(AcademicTermID);
-            return _term != null ? _AcademicTermToResponse(_term) : null;
+            _term = await _termRepository.GetAcademicTermByIDAsync(termID);
+            return _term != null ? _term.AcademicTermToResponse() : null;
         }
     }
 }

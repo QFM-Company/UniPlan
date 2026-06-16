@@ -12,6 +12,10 @@ namespace Core.Entities
 
         public Major? Major { get; set; }
 
+        public Student(int studentID)
+        {
+            StudentID = studentID;
+        }
 
         public Student(int studentID, Person? person, Account? account, Major? major)
         {

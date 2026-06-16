@@ -3,6 +3,7 @@ using Core.Entities;
 using Core.Interfaces.Repositories;
 using Business.Interfaces;
 using Business.DTOs.Responses;
+using Business.Mapper;
 
 namespace Business.Services
 {
@@ -19,9 +20,18 @@ namespace Business.Services
 
         public async Task<PersonResponse?> AddPersonAsync(PersonRequest request)
         {
-            _person = new Person(request.PersonID, request.FirstName, request.MiddleName, request.LastName);
-            _person.PersonID = await _peopleRepository.AddPersonAsync(_person);
-            return new PersonResponse(_person.PersonID, _person.FirstName, _person.MiddleName, _person.LastName);
+            _person = new Person();
+            _person = _person.RequestToPerson(request);
+
+            if(_person != null)
+            {
+                _person.PersonID = await _peopleRepository.AddPersonAsync(_person);
+
+                if (_person.PersonID != -1)
+                    return _person.PersonToResponse();
+            }
+
+            return null;
         }
     }
 }
