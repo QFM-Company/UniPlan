@@ -48,7 +48,7 @@ builder.Services.AddScoped<ILectureService, LectureService>();
 builder.Services.AddScoped<IAcademicTermService, AcademicTermService>();
 builder.Services.AddScoped<ICourseOfferingService, CourseOfferingService>();
 builder.Services.AddScoped<ICoursesService, CoursesService>();
-builder.Services.AddScoped<ICoursePrequsetRepository, ICoursePrequsetRepository>();
+builder.Services.AddScoped<ICoursePrequistService, CoursePrequistService>();
 
 
 var app = builder.Build();

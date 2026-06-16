@@ -8,10 +8,11 @@ using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Core.Interfaces.Repositories;
 using Core.Entities;
+using Business.Interfaces;
 
 namespace Business.Services
 {
-    public class CoursePrequistService
+    public class CoursePrequistService : ICoursePrequistService
     {
         private readonly ICoursePrequsetRepository _coursePrequset;
 
