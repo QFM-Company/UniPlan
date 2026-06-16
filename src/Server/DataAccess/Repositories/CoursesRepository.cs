@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
@@ -82,7 +78,7 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@CourseID", course.CourseID);
                     command.Parameters.AddWithValue("@CourseName", course.CourseName);
                     command.Parameters.AddWithValue("@CreditHours", course.CreditHours);
-                    command.Parameters.AddWithValue("@MajorID", course.Major.MajorID);
+                    command.Parameters.AddWithValue("@MajorID", course.Major?.MajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -164,8 +160,9 @@ namespace DataAccess.Repositories
 
                             int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
                             int.TryParse(reader["MajorID"]?.ToString(), out int majorID);
+                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
 
-                            Major major = new Major(majorID, null);
+                            Major major = new Major(majorID, majorName);
 
                             course = new Course(
                                 courseID,
@@ -212,11 +209,12 @@ namespace DataAccess.Repositories
                             int.TryParse(reader["CourseID"]?.ToString(), out int courseID);
                             int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
                             int.TryParse(reader["MajorID"]?.ToString(), out int majorID);
+                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
 
                             string courseName =
                                 reader["CourseName"]?.ToString() ?? string.Empty;
 
-                            Major major = new Major(majorID, null);
+                            Major major = new Major(majorID, majorName);
 
                             courses.Add(
                                 new Course(

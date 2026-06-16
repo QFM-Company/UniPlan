@@ -13,7 +13,7 @@ namespace Core.Entities
         public int CreditHours { get; set; }
         public Major? Major { get; set; }
 
-        public Course(int courseID, string? courseName, int creditHours, Major major)
+        public Course(int courseID, string? courseName, int creditHours, Major? major)
         {
             CourseID = courseID;
             CourseName = courseName;

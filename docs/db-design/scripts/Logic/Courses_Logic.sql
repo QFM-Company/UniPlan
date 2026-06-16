@@ -14,7 +14,7 @@ BEGIN
         OR @CreditHours <= 0
         OR @MajorID <= 0
     BEGIN
-        THROW 50801, 'Course validation failed', 1;
+        ;THROW 50801, 'Course validation failed', 1;
     END
 
     BEGIN TRY
@@ -55,7 +55,7 @@ BEGIN
         OR @CreditHours <= 0
         OR @MajorID <= 0
     BEGIN
-        THROW 50801, 'Course validation failed', 1;
+        ;THROW 50801, 'Course validation failed', 1;
     END
 
     BEGIN TRY
@@ -119,8 +119,9 @@ BEGIN
             C.CourseID,
             C.CourseName,
             C.CreditHours,
-            C.MajorID
-        FROM [dbo].[Courses] C
+            C.MajorID ,
+			Majors.MajorName
+        FROM [dbo].[Courses] C  inner join Majors on C.MajorID = Majors.MajorID
         ORDER BY C.CourseID
         OFFSET (@PageNumber - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY;
@@ -130,6 +131,8 @@ BEGIN
     END CATCH
 END;
 GO
+
+
 
 
 CREATE OR ALTER PROCEDURE SP_Courses_GetById
@@ -143,8 +146,9 @@ BEGIN
             CourseID,
             CourseName,
             CreditHours,
-            MajorID
-        FROM [dbo].[Courses]
+            Courses.MajorID ,
+			Majors.MajorName
+        FROM [dbo].[Courses] inner join Majors on Courses.MajorID = Majors.MajorID
         WHERE CourseID = @CourseID;
     END TRY
     BEGIN CATCH
