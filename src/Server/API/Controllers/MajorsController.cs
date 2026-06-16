@@ -54,19 +54,19 @@ namespace API.Controllers
         }
 
         [HttpPut("update/{majorID}", Name = "UpdateMajorAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MajorResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<MajorResponse?>> UpdateMajorMajorAsync(MajorRequest request, int majorID)
+        public async Task<ActionResult<bool>> UpdateMajorMajorAsync(MajorRequest request, int majorID)
         {
             try
             {
-                MajorResponse? response = await _majorService.UpdateMajorAsync(request, majorID);
+                bool res = await _majorService.UpdateMajorAsync(request, majorID);
 
-                if (response != null)
+                if (res)
                 {
                     await _logService.LogAsync("Major updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return Ok(res);
                 }
 
                 await _logService.LogAsync("Failed to update Major.", ExternalServicesEnums.LogType.Warning);

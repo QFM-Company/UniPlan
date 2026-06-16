@@ -10,25 +10,22 @@ namespace Business.Services
     public class PeopleService : IPeopleService
     {
         private IPeopleRepository _peopleRepository;
-        private Person? _person;
         
         public PeopleService(IPeopleRepository peopleRepository)
         {
             _peopleRepository = peopleRepository;
-            _person = null;
         }
 
         public async Task<PersonResponse?> AddPersonAsync(PersonRequest request)
         {
-            _person = new Person();
-            _person = _person.RequestToPerson(request);
+            Person? person = request.RequestToPerson();
 
-            if(_person != null)
+            if(person != null)
             {
-                _person.PersonID = await _peopleRepository.AddPersonAsync(_person);
+                person.PersonID = await _peopleRepository.AddPersonAsync(person);
 
-                if (_person.PersonID != -1)
-                    return _person.PersonToResponse();
+                if (person.PersonID != -1)
+                    return person.PersonToResponse();
             }
 
             return null;

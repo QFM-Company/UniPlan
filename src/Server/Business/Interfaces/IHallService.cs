@@ -10,7 +10,7 @@ namespace Business.Interfaces
 
         Task<HallResponse?> AddHallAsync(CreateHallRequest request);
 
-        Task<HallResponse?> UpdateHallAsync(UpdateHallRequest request, int hallID);
+        Task<bool> UpdateHallAsync(UpdateHallRequest request, int hallID);
 
         Task<IEnumerable<HallResponse>?> GetPagedHallsAsync(int pageNumber = 1, int pageSize = 10);
 

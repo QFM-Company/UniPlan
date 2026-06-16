@@ -55,19 +55,19 @@ namespace API.Controllers
         }
 
         [HttpPut("update/{hallID}", Name = "UpdateHallAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HallResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<HallResponse?>> UpdateHallHallAsync(UpdateHallRequest request, int hallID)
+        public async Task<ActionResult<bool>> UpdateHallHallAsync(UpdateHallRequest request, int hallID)
         {
             try
             {
-                HallResponse? response = await _hallService.UpdateHallAsync(request, hallID);
+                bool res = await _hallService.UpdateHallAsync(request, hallID);
 
-                if (response != null)
+                if (res)
                 {
                     await _logService.LogAsync("Hall updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return Ok(res);
                 }
 
                 await _logService.LogAsync("Failed to update Hall.", ExternalServicesEnums.LogType.Warning);

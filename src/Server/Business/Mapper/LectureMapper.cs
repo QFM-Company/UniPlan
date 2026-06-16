@@ -6,12 +6,21 @@ namespace Business.Mapper
 {
     public static class LectureMapper
     {
-        public static Lecture? RequestToLecture(this Lecture lecture, LectureRequest request, int lectureID = -1)
+        public static Lecture? RequestToLecture(this LectureRequest request, int lectureID = -1)
         {
             if(request != null)
                 return new Lecture(lectureID, request.LectureType, request.DurationValue, new Course { CourseID = request.CourseID });
 
             return null;
+        }
+
+        public static void UpdateLectureFromRequest(this Lecture lecture, LectureRequest request)
+        {
+            lecture.DurationValue = request.DurationValue;
+            lecture.LectureType = request.LectureType;
+            
+            if(lecture.Course != null)
+                lecture.Course.CourseID = request.CourseID;
         }
 
         public static LectureResponse? LectureToResponse(this Lecture lecture)

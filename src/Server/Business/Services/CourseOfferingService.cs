@@ -11,12 +11,10 @@ namespace Business.Services
     public class CourseOfferingService : ICourseOfferingService
     {
         private ICourseOfferingRepository _offeringRepository;
-        private CourseOffering? _offering;
 
         public CourseOfferingService(ICourseOfferingRepository offeringRepository)
         {
             _offeringRepository = offeringRepository;
-            _offering = null;
         }
 
         public async Task<bool> DeleteCourseOfferingAsync(int offeringID)
@@ -27,29 +25,29 @@ namespace Business.Services
 
         public async Task<CourseOfferingResponse?> AddCourseOfferingAsync(CreateCourseOfferingRequest request)
         {
-            _offering = new CourseOffering();
-            _offering = _offering.CreateRequestToCourseOffering(request);
+            CourseOffering? offering = request.CreateRequestToCourseOffering();
 
-            if (_offering != null)
+            if (offering != null)
             {
-                _offering.OfferingID = await _offeringRepository.AddCourseOfferingAsync(_offering);
+                offering.OfferingID = await _offeringRepository.AddCourseOfferingAsync(offering);
 
-                if (_offering.OfferingID != -1)
-                    return await GetCourseOfferingByIDAsync(_offering.OfferingID);
+                if (offering.OfferingID != -1)
+                    return await GetCourseOfferingByIDAsync(offering.OfferingID);
             }
 
             return null;
         }
 
-        public async Task<CourseOfferingResponse?> UpdateCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID)
+        public async Task<bool> UpdateCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID)
         {
-            _offering = new CourseOffering();
-            _offering = _offering.UpdateRequestToCourseOffering(request, offeringID);
+            CourseOffering? offering = await _offeringRepository.GetCourseOfferingByIDAsync(offeringID);
 
-            if (_offering != null && await _offeringRepository.UpdateCourseOfferingAsync(_offering))
-                return await GetCourseOfferingByIDAsync(_offering.OfferingID);
+            offering?.UpdateOfferingFromRequest(request);
 
-            return null;
+            if (offering != null)
+                return await _offeringRepository.UpdateCourseOfferingAsync(offering);
+
+            return false;
         }
 
         public async Task<IEnumerable<CourseOfferingResponse>?> GetPagedCourseOfferingsAsync(int pageNumber = 1, int pageSize = 10)
@@ -60,7 +58,7 @@ namespace Business.Services
 
         public async Task<CourseOfferingResponse?> GetCourseOfferingByIDAsync(int offeringID)
         {
-            _offering = await _offeringRepository.GetCourseOfferingByIDAsync(offeringID);
+            CourseOffering? _offering = await _offeringRepository.GetCourseOfferingByIDAsync(offeringID);
             return _offering != null ? _offering.CourseOfferingToResponse() : null;
         }
     }

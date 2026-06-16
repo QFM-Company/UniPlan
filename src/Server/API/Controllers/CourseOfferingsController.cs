@@ -55,19 +55,19 @@ namespace API.Controllers
         }
 
         [HttpPut("update/{offeringID}", Name = "UpdateCourseOfferingAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CourseOfferingResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<CourseOfferingResponse?>> UpdateCourseOfferingCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID)
+        public async Task<ActionResult<bool>> UpdateCourseOfferingCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID)
         {
             try
             {
-                CourseOfferingResponse? response = await _offeringService.UpdateCourseOfferingAsync(request, offeringID);
+                bool res = await _offeringService.UpdateCourseOfferingAsync(request, offeringID);
 
-                if (response != null)
+                if (res)
                 {
                     await _logService.LogAsync("CourseOffering updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return Ok(res);
                 }
 
                 await _logService.LogAsync("Failed to update CourseOffering.", ExternalServicesEnums.LogType.Warning);

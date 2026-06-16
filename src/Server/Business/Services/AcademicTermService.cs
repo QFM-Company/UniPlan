@@ -10,12 +10,10 @@ namespace Business.Services
     public class AcademicTermService : IAcademicTermService
     {
         private IAcademicTermRepository _termRepository;
-        private AcademicTerm? _term;
 
         public AcademicTermService(IAcademicTermRepository termRepository)
         {
             _termRepository = termRepository;
-            _term = null;
         }
 
         public async Task<bool> DeleteAcademicTermAsync(int AcademicTermID)
@@ -25,15 +23,14 @@ namespace Business.Services
 
         public async Task<AcademicTermResponse?> AddAcademicTermAsync(AcademicTermRequest request)
         {
-            _term = new AcademicTerm();
-            _term = _term.RequestToAcademicTerm(request);
+            AcademicTerm? term = request.RequestToAcademicTerm();
 
-            if(_term != null)
+            if(term != null)
             {
-                _term.TermID = await _termRepository.AddAcademicTermAsync(_term);
+                term.TermID = await _termRepository.AddAcademicTermAsync(term);
 
-                if (_term.TermID != -1)
-                    return _term.AcademicTermToResponse();
+                if (term.TermID != -1)
+                    return term.AcademicTermToResponse();
             }
 
             return null;
@@ -47,8 +44,8 @@ namespace Business.Services
 
         public async Task<AcademicTermResponse?> GetAcademicTermByIDAsync(int termID)
         {
-            _term = await _termRepository.GetAcademicTermByIDAsync(termID);
-            return _term != null ? _term.AcademicTermToResponse() : null;
+            AcademicTerm? term = await _termRepository.GetAcademicTermByIDAsync(termID);
+            return term != null ? term.AcademicTermToResponse() : null;
         }
     }
 }

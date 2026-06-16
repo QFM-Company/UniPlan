@@ -12,12 +12,10 @@ namespace Business.Services
     public class HallService : IHallService
     {
         private IHallRepository _hallRepository;
-        private Hall? _hall;
 
         public HallService(IHallRepository hallRepository)
         {
             _hallRepository = hallRepository;
-            _hall = null;
         }
 
         public async Task<bool> DeleteHallAsync(int hallID)
@@ -27,29 +25,29 @@ namespace Business.Services
 
         public async Task<HallResponse?> AddHallAsync(CreateHallRequest request)
         {
-            _hall = new Hall();
-            _hall = _hall.CreateRequestToHall(request);
+            Hall? hall = request.CreateRequestToHall();
 
-            if(_hall != null)
+            if(hall != null)
             {
-                _hall.HallID = await _hallRepository.AddHallAsync(_hall);
+                hall.HallID = await _hallRepository.AddHallAsync(hall);
 
-                if (_hall.HallID != -1)
-                    return _hall.HallToResponse();
+                if (hall.HallID != -1)
+                    return hall.HallToResponse();
             }
 
             return null;
         }
 
-        public async Task<HallResponse?> UpdateHallAsync(UpdateHallRequest request, int hallID)
+        public async Task<bool> UpdateHallAsync(UpdateHallRequest request, int hallID)
         {
-            _hall = new Hall();
-            _hall = _hall.UpdateRequestToHall(request, hallID);
+            Hall? hall = await _hallRepository.GetHallByIDAsync(hallID);
 
-            if (_hall != null && await _hallRepository.UpdateHallAsync(_hall))
-                return _hall.HallToResponse();
+            hall?.UpdateHallFromRequest(request);
 
-            return null;
+            if (hall != null)
+                return await _hallRepository.UpdateHallAsync(hall);
+
+            return false;
         }
 
         public async Task<IEnumerable<HallResponse>?> GetPagedHallsAsync(int pageNumber = 1, int pageSize = 10)
@@ -60,8 +58,8 @@ namespace Business.Services
 
         public async Task<HallResponse?> GetHallByIDAsync(int hallID)
         {
-            _hall = await _hallRepository.GetHallByIDAsync(hallID);
-            return _hall != null ? _hall.HallToResponse() : null;
+            Hall? hall = await _hallRepository.GetHallByIDAsync(hallID);
+            return hall != null ? hall.HallToResponse() : null;
         }
     }
 }

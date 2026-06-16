@@ -9,7 +9,7 @@ namespace Business.Interfaces
 
         Task<LectureResponse?> AddLectureAsync(LectureRequest request);
 
-        Task<LectureResponse?> UpdateLectureAsync(LectureRequest request, int lectureID);
+        Task<bool> UpdateLectureAsync(LectureRequest request, int lectureID);
 
         Task<IEnumerable<LectureResponse>?> GetPagedLecturesAsync(int pageNumber = 1, int pageSize = 10);
 

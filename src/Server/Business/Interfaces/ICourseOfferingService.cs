@@ -10,7 +10,7 @@ namespace Business.Interfaces
 
         Task<CourseOfferingResponse?> AddCourseOfferingAsync(CreateCourseOfferingRequest request);
 
-        Task<CourseOfferingResponse?> UpdateCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID);
+        Task<bool> UpdateCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID);
 
         Task<IEnumerable<CourseOfferingResponse>?> GetPagedCourseOfferingsAsync(int pageNumber = 1, int pageSize = 10);
 

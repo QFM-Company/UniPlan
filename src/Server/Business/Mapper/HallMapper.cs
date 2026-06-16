@@ -7,7 +7,7 @@ namespace Business.Mapper
 {
     public static class HallMapper
     {
-        public static Hall? CreateRequestToHall(this Hall hall, CreateHallRequest request)
+        public static Hall? CreateRequestToHall(this CreateHallRequest request)
         {
             if (request != null)
                 return new Hall(request.HallName, request.Building, request.Floor, request.CreatedByAdminID);
@@ -15,12 +15,11 @@ namespace Business.Mapper
             return null;
         }
 
-        public static Hall? UpdateRequestToHall(this Hall hall, UpdateHallRequest request, int hallID = -1)
+        public static void UpdateHallFromRequest(this Hall hall, UpdateHallRequest request)
         {
-            if(request != null)
-                return new Hall(hallID, request.HallName, request.Building, request.Floor);
-            
-            return null;
+            hall.HallName = request.HallName;
+            hall.Building = request.Building;
+            hall.Floor = request.Floor;
         }
 
         public static HallResponse HallToResponse(this Hall hall)

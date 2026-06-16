@@ -9,7 +9,7 @@ namespace Business.Interfaces
 
         Task<MajorResponse?> AddMajorAsync(MajorRequest request);
 
-        Task<MajorResponse?> UpdateMajorAsync(MajorRequest request, int majorID);
+        Task<bool> UpdateMajorAsync(MajorRequest request, int majorID);
 
         Task<IEnumerable<MajorResponse>?> GetPagedMajorsAsync(int pageNumber = 1, int pageSize = 10);
 

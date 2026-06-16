@@ -7,7 +7,7 @@ namespace Business.Mapper
 {
     public static class CourseOfferingMapper
     {
-        public static CourseOffering? CreateRequestToCourseOffering(this CourseOffering offering, CreateCourseOfferingRequest? request)
+        public static CourseOffering? CreateRequestToCourseOffering(this CreateCourseOfferingRequest? request)
         {
             if (request == null)
                 return null;
@@ -18,16 +18,19 @@ namespace Business.Mapper
             return new CourseOffering(-1, request.SectionNumber, request.CreatedByAdminID, term, lecture);
         }
 
-        public static CourseOffering? UpdateRequestToCourseOffering(this CourseOffering offering, UpdateCourseOfferingRequest? request, int offeringID = -1)
+        public static void UpdateOfferingFromRequest(this CourseOffering offering, UpdateCourseOfferingRequest? request)
         {
             if (request == null)
-                return null;
+                return;
 
+            offering.SectionNumber = request.SectionNumber;
             
-            AcademicTerm term = new AcademicTerm(request.TermID);
-            Lecture lecture = new Lecture(request.LectureID, request.CourseID);
-
-            return new CourseOffering(offeringID, request.SectionNumber, term, lecture);
+            if (offering.Term != null && offering.Lecture != null && offering.Lecture.Course != null)
+            {
+                offering.Term.TermID = request.TermID;
+                offering.Lecture.LectureID = request.LectureID;
+                offering.Lecture.Course.CourseID = request.CourseID;
+            }
         }
 
         public static CourseOfferingResponse CourseOfferingToResponse(this CourseOffering offering)

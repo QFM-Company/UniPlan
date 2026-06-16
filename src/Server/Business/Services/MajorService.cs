@@ -10,12 +10,10 @@ namespace Business.Services
     public class MajorService : IMajorService
     {
         private IMajorRepository _majorRepository;
-        private Major? _major;
 
         public MajorService(IMajorRepository majorRepository)
         {
             _majorRepository = majorRepository;
-            _major = null;
         }
 
         public async Task<bool> DeleteMajorAsync(int majorID)
@@ -25,29 +23,29 @@ namespace Business.Services
 
         public async Task<MajorResponse?> AddMajorAsync(MajorRequest request)
         {
-            _major = new Major();
-            _major = _major.RequestToMajor(request);
+            Major? major = request.RequestToMajor();
 
-            if(_major != null)
+            if(major != null)
             {
-                _major.MajorID = await _majorRepository.AddMajorAsync(_major);
+                major.MajorID = await _majorRepository.AddMajorAsync(major);
 
-                if (_major.MajorID != -1)
-                    return _major.MajorToResponse();
+                if (major.MajorID != -1)
+                    return major.MajorToResponse();
             }
 
             return null;
         }
 
-        public async Task<MajorResponse?> UpdateMajorAsync(MajorRequest request, int majorID)
+        public async Task<bool> UpdateMajorAsync(MajorRequest request, int majorID)
         {
-            _major = new Major();
-            _major = _major.RequestToMajor(request, majorID);
+            Major? major = await _majorRepository.GetMajorByIDAsync(majorID);
 
-            if (_major != null && await _majorRepository.UpdateMajorAsync(_major))
-                return _major.MajorToResponse();
+            major?.UpdateMajorFromRequest(request);
 
-            return null;
+            if (major != null)
+                return await _majorRepository.UpdateMajorAsync(major);
+
+            return false;
         }
 
         public async Task<IEnumerable<MajorResponse>?> GetPagedMajorsAsync(int pageNumber = 1, int pageSize = 10)
@@ -58,8 +56,8 @@ namespace Business.Services
 
         public async Task<MajorResponse?> GetMajorByIDAsync(int majorID)
         {
-            _major = await _majorRepository.GetMajorByIDAsync(majorID);
-            return _major != null ? _major.MajorToResponse() : null;
+            Major? major = await _majorRepository.GetMajorByIDAsync(majorID);
+            return major != null ? major.MajorToResponse() : null;
         }
     }
 }
