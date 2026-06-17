@@ -3,6 +3,7 @@ using System.Data;
 using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Repositories
@@ -156,19 +157,8 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            string courseName = reader["CourseName"]?.ToString() ?? string.Empty;
-
-                            int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
-                            int.TryParse(reader["MajorID"]?.ToString(), out int majorID);
-                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
-
-                            Major major = new Major(majorID, majorName);
-
-                            course = new Course(
-                                courseID,
-                                courseName,
-                                creditHours,
-                                major);
+                            course = reader.ToCourse();
+                            course.CourseID = courseID;
                         }
                     }
                 }
@@ -206,22 +196,7 @@ namespace DataAccess.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            int.TryParse(reader["CourseID"]?.ToString(), out int courseID);
-                            int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
-                            int.TryParse(reader["MajorID"]?.ToString(), out int majorID);
-                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
-
-                            string courseName =
-                                reader["CourseName"]?.ToString() ?? string.Empty;
-
-                            Major major = new Major(majorID, majorName);
-
-                            courses.Add(
-                                new Course(
-                                    courseID,
-                                    courseName,
-                                    creditHours,
-                                    major));
+                            courses.Add(reader.ToCourse());
                         }
                     }
                 }

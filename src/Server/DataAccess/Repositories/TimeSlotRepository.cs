@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -139,17 +140,8 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            if (!int.TryParse(reader["DayNum"]?.ToString(), out int day))
-                            {
-                                day = 0;
-                            }
-                            if (!int.TryParse(reader["PeriodID"]?.ToString(), out int periodID))
-                            {
-                                periodID = 0;
-                            }
-
-
-                            timeSlot = new TimeSlot(slotID, (DayOfWeek) day, new Period() { PeriodID = periodID });
+                            timeSlot = reader.ToTimeSlot();
+                            timeSlot.SlotID = slotID;
                         }
                     }
                 }
@@ -183,24 +175,7 @@ namespace DataAccess.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                if (!int.TryParse(reader["SlotID"]?.ToString(), out int slotID))
-                                {
-                                    slotID = 0;
-                                }
-                                if (!int.TryParse(reader["DayNum"]?.ToString(), out int day))
-                                {
-                                    day = 0;
-                                }
-                                if (!int.TryParse(reader["PeriodID"]?.ToString(), out int periodID))
-                                {
-                                    periodID = 0;
-                                }
-
-                                TimeSpan startTime = reader["StartTime"] is TimeSpan start ? start : TimeSpan.Parse(reader["StartTime"].ToString()!);
-                                TimeSpan endTime = reader["EndTime"] is TimeSpan end ? end : TimeSpan.Parse(reader["EndTime"].ToString()!);
-
-                                TimeSlot timeSlot = new TimeSlot(slotID, (DayOfWeek)day, new Period(periodID , startTime , endTime));
-                                timeSlots.Add(timeSlot);
+                                timeSlots.Add(reader.ToTimeSlot());
                             }
                         }
                     }

@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Data.SqlClient;
@@ -113,37 +114,8 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            
-                            string courseName = reader["CourseName"]?.ToString() ?? string.Empty;
-
-                            int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
-                            int.TryParse(reader["MajorID"]?.ToString(), out int majorID);
-                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
-                            int.TryParse(reader["CourseID"]?.ToString(), out int mainCourseID);
-
-                            Major major = new Major(majorID, majorName);
-
-                            Course mainCourse = new Course(mainCourseID ,courseName , creditHours , major);
-                           
-
-
-                            string courseName2 = reader["CourseName2"]?.ToString() ?? string.Empty;
-
-                            int.TryParse(reader["CreditHours2"]?.ToString(), out int creditHours2);
-                            int.TryParse(reader["MajorID2"]?.ToString(), out int majorID2);
-                            string majorName2 = reader["MajorName2"].ToString() ?? string.Empty;
-                            int.TryParse(reader["CourseID2"]?.ToString(), out int PreCourseID2);
-
-                            Major major2 = new Major(majorID2, majorName2);
-
-                            Course preCourse = new Course(PreCourseID2 , courseName2 , creditHours2 , major2);
-                            
-                            
-                            coursePrequest = new CoursePrerequisites(
-                                coursePrequestID ,
-                                 mainCourse ,
-                                 preCourse
-                                 );
+                            coursePrequest = reader.ToCoursePrequist();
+                            coursePrequest.PreRequestID = coursePrequestID;
                         }
                     }
                 }
@@ -180,38 +152,7 @@ namespace DataAccess.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            string courseName = reader["CourseName"]?.ToString() ?? string.Empty;
-
-                            int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
-                            int.TryParse(reader["MajorID"]?.ToString(), out int majorID);
-                            string majorName = reader["MajorName"].ToString() ?? string.Empty;
-                            int.TryParse(reader["CourseID"]?.ToString(), out int mainCourseID);
-
-                            Major major = new Major(majorID, majorName);
-
-                            Course mainCourse = new Course(mainCourseID, courseName, creditHours, major);
-
-
-
-                            string courseName2 = reader["CourseName2"]?.ToString() ?? string.Empty;
-
-                            int.TryParse(reader["CreditHours2"]?.ToString(), out int creditHours2);
-                            int.TryParse(reader["MajorID2"]?.ToString(), out int majorID2);
-                            string majorName2 = reader["MajorName2"].ToString() ?? string.Empty;
-                            int.TryParse(reader["CourseID2"]?.ToString(), out int PreCourseID2);
-
-                            Major major2 = new Major(majorID2, majorName2);
-
-                            Course preCourse = new Course(PreCourseID2, courseName2, creditHours2, major2);
-
-                            int.TryParse(reader["PrerequisiteID"]?.ToString(), out int PrerequisiteID);
-
-
-                            coursesPre.Add( new CoursePrerequisites(
-                                 PrerequisiteID,
-                                 mainCourse,
-                                 preCourse
-                                 ));
+                            coursesPre.Add(reader.ToCoursePrequist());
                         }
                     }
                 }

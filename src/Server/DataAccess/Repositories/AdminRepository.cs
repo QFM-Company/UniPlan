@@ -5,6 +5,7 @@ using Core.Entities;
 using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Repositories
@@ -167,18 +168,10 @@ namespace DataAccess.Repositories
                     await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader != null)
+                        if (reader != null && await reader.ReadAsync())
                         {
-                            await reader.ReadAsync();
-                            
-                            int personID = reader["PersonID"] != DBNull.Value ? Convert.ToInt32(reader["PersonID"]) : -1; 
-                            int accountID = reader["AccountID"] != DBNull.Value ? Convert.ToInt32(reader["AccountID"]) : -1; 
-                            string accoutName = reader["AccountName"].ToString() ?? string.Empty;
-                            string email = reader["Email"].ToString() ?? string.Empty;
-                            string firstName = reader["FirstName"].ToString() ?? string.Empty;
-                            string lastName = reader["LastName"].ToString() ?? string.Empty;
-                            string middelName = reader["MiddleName"].ToString() ?? string.Empty;
-                            admin = new Administrator(adminID , new Person(personID , firstName , middelName , lastName) , new Account(accountID ,accoutName , email) , true);
+                            admin = reader.ToAdmin();
+                            admin.AdminID = adminID;
                         }
                     }
 
@@ -214,17 +207,7 @@ namespace DataAccess.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                int adminID = reader["AdminID"] != DBNull.Value ? Convert.ToInt32(reader["AdminID"]) : -1;
-                                int personID = reader["PersonID"] != DBNull.Value ? Convert.ToInt32(reader["PersonID"]) : -1;
-                                int accountID = reader["AccountID"] != DBNull.Value ? Convert.ToInt32(reader["AccountID"]) : -1;
-                                string accoutName = reader["AccountName"].ToString() ?? string.Empty;
-                                string email = reader["Email"].ToString() ?? string.Empty;
-                                string firstName = reader["FirstName"].ToString() ?? string.Empty;
-                                string lastName = reader["LastName"].ToString() ?? string.Empty;
-                                string middelName = reader["MiddleName"].ToString() ?? string.Empty;
-                       
-                                Administrator admin = new Administrator(adminID, new Person(personID, firstName, middelName, lastName), new Account(accountID,accoutName, email), true);
-                                admins.Add(admin);
+                                admins.Add(reader.ToAdmin());
                             }
                         }
                     }

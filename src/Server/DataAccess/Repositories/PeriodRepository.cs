@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -140,10 +141,8 @@ namespace DataAccess.Repositories
                     {
                         if (reader != null && await reader.ReadAsync())
                         {
-                            TimeSpan startTime = reader["StartTime"] is TimeSpan start ? start : TimeSpan.Parse(reader["StartTime"].ToString()!);
-                            TimeSpan endTime = reader["EndTime"] is TimeSpan end ? end : TimeSpan.Parse(reader["EndTime"].ToString()!);
-
-                            period = new Period(periodID, startTime, endTime);
+                            period = reader.ToPeriod();
+                            period.PeriodID = periodID;
                         }
                     }
                 }
@@ -177,15 +176,7 @@ namespace DataAccess.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                if (!int.TryParse(reader["PeriodID"]?.ToString(), out int periodID))
-                                {
-                                    periodID = 0;
-                                }
-                                TimeSpan startTime = reader["StartTime"] is TimeSpan start ? start : TimeSpan.Parse(reader["StartTime"].ToString()!);
-                                TimeSpan endTime = reader["EndTime"] is TimeSpan end ? end : TimeSpan.Parse(reader["EndTime"].ToString()!);
-
-                                Period period = new Period(periodID, startTime, endTime);
-                                periods.Add(period);
+                                periods.Add(reader.ToPeriod());
                             }
                         }
                     }
