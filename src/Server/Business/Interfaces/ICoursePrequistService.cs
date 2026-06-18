@@ -16,7 +16,7 @@ namespace Business.Interfaces
 
         Task<CoursePrerequisiteResponse?> AddCoursePrequistAsync(CoursePrerequisiteRequest request);
 
-        Task<IEnumerable<CoursePrerequisiteResponse>?> GetPagedCoursePrequistsAsync(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<CoursePrerequisiteResponse?>?> GetPagedCoursePrequistsAsync(int pageNumber = 1, int pageSize = 10);
 
         Task<CoursePrerequisiteResponse?> GetCoursePrequistByIDAsync(int prequistID);
     }

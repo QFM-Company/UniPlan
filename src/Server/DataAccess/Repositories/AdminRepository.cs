@@ -22,12 +22,12 @@ namespace DataAccess.Repositories
             _LogService = logService;
         }
 
-        public async Task<int> AddAdminAsync(Administrator admin)
+        public async Task<Administrator?> AddAdminAsync(Administrator admin)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Admin_Profile_Insert", connection))
+                using (SqlCommand command = new SqlCommand("SP_AdminProfile_Insert", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -55,16 +55,31 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@Password", admin.Account.Password);
                     command.Parameters.AddWithValue("@Email", admin.Account.Email);
 
-
                     await connection.OpenAsync();
-                    await command.ExecuteNonQueryAsync();
 
-
-                    if (adminID.Value != DBNull.Value && int.TryParse(adminID.Value.ToString(), out int admID))
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        return admID;
+                        if (await reader.ReadAsync())
+                        {
+                            admin.Person = reader.ToPerson();
+                        }
+                    
                     }
 
+                    if (!(adminID.Value != DBNull.Value && int.TryParse(adminID.Value.ToString(), out int admID)))
+                    {
+                        admID = -1;
+                    }
+                    if (!(accountID.Value != DBNull.Value && int.TryParse(accountID.Value.ToString(), out int accntID)))
+                    {
+                        accntID = -1;
+                    }
+
+
+                    admin.AdminID = admID;
+                    admin.Account.AccountID = accntID;
+
+                    return admin;
                 }
             }
             catch (Exception ex)
@@ -72,7 +87,7 @@ namespace DataAccess.Repositories
                 await _LogService.LogAsync(ex);
             }
 
-            return -1;
+            return null;
         }
 
 

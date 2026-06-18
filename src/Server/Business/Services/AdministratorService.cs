@@ -17,6 +17,7 @@ namespace Business.Services
         private IAdminRepository _AdminRepository;
         private Administrator? _admin;
 
+
         public AdministratorService(IAdminRepository adminRepostery)
         {
             _AdminRepository = adminRepostery;
@@ -27,11 +28,11 @@ namespace Business.Services
         {
             if (request != null)
             {
-                if (request.Person != null)
+                if (request.PersonID > 0)
                 {
                     if (request.Account != null)
                     {
-                        Person person = new Person(request.Person.PersonID ,request.Person.FirstName, request.Person.MiddleName, request.Person.LastName);
+                        Person person = new Person(request.PersonID);
                         Account account = new Account(request.Account.AccountName, request.Account.Password, request.Account.Email);
                         return new Administrator(adminID, person, account , true);
                     }
@@ -61,11 +62,19 @@ namespace Business.Services
         public async Task<AdministratorResponse?> AddAdministratorAsync(AdministratorRequest request)
         {
             _admin = RequestToAdministrator(request);
-            if (_admin != null)
+            if (_admin != null && _admin.Account != null)
             {
-                _admin.AdminID = await _AdminRepository.AddAdminAsync(_admin);
-                if (_admin.AdminID > 0)
-                    return AdministratorToResponse(_admin)!;
+                var result = await _AdminRepository.AddAdminAsync(_admin);
+                if (result != null && result.Account != null)
+                {
+                    _admin.AdminID = result.AdminID;
+                    _admin.Account.AccountID = result.Account.AccountID;
+                    _admin.Person = result.Person;
+                    if (_admin.AdminID > 0 && _admin.Account.AccountID > 0)
+                    {
+                        return AdministratorToResponse(_admin)!;
+                    }
+                }
             }
 
             return null;
