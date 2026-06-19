@@ -8,12 +8,12 @@ namespace Business.Interfaces
     {
         Task<bool> DeleteStudentAsync(int studentID);
 
-        Task<StudentProfileResponse?> AddStudentAsync(CreateStudentRequest request);
+        Task<StudentResponse?> AddStudentAsync(CreateStudentRequest request);
 
-        Task<StudentProfileResponse?> UpdateStudentAsync(UpdateStudentRequest request);
+        Task<bool> UpdateStudentAsync(UpdateStudentRequest request, int studentID);
 
-        Task<IEnumerable<StudentProfileResponse>?> GetPagedStudentsAsync(int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<StudentResponse>?> GetPagedStudentsAsync(int pageNumber = 1, int pageSize = 10);
 
-        Task<StudentProfileResponse?> GetStudentByIDAsync(int studentID);
+        Task<StudentResponse?> GetStudentByIDAsync(int studentID);
     }
 }

@@ -7,15 +7,12 @@ namespace Business.Mapper
 {
     public static class TermMapper
     {
-        public static AcademicTerm? RequestToAcademicTerm(this AcademicTermRequest request, int termID = -1)
+        public static AcademicTerm ToAcademicTerm(this AcademicTermRequest request)
         {
-            if(request != null)
-                return new AcademicTerm(termID, request.TermType, request.TermYear);
-
-            return null;
+            return new AcademicTerm(-1, request.TermType, request.TermYear);
         }
 
-        public static AcademicTermResponse AcademicTermToResponse(this AcademicTerm term)
+        public static AcademicTermResponse ToResponse(this AcademicTerm term)
         {
             return new AcademicTermResponse(term.TermID, term.TermType, term.TermYear);
         }

@@ -6,20 +6,20 @@ namespace Business.Mapper
 {
     public static class MajorMapper
     {
-        public static Major? RequestToMajor(this MajorRequest? request, int majorID = -1)
+        public static Major ToMajor(this MajorRequest request)
         {
-            if(request != null)
-                return new Major(majorID, request.MajorName);
-
-            return null;
+            return new Major(-1, request.MajorName);
         }
 
-        public static void UpdateMajorFromRequest(this Major major, MajorRequest request)
+        public static void UpdateMajor(this Major major, MajorRequest? request)
         {
+            if (request == null)
+                return;
+
             major.MajorName = request.MajorName;
         }
 
-        public static  MajorResponse MajorToResponse(this Major major)
+        public static MajorResponse ToResponse(this Major major)
         {
             return new MajorResponse(major.MajorID, major.MajorName);
         }

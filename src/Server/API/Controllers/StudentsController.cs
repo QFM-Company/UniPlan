@@ -2,10 +2,8 @@
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
-using Business.Services;
 using Core.Enums;
 using Core.Interfaces.ExternalServices;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -27,14 +25,14 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddStudentAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentProfileResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<StudentProfileResponse?>> AddStudentAsync(CreateStudentRequest request)
+        public async Task<ActionResult<StudentResponse?>> AddStudentAsync(CreateStudentRequest request)
         {
             try
             {
-                StudentProfileResponse? response = await _studentService.AddStudentAsync(request);
+                StudentResponse? response = await _studentService.AddStudentAsync(request);
 
                 if (response != null)
                 {
@@ -55,20 +53,20 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("update", Name = "UpdateStudentAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentProfileResponse))]
+        [HttpPut("update/{studentID}", Name = "UpdateStudentAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<StudentProfileResponse?>> UpdateStudentAsync(UpdateStudentRequest request)
+        public async Task<ActionResult<StudentResponse?>> UpdateStudentAsync(UpdateStudentRequest request, int studentID)
         {
             try
             {
-                StudentProfileResponse? response = await _studentService.UpdateStudentAsync(request);
+                bool res = await _studentService.UpdateStudentAsync(request, studentID);
 
-                if (response != null)
+                if (res)
                 {
                     await _logService.LogAsync("Student updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return Ok(res);
                 }
 
                 await _logService.LogAsync("Failed to update Student.", ExternalServicesEnums.LogType.Warning);
@@ -114,14 +112,14 @@ namespace API.Controllers
         }
 
         [HttpGet("get/{studentID}", Name = "GetStudentByIDAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentProfileResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<StudentProfileResponse>> GetStudentByIDAsync(int studentID)
+        public async Task<ActionResult<StudentResponse>> GetStudentByIDAsync(int studentID)
         {
             try
             {
-                StudentProfileResponse? response = await _studentService.GetStudentByIDAsync(studentID);
+                StudentResponse? response = await _studentService.GetStudentByIDAsync(studentID);
 
                 if (response != null)
                 {
@@ -143,14 +141,14 @@ namespace API.Controllers
         }
 
         [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedStudentsAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentProfileResponse>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentResponse>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<StudentProfileResponse>?>> GetPagedStudentsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<StudentResponse>?>> GetPagedStudentsAsync(int pageNumber, int pageSize)
         {
             try
             {
-                IEnumerable<StudentProfileResponse>? responses = await _studentService.GetPagedStudentsAsync(pageNumber, pageSize);
+                IEnumerable<StudentResponse>? responses = await _studentService.GetPagedStudentsAsync(pageNumber, pageSize);
 
                 if (responses != null && responses.Any())
                 {

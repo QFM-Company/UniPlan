@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Core.Entities;
 namespace Business.DTOs.Responses
 {
     public class AccountResponse
@@ -13,6 +8,13 @@ namespace Business.DTOs.Responses
         public string AccountName { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
+
+        public AccountResponse()
+        {
+            AccountID = -1;
+            AccountName = string.Empty;
+            Email = string.Empty;
+        }
 
         public AccountResponse(int accountID ,string accountName, string email) 
         {

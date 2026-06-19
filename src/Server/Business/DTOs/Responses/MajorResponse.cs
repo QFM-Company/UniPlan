@@ -1,4 +1,6 @@
-﻿namespace Business.DTOs.Responses
+﻿using Core.Entities;
+
+namespace Business.DTOs.Responses
 {
     public class MajorResponse
     {
@@ -9,6 +11,12 @@
         {
             MajorID = majorID;
             MajorName = majorName;
+        }
+
+        public MajorResponse()
+        {
+            MajorID = -1;
+            MajorName = string.Empty;
         }
     }
 }

@@ -23,29 +23,26 @@ namespace Business.Services
 
         public async Task<AcademicTermResponse?> AddAcademicTermAsync(AcademicTermRequest request)
         {
-            AcademicTerm? term = request.RequestToAcademicTerm();
+            AcademicTerm term = request.ToAcademicTerm();
 
-            if(term != null)
-            {
-                term.TermID = await _termRepository.AddAcademicTermAsync(term);
+            term.TermID = await _termRepository.AddAcademicTermAsync(term);
 
-                if (term.TermID != -1)
-                    return term.AcademicTermToResponse();
-            }
-
+            if (term.TermID != -1)
+                return term.ToResponse();
+            
             return null;
         }
 
         public async Task<IEnumerable<AcademicTermResponse>?> GetPagedAcademicTermsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<AcademicTerm>? terms = await _termRepository.GetPagedAcademicTermsAsync(pageNumber, pageSize);
-            return terms?.Select(m => m.AcademicTermToResponse()).OfType<AcademicTermResponse>();
+            return terms?.Select(m => m.ToResponse()).OfType<AcademicTermResponse>();
         }
 
         public async Task<AcademicTermResponse?> GetAcademicTermByIDAsync(int termID)
         {
             AcademicTerm? term = await _termRepository.GetAcademicTermByIDAsync(termID);
-            return term != null ? term.AcademicTermToResponse() : null;
+            return term != null ? term.ToResponse() : null;
         }
     }
 }

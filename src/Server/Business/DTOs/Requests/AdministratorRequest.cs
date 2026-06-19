@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.DTOs.Requests.Create;
 using Core.Entities;
 
 namespace Business.DTOs.Requests
@@ -11,9 +12,9 @@ namespace Business.DTOs.Requests
     {
         public int PersonID { get; set; }
 
-        public AccountRequest? Account { get; set; }
+        public CreateAccountRequest? Account { get; set; }
 
-        public AdministratorRequest(int personID, AccountRequest? account)
+        public AdministratorRequest(int personID, CreateAccountRequest? account)
         {
             PersonID = personID;
             Account = account;

@@ -25,15 +25,13 @@ namespace Business.Services
 
         public async Task<HallResponse?> AddHallAsync(CreateHallRequest request)
         {
-            Hall? hall = request.CreateRequestToHall();
+            Hall hall = request.ToHall();
 
-            if(hall != null)
-            {
-                hall.HallID = await _hallRepository.AddHallAsync(hall);
 
-                if (hall.HallID != -1)
-                    return hall.HallToResponse();
-            }
+            hall.HallID = await _hallRepository.AddHallAsync(hall);
+
+            if (hall.HallID != -1)
+                return hall.ToResponse();
 
             return null;
         }
@@ -42,7 +40,7 @@ namespace Business.Services
         {
             Hall? hall = await _hallRepository.GetHallByIDAsync(hallID);
 
-            hall?.UpdateHallFromRequest(request);
+            hall?.UpdateHall(request);
 
             if (hall != null)
                 return await _hallRepository.UpdateHallAsync(hall);
@@ -53,13 +51,13 @@ namespace Business.Services
         public async Task<IEnumerable<HallResponse>?> GetPagedHallsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<Hall>? halls = await _hallRepository.GetPagedHallsAsync(pageNumber, pageSize);
-            return halls?.Select(m => m.HallToResponse()).OfType<HallResponse>();
+            return halls?.Select(m => m.ToResponse()).OfType<HallResponse>();
         }
 
         public async Task<HallResponse?> GetHallByIDAsync(int hallID)
         {
             Hall? hall = await _hallRepository.GetHallByIDAsync(hallID);
-            return hall != null ? hall.HallToResponse() : null;
+            return hall != null ? hall.ToResponse() : null;
         }
     }
 }

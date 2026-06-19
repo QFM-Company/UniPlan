@@ -23,16 +23,13 @@ namespace Business.Services
 
         public async Task<MajorResponse?> AddMajorAsync(MajorRequest request)
         {
-            Major? major = request.RequestToMajor();
+            Major major = request.ToMajor();
 
-            if(major != null)
-            {
-                major.MajorID = await _majorRepository.AddMajorAsync(major);
+            major.MajorID = await _majorRepository.AddMajorAsync(major);
 
-                if (major.MajorID != -1)
-                    return major.MajorToResponse();
-            }
-
+            if (major.MajorID != -1)
+                return major.ToResponse();
+           
             return null;
         }
 
@@ -40,7 +37,7 @@ namespace Business.Services
         {
             Major? major = await _majorRepository.GetMajorByIDAsync(majorID);
 
-            major?.UpdateMajorFromRequest(request);
+            major?.UpdateMajor(request);
 
             if (major != null)
                 return await _majorRepository.UpdateMajorAsync(major);
@@ -51,13 +48,13 @@ namespace Business.Services
         public async Task<IEnumerable<MajorResponse>?> GetPagedMajorsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<Major>? majors = await _majorRepository.GetPagedMajorsAsync(pageNumber, pageSize);
-            return majors?.Select(m => m.MajorToResponse()).OfType<MajorResponse>();
+            return majors?.Select(m => m.ToResponse()).OfType<MajorResponse>();
         }
 
         public async Task<MajorResponse?> GetMajorByIDAsync(int majorID)
         {
             Major? major = await _majorRepository.GetMajorByIDAsync(majorID);
-            return major != null ? major.MajorToResponse() : null;
+            return major != null ? major.ToResponse() : null;
         }
     }
 }

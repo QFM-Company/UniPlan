@@ -18,15 +18,14 @@ namespace Business.Services
 
         public async Task<PersonResponse?> AddPersonAsync(PersonRequest request)
         {
-            Person? person = request.RequestToPerson();
+            Person person = request.ToPerson();
 
-            if(person != null)
-            {
-                person.PersonID = await _peopleRepository.AddPersonAsync(person);
 
-                if (person.PersonID != -1)
-                    return person.PersonToResponse();
-            }
+            person.PersonID = await _peopleRepository.AddPersonAsync(person);
+
+            if (person.PersonID != -1)
+                return person.ToResponse();
+            
 
             return null;
         }

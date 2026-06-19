@@ -25,15 +25,13 @@ namespace Business.Services
 
         public async Task<LectureResponse?> AddLectureAsync(LectureRequest request)
         {
-            Lecture? lecture = request.RequestToLecture();
+            Lecture lecture = request.ToLecture();
 
-            if(lecture != null)
-            {
-                lecture.LectureID = await _lectureRepository.AddLectureAsync(lecture);
 
-                if (lecture.LectureID != -1)
-                    return await GetLectureByIDAsync(lecture.LectureID);
-            }
+            lecture.LectureID = await _lectureRepository.AddLectureAsync(lecture);
+
+            if (lecture.LectureID != -1)
+                return await GetLectureByIDAsync(lecture.LectureID);
 
             return null;
         }
@@ -42,7 +40,7 @@ namespace Business.Services
         {
             Lecture? lecture = await _lectureRepository.GetLectureByIDAsync(lectureID);
 
-            lecture?.UpdateLectureFromRequest(request);
+            lecture?.UpdateLecture(request);
 
             if (lecture != null)
                 return await _lectureRepository.UpdateLectureAsync(lecture);
@@ -53,13 +51,13 @@ namespace Business.Services
         public async Task<IEnumerable<LectureResponse>?> GetPagedLecturesAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<Lecture>? lectures = await _lectureRepository.GetPagedLecturesAsync(pageNumber, pageSize);
-            return lectures?.Select(m => m.LectureToResponse()).OfType<LectureResponse>();
+            return lectures?.Select(m => m.ToResponse()).OfType<LectureResponse>();
         }
 
         public async Task<LectureResponse?> GetLectureByIDAsync(int lectureID)
         {
             Lecture? lecture = await _lectureRepository.GetLectureByIDAsync(lectureID);
-            return lecture != null ? lecture.LectureToResponse() : null;
+            return lecture != null ? lecture.ToResponse() : null;
         }
     }
 }

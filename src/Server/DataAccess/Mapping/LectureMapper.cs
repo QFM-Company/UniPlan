@@ -8,12 +8,7 @@ namespace DataAccess.Mapping
     {
         public static Lecture ToLecture(this SqlDataReader reader)
         {
-            int.TryParse(reader["CourseID"]?.ToString(), out int courseID);
-            int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
-            int.TryParse(reader["MajorID"]?.ToString(), out int majorID);
-            string courseName = reader["CourseName"]?.ToString() ?? string.Empty;
-
-            Course course = new Course(courseID, courseName, creditHours, new Major { MajorID = majorID });
+            Course course = reader.ToCourse();
 
             int.TryParse(reader["LectureID"]?.ToString(), out int lectureID);
             int.TryParse(reader["DurationValue"]?.ToString(), out int durationValue);

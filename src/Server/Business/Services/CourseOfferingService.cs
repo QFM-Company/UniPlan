@@ -25,15 +25,12 @@ namespace Business.Services
 
         public async Task<CourseOfferingResponse?> AddCourseOfferingAsync(CreateCourseOfferingRequest request)
         {
-            CourseOffering? offering = request.CreateRequestToCourseOffering();
+            CourseOffering offering = request.ToCourseOffering();
 
-            if (offering != null)
-            {
-                offering.OfferingID = await _offeringRepository.AddCourseOfferingAsync(offering);
+            offering.OfferingID = await _offeringRepository.AddCourseOfferingAsync(offering);
 
-                if (offering.OfferingID != -1)
-                    return await GetCourseOfferingByIDAsync(offering.OfferingID);
-            }
+            if (offering.OfferingID != -1)
+                return await GetCourseOfferingByIDAsync(offering.OfferingID);
 
             return null;
         }
@@ -42,7 +39,7 @@ namespace Business.Services
         {
             CourseOffering? offering = await _offeringRepository.GetCourseOfferingByIDAsync(offeringID);
 
-            offering?.UpdateOfferingFromRequest(request);
+            offering?.UpdateOffering(request);
 
             if (offering != null)
                 return await _offeringRepository.UpdateCourseOfferingAsync(offering);
@@ -53,13 +50,13 @@ namespace Business.Services
         public async Task<IEnumerable<CourseOfferingResponse>?> GetPagedCourseOfferingsAsync(int pageNumber = 1, int pageSize = 10)
         {
             IEnumerable<CourseOffering>? offerings = await _offeringRepository.GetPagedCourseOfferingsAsync(pageNumber, pageSize);
-            return offerings?.Select(m => m.CourseOfferingToResponse()).OfType<CourseOfferingResponse>();
+            return offerings?.Select(m => m.ToResponse()).OfType<CourseOfferingResponse>();
         }
 
         public async Task<CourseOfferingResponse?> GetCourseOfferingByIDAsync(int offeringID)
         {
             CourseOffering? _offering = await _offeringRepository.GetCourseOfferingByIDAsync(offeringID);
-            return _offering != null ? _offering.CourseOfferingToResponse() : null;
+            return _offering != null ? _offering.ToResponse() : null;
         }
     }
 }
