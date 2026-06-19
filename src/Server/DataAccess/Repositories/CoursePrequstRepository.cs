@@ -23,8 +23,9 @@ namespace DataAccess.Repositories
         }
 
 
-        public async Task<int> AddPrequestAsync(CoursePrerequisites coursePrequst)
+        public async Task<CoursePrerequisites?> AddPrequestAsync(CoursePrerequisites coursePrequst)
         {
+            CoursePrerequisites? coursePrerequisites = null;
             try
             {
                 using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
@@ -40,11 +41,15 @@ namespace DataAccess.Repositories
                         command.Parameters.AddWithValue("@CourseID", coursePrequst.Course?.CourseID);
                         command.Parameters.AddWithValue("@PrerequisiteCourseID", coursePrequst.PreRequestCourse?.CourseID);
                         await connection.OpenAsync();
-                        await command.ExecuteNonQueryAsync();
-                        if (preRequestID.Value != DBNull.Value &&
-                            int.TryParse(preRequestID.Value.ToString(), out int pID))
+
+
+
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            return pID;
+                            if (await reader.ReadAsync())
+                            {
+                                coursePrerequisites = reader.ToCoursePrequist();
+                            }
                         }
                     }
                 }
@@ -54,7 +59,7 @@ namespace DataAccess.Repositories
                 await _logService.LogAsync(ex);
                 throw;
             }
-            return -1;
+            return coursePrerequisites;
         }
 
 

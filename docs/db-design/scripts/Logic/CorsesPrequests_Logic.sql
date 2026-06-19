@@ -33,6 +33,15 @@ BEGIN
         );
 
         SET @PrerequisiteID = CONVERT(INT, SCOPE_IDENTITY());
+
+
+		   SELECT
+             m.CourseID , m.CourseName , m.CreditHours , m.MajorID , m.MajorName , CP.PrerequisiteID ,
+			 p.CourseID2 , p.CourseName2 , p.CreditHours2 , p.MajorID2 , p.MajorName2
+             FROM [dbo].[VW_Main]as m inner join CoursePrerequisites As CP on  CP.CourseID = m.CourseID 
+		    inner Join VW_Pre as p on CP.PrerequisiteCourseID = p.CourseID2
+            WHERE PrerequisiteID = @PrerequisiteID;
+
     END TRY
     BEGIN CATCH
         THROW;
@@ -79,7 +88,7 @@ create or Alter View VW_Pre
 AS
 select pre.CourseID as CourseID2 , pre.CourseName as CourseName2 , pre.CreditHours as CreditHours2,
 pre.MajorID as MajorID2 , m.MajorName as MajorName2
-from Courses as pre inner join Majors as m on pre.CourseID = m.MajorID;
+from Courses as pre inner join Majors as m on pre.MajorID = m.MajorID;
 GO
 
 
@@ -132,7 +141,7 @@ BEGIN
 
     BEGIN TRY
         SELECT
-             m.CourseID , m.CourseName , m.CreditHours , m.MajorID , m.MajorName ,
+             m.CourseID , m.CourseName , m.CreditHours , m.MajorID , m.MajorName , CP.PrerequisiteID ,
 			 p.CourseID2 , p.CourseName2 , p.CreditHours2 , p.MajorID2 , p.MajorName2
              FROM [dbo].[VW_Main]as m inner join CoursePrerequisites As CP on  CP.CourseID = m.CourseID 
 		    inner Join VW_Pre as p on CP.PrerequisiteCourseID = p.CourseID2

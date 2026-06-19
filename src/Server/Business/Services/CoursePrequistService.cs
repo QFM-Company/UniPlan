@@ -43,9 +43,9 @@ namespace Business.Services
             CoursePrerequisites? coursePrequist = _RequestToCoursePrequist(request);
             if (coursePrequist == null) { return null; }
 
-            coursePrequist.PreRequestID = await _coursePrequset.AddPrequestAsync(coursePrequist);
+            coursePrequist = await _coursePrequset.AddPrequestAsync(coursePrequist);
 
-            if (coursePrequist.PreRequestID <= 0) return null;
+            if (coursePrequist?.PreRequestID <= 0) return null;
             return _CoursePrequistToResponse(coursePrequist);
         }
 

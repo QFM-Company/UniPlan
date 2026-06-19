@@ -119,7 +119,7 @@ namespace API.Controllers
         {
             try
             {
-                IEnumerable<CoursePrerequisiteResponse>? responses = await _coursePrequistsService.GetPagedCoursePrequistsAsync(pageNumber, pageSize);
+                IEnumerable<CoursePrerequisiteResponse?>? responses = await _coursePrequistsService.GetPagedCoursePrequistsAsync(pageNumber, pageSize);
 
                 if (responses != null && responses.Any())
                 {
