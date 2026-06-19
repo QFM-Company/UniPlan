@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.DTOs.Responses;
+using Core.Entities;
 
-namespace Core.Entities
+namespace Business.DTOs.Requests.Create
 {
-    public class CourseSession
+    public class CreateCourseSessionRequest
     {
-        public int SessionID { get; set; }
 
         public CourseOffering? CourseOffering { get; set; }
 
@@ -18,16 +19,15 @@ namespace Core.Entities
 
         public int? CreatedByAdminID { get; set; }
 
-        public CourseSession(int sessionID, CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot, int createdByAdminID)
+        public CreateCourseSessionRequest(CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot, int createdByAdminID)
         {
-            SessionID = sessionID;
             CourseOffering = courseOffering;
             Hall = hall;
             TimeSlot = timeSlot;
             CreatedByAdminID = createdByAdminID;
         }
 
-        public CourseSession()
+        public CreateCourseSessionRequest()
         {
         }
     }

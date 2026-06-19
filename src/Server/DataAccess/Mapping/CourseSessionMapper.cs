@@ -18,14 +18,17 @@ namespace DataAccess.Mapping
 
             TimeSlot timeSlot = reader.ToTimeSlot();
 
-            Administrator createdByAdmin = reader.ToAdmin();
+            if (!int.TryParse(reader["AdminID"]?.ToString(), out int adminID))
+            {
+                adminID = -1;
+            }
 
             if (!int.TryParse(reader["@SessionID"]?.ToString(), out int courseSessionID))
             {
                 courseSessionID = -1;
             }
 
-            return new CourseSession(courseSessionID , courseOffering , hall , timeSlot , createdByAdmin);
+            return new CourseSession(courseSessionID , courseOffering , hall , timeSlot , adminID);
         }
     }
 }

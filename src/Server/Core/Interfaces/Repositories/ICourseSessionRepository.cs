@@ -9,13 +9,13 @@ namespace Core.Interfaces.Repositories
 {
     public interface ICourseSessionRepository
     {
-        Task<int> AddCourseSessionAsync(CourseSession courseSession);
+        Task<CourseSession?> AddCourseSessionAsync(CourseSession courseSession);
 
-        Task<bool> UpdateCourseSessionAsync(CourseSession courseSession);
+        Task<CourseSession?> UpdateCourseSessionAsync(CourseSession courseSession);
 
         Task<CourseSession?> GetCourseSessionByIDAsync(int sessionID);
 
-        Task<IEnumerable<CourseSession>>GetCourseSessionsPagedAsync(int pageNumber,int pageSize);
+        Task<IEnumerable<CourseSession?>?>GetCourseSessionsPagedAsync(int pageNumber,int pageSize);
 
     }
 }

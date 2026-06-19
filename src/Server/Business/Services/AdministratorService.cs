@@ -49,7 +49,7 @@ namespace Business.Services
                 {
                     if (admin.Account != null)
                     {
-                        PersonRequest person = new PersonRequest(admin.Person.PersonID, admin.Person.FirstName, admin.Person.MiddleName, admin.Person.LastName);
+                        PersonRequest person = new PersonRequest(admin.Person.FirstName, admin.Person.MiddleName, admin.Person.LastName);
                         AccountResponse account = new AccountResponse(admin.Account.AccountID , admin.Account.AccountName, admin.Account.Email);
                         return new AdministratorResponse(admin.AdminID, person, account, admin.IsActive);
                     }

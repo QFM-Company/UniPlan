@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Entities;
 
-namespace Core.Entities
+namespace Business.DTOs.Responses
 {
-    public class CourseSession
+    public class CourseSessionResponse
     {
         public int SessionID { get; set; }
 
@@ -18,7 +19,7 @@ namespace Core.Entities
 
         public int? CreatedByAdminID { get; set; }
 
-        public CourseSession(int sessionID, CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot, int createdByAdminID)
+        public CourseSessionResponse(int sessionID, CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot, int createdByAdminID)
         {
             SessionID = sessionID;
             CourseOffering = courseOffering;
@@ -27,7 +28,7 @@ namespace Core.Entities
             CreatedByAdminID = createdByAdminID;
         }
 
-        public CourseSession()
+        public CourseSessionResponse()
         {
         }
     }

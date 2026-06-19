@@ -7,7 +7,7 @@ using System.Data;
 
 namespace DataAccess.Repositories
 {
-    public class CourseSessionRepository : ICourseSessionRepository
+    public class CourseSessionRepository //: ICourseSessionRepository
     {
         private readonly DBHelpers _dBHelpers;
         private readonly ILogService _logService;
@@ -62,7 +62,7 @@ namespace DataAccess.Repositories
                 command.Parameters.AddWithValue
                 (
                     "@CreatedByAdminID",
-                    courseSession.CreatedByAdmin?.AdminID
+                    courseSession.CreatedByAdminID
                         ?? (object)DBNull.Value
                 );
 
@@ -130,7 +130,7 @@ namespace DataAccess.Repositories
                 command.Parameters.AddWithValue
                 (
                     "@CreatedByAdminID",
-                    courseSession.CreatedByAdmin?.AdminID
+                    courseSession.CreatedByAdminID
                         ?? (object)DBNull.Value
                 );
 

@@ -3,32 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Entities;
 
-namespace Core.Entities
+namespace Business.DTOs.Requests.Update
 {
-    public class CourseSession
+    public class UpdateCourseSessionRequest
     {
-        public int SessionID { get; set; }
-
         public CourseOffering? CourseOffering { get; set; }
 
         public Hall? Hall { get; set; }
 
         public TimeSlot? TimeSlot { get; set; }
 
-        public int? CreatedByAdminID { get; set; }
-
-        public CourseSession(int sessionID, CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot, int createdByAdminID)
+        public UpdateCourseSessionRequest(CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot)
         {
-            SessionID = sessionID;
             CourseOffering = courseOffering;
             Hall = hall;
             TimeSlot = timeSlot;
-            CreatedByAdminID = createdByAdminID;
         }
 
-        public CourseSession()
+        public UpdateCourseSessionRequest()
         {
         }
+
     }
 }
