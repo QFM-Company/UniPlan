@@ -48,7 +48,7 @@
             // 
             // piclogo
             // 
-            piclogo.Image = Controls.Properties.Resources.UniPlan;
+            piclogo.Image = global::Controls.Properties.Resources.UniPlan;
             piclogo.Location = new Point(1, 1);
             piclogo.Name = "piclogo";
             piclogo.Size = new Size(103, 103);

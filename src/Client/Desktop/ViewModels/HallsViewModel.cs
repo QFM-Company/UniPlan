@@ -1,53 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ViewModels
 {
-    internal class HallsViewModel
+    public class HallModel
     {
-        public class HallModel
-        {
-            public string HallId { get; set; }    
-            public string HallName { get; set; }  
-            public string Building { get; set; }   
-            public string Floor { get; set; }     
+        public string HallId { get; set; } = string.Empty;
+        public string HallName { get; set; } = string.Empty;
+        public string Building { get; set; } = string.Empty;
+        public string Floor { get; set; } = string.Empty;
+    }
 
+    public class HallsViewModel
+    {
+        public List<HallModel> HallsList { get; set; }
+
+        public HallsViewModel()
+        {
+            HallsList = new List<HallModel>();
         }
 
+        public bool AddHall(string name, string build, string floor, out string errorMsg)
+        {
+            errorMsg = "";
 
-        internal class HallsviewModel
-        { 
-            public List<HallModel> HallsList { get; set; }
-            public HallsviewModel()
+            if (string.IsNullOrEmpty(name) || name.Trim() == "" || name == "Halls Name")
             {
-                HallsList = new List<HallModel>();
+                errorMsg = "Enter Name of Hall Please : ";
+                return false;
+            }
+            if (string.IsNullOrEmpty(floor) || floor.Trim() == "")
+            {
+                errorMsg = "Enter Floor of Hall Please : ";
+                return false;
+            }
+            if (string.IsNullOrEmpty(build) || build.Trim() == "")
+            {
+                errorMsg = "Enter Building of Hall Please : ";
+                return false;
             }
 
-            public bool AddHall(string name, string Build, string Floor,out string errorMsg) {
-                errorMsg = "";
-                if (string.IsNullOrEmpty(name) || name.Trim() == "" || name == "Halls Name")
-                {
-                    errorMsg = "Enter Name  of Hall Pleas  :  ";
-                    return false;
-                }
-                if(string.IsNullOrEmpty(Floor) || Floor.Trim()== " ")
-                {
-                    errorMsg = "Enter Floor of Hall Please :  ";
-                    return false;
-                }
-                if(string.IsNullOrEmpty(Build) || Build.Trim()== " ")
-                {
-                    errorMsg = "Enter Building of Hall Please :  ";
-                    return false;
-                }
+            var newHall = new HallModel
+            {
+                HallId = Guid.NewGuid().ToString(),
+                HallName = name.Trim(),
+                Building = build.Trim(),
+                Floor = floor.Trim()
+            };
 
-
-
-               
-            }
+            HallsList.Add(newHall);
+            return true;
         }
     }
 }
