@@ -190,10 +190,6 @@ BEGIN
         -- CHANGED: Explicitly converts SCOPE_IDENTITY() to int.
         SET @AdministratorID = CONVERT(int, SCOPE_IDENTITY());
 
-		select * from People
-		where PersonID = @PersonID;
-
-
         COMMIT TRANSACTION;
 
     END TRY

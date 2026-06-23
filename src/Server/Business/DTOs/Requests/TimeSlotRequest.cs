@@ -11,12 +11,12 @@ namespace Business.DTOs.Requests
     {
         public DayOfWeek Day { get; set; }
 
-        public Period? Period { get; set; }
+        public int PeriodID { get; set; }
 
-        public TimeSlotRequest(DayOfWeek day, Period? period)
+        public TimeSlotRequest(DayOfWeek day, int periodID)
         {
             Day = day;
-            Period = period;
+            PeriodID = periodID;
         }
     }
 }
