@@ -21,14 +21,10 @@ namespace Business.Mapper
             return new Administrator(adminID, person, account, true);
         }
 
-        public static void UpdateAdmin(this Administrator admin, UpdateAdministratorRequest? request)
+        public static void UpdateAdmin(this Administrator admin, UpdateAdministratorRequest request)
         {
-            if (request == null || admin.Person == null)
-                return;
-
-            admin.Account?.UpdateAccount(request.Account);
-            
-            admin.Person.PersonID = request.PersonID;
+            admin.Account?.UpdateAccount(request.Account);   
+            admin.Person!.PersonID = request.PersonID;
         }
 
         public static AdministratorResponse ToResponse(this Administrator admin)

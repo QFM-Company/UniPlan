@@ -24,11 +24,8 @@ namespace Business.Mapper
             );
         }
 
-        public static void UpdateCourse(this Course course, CourseRequest? request)
+        public static void UpdateCourse(this Course course, CourseRequest request)
         {
-            if (request == null)
-                return;
-
             course.CreditHours = request.CreditHours;
             course.CourseName = request.CourseName;
             course.Major = new Major(request.MajorID, "");

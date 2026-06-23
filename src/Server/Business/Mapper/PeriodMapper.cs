@@ -16,15 +16,6 @@ namespace Business.Mapper
            return new Period(periodID, request.StartTime, request.EndTime);       
         }
 
-        public static void UpdatePeriod(this Period period, PeriodRequest? request)
-        {
-            if (request == null)
-                return;
-
-            period.StartTime = request.StartTime;
-            period.EndTime = request.EndTime;
-        }
-
         public static PeriodResponse ToResponse(this Period period)
         {
             return new PeriodResponse(period.PeriodID, period.StartTime, period.EndTime);

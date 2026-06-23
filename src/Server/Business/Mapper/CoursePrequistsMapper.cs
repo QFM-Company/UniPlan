@@ -16,11 +16,8 @@ namespace Business.Mapper
             return new CoursePrerequisites(prequistID, new Course(request.CourseID, null, 0, null), new Course(request.PreRequestCourseID, null, 0, null));
         }
 
-        public static void UpdateCourse(this CoursePrerequisites coursePrequist, CoursePrerequisiteRequest? request)
+        public static void UpdateCourse(this CoursePrerequisites coursePrequist, CoursePrerequisiteRequest request)
         {
-            if (request == null)
-                return;
-
             coursePrequist.Course = new Course(request.CourseID, null, 0, null);
             coursePrequist.PreRequestCourse = new Course(request.PreRequestCourseID, null, 0, null);
         }

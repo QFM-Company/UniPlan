@@ -34,14 +34,6 @@ BEGIN
 
         SET @PrerequisiteID = CONVERT(INT, SCOPE_IDENTITY());
 
-
-		   SELECT
-             m.CourseID , m.CourseName , m.CreditHours , m.MajorID , m.MajorName , CP.PrerequisiteID ,
-			 p.CourseID2 , p.CourseName2 , p.CreditHours2 , p.MajorID2 , p.MajorName2
-             FROM [dbo].[VW_Main]as m inner join CoursePrerequisites As CP on  CP.CourseID = m.CourseID 
-		    inner Join VW_Pre as p on CP.PrerequisiteCourseID = p.CourseID2
-            WHERE PrerequisiteID = @PrerequisiteID;
-
     END TRY
     BEGIN CATCH
         THROW;

@@ -22,7 +22,7 @@ namespace DataAccess.Repositories
             _LogService = logService;
         }
 
-        public async Task<Administrator?> AddAdminAsync(Administrator admin)
+        public async Task<bool> AddAdminAsync(Administrator admin)
         {
             try
             {
@@ -57,29 +57,21 @@ namespace DataAccess.Repositories
 
                     await connection.OpenAsync();
 
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            admin.Person = reader.ToPerson();
-                        }
-                    
-                    }
-
+                    int rowsAffected = command.ExecuteNonQuery();
                     if (!(adminID.Value != DBNull.Value && int.TryParse(adminID.Value.ToString(), out int admID)))
                     {
                         admID = -1;
                     }
+                    admin.AdminID = admID;
                     if (!(accountID.Value != DBNull.Value && int.TryParse(accountID.Value.ToString(), out int accntID)))
                     {
                         accntID = -1;
                     }
-
-
-                    admin.AdminID = admID;
                     admin.Account.AccountID = accntID;
-
-                    return admin;
+                    if (rowsAffected > 0)
+                    {
+                        return true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -87,7 +79,7 @@ namespace DataAccess.Repositories
                 await _LogService.LogAsync(ex);
             }
 
-            return null;
+            return false;
         }
 
 

@@ -16,11 +16,8 @@ namespace Business.Mapper
             return new TimeSlot(timeSlotID, request.Day, new Period(request.PeriodID, TimeSpan.Zero, TimeSpan.Zero));
         }
 
-        public static void UpdatePeriod(this TimeSlot timeSlot, TimeSlotRequest? request)
+        public static void UpdatePeriod(this TimeSlot timeSlot, TimeSlotRequest request)
         {
-            if (request == null)
-                return;
-
             timeSlot.Day = request.Day;
             timeSlot!.Period!.PeriodID = request.PeriodID;
         }

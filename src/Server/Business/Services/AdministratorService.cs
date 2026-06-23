@@ -18,12 +18,13 @@ namespace Business.Services
         
         private IAdminRepository _AdminRepository;
         private Administrator? _admin;
+        private IPeopleRepository IPeopleRepository;
 
-
-        public AdministratorService(IAdminRepository adminRepostery)
+        public AdministratorService(IAdminRepository adminRepostery , IPeopleRepository iPeopleRepository)
         {
             _AdminRepository = adminRepostery;
             _admin = null;
+            IPeopleRepository = iPeopleRepository;
         }
 
 
@@ -34,11 +35,12 @@ namespace Business.Services
             if (_admin != null && _admin.Account != null)
             {
                 var result = await _AdminRepository.AddAdminAsync(_admin);
-                if (result != null && result.Account != null)
+                _admin = await _AdminRepository.GetAdminByIDAsync(_admin.AdminID);
+                if (result && _admin?.Account != null && _admin?.Person != null)
                 {
-                    _admin.AdminID = result.AdminID;
-                    _admin.Account.AccountID = result.Account.AccountID;
-                    _admin.Person = result.Person;
+                    _admin.AdminID = _admin.AdminID;
+                    _admin.Account.AccountID = _admin.Account.AccountID;
+                    _admin.Person = _admin.Person;
                     if (_admin.AdminID > 0 && _admin.Account.AccountID > 0)
                     {
                         return _admin.ToResponse();
