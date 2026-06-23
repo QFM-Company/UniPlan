@@ -1,4 +1,4 @@
-﻿using Business.DTOs.Requests;
+﻿using Business.DTOs.Requests.Create;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
@@ -27,7 +27,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<AdministratorResponse>> AddAdminAsync(AdministratorRequest request)
+        public async Task<ActionResult<AdministratorResponse>> AddAdminAsync(CreateAdministratorRequest request)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<AdministratorResponse?>> UpdateAdminAsync(AdministratorRequest request, int adminID)
+        public async Task<ActionResult<AdministratorResponse?>> UpdateAdminAsync(CreateAdministratorRequest request, int adminID)
         {
             try
             {

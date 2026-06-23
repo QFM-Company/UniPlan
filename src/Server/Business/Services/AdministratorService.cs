@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.DTOs.Requests;
+using Business.DTOs.Requests.Create;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Entities;
@@ -24,7 +25,7 @@ namespace Business.Services
             _admin = null;
         }
 
-        private Administrator? RequestToAdministrator(AdministratorRequest? request, int adminID = -1)
+        private Administrator? RequestToAdministrator(CreateAdministratorRequest? request, int adminID = -1)
         {
             if (request != null)
             {
@@ -59,7 +60,7 @@ namespace Business.Services
         }
 
 
-        public async Task<AdministratorResponse?> AddAdministratorAsync(AdministratorRequest request)
+        public async Task<AdministratorResponse?> AddAdministratorAsync(CreateAdministratorRequest request)
         {
             _admin = RequestToAdministrator(request);
             if (_admin != null && _admin.Account != null)
@@ -91,7 +92,7 @@ namespace Business.Services
             return AdministratorToResponse(_admin) ?? null;
         }
 
-        public async Task<AdministratorResponse?> UpdateAdministratorAsync(int adminID, AdministratorRequest request)
+        public async Task<AdministratorResponse?> UpdateAdministratorAsync(int adminID, CreateAdministratorRequest request)
         {
             _admin = RequestToAdministrator(request, adminID);
             if (_admin != null)

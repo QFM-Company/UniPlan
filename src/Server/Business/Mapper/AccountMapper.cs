@@ -9,7 +9,7 @@ namespace Business.Mapper
     {
         public static Account ToAccount(this CreateAccountRequest request)
         {
-            return new Account(request.AccountName, request.Email);
+            return new Account(request.AccountName , request.Password, request.Email);
         }
 
         public static void UpdateAccount(this Account account, UpdateAccountRequest? request)
