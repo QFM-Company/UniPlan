@@ -7,6 +7,7 @@ using Business.DTOs.Requests;
 using Business.DTOs.Requests.Create;
 using Business.DTOs.Responses;
 using Business.Interfaces;
+using Business.Mapper;
 using Core.Entities;
 using Core.Interfaces.Repositories;
 
@@ -25,44 +26,11 @@ namespace Business.Services
             _admin = null;
         }
 
-        private Administrator? RequestToAdministrator(CreateAdministratorRequest? request, int adminID = -1)
-        {
-            if (request != null)
-            {
-                if (request.PersonID > 0)
-                {
-                    if (request.Account != null)
-                    {
-                        Person person = new Person(request.PersonID);
-                        Account account = new Account(request.Account.AccountName, request.Account.Password, request.Account.Email);
-                        return new Administrator(adminID, person, account , true);
-                    }
-                }
-            }
-            return null;
-        }
-
-        private AdministratorResponse? AdministratorToResponse(Administrator? admin)
-        {
-            if (admin != null)
-            {
-                if (admin.Person != null)
-                {
-                    if (admin.Account != null)
-                    {
-                        PersonRequest person = new PersonRequest(admin.Person.FirstName, admin.Person.MiddleName, admin.Person.LastName);
-                        AccountResponse account = new AccountResponse(admin.Account.AccountID , admin.Account.AccountName, admin.Account.Email);
-                        return new AdministratorResponse(admin.AdminID, person, account, admin.IsActive);
-                    }
-                }
-            }
-            return null;
-        }
 
 
         public async Task<AdministratorResponse?> AddAdministratorAsync(CreateAdministratorRequest request)
         {
-            _admin = RequestToAdministrator(request);
+            _admin = request?.ToAdministrator() ?? null;
             if (_admin != null && _admin.Account != null)
             {
                 var result = await _AdminRepository.AddAdminAsync(_admin);
@@ -73,7 +41,7 @@ namespace Business.Services
                     _admin.Person = result.Person;
                     if (_admin.AdminID > 0 && _admin.Account.AccountID > 0)
                     {
-                        return AdministratorToResponse(_admin)!;
+                        return _admin.ToResponse();
                     }
                 }
             }
@@ -89,18 +57,18 @@ namespace Business.Services
         public async Task<AdministratorResponse?> GetAdministratorByIdAsync(int adminID)
         {
             _admin = await _AdminRepository.GetAdminByIDAsync(adminID);
-            return AdministratorToResponse(_admin) ?? null;
+            return _admin?.ToResponse() ?? null;
         }
 
         public async Task<AdministratorResponse?> UpdateAdministratorAsync(int adminID, CreateAdministratorRequest request)
         {
-            _admin = RequestToAdministrator(request, adminID);
+            _admin = request.ToAdministrator(adminID);
             if (_admin != null)
             {
                 bool result = await _AdminRepository.UpdateAdminAsync(_admin);
                 if (result)
                 {
-                    return AdministratorToResponse(_admin)!;
+                    return _admin.ToResponse();
                 }
             }
             return null;
@@ -110,11 +78,9 @@ namespace Business.Services
         {
             var admins = await _AdminRepository.GetPageAdminsAsync(pageNumber, pageSize);
 
-            var responses = admins?.Select(admin => AdministratorToResponse(admin)).Where(adm => adm != null);
+            var responses = admins?.Select(admin => admin.ToResponse()).Where(adm => adm != null);
 
             return responses?.Select(response => response!).ToList() ?? new List<AdministratorResponse>();
         }
-
-
     }
 }

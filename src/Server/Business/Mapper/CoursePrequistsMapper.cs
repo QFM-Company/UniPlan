@@ -11,9 +11,8 @@ namespace Business.Mapper
 {
     public static class CoursePrequistsMapper
     {
-        public static CoursePrerequisites? _RequestToCoursePrequist(CoursePrerequisiteRequest request, int prequistID = -1)
+        public static CoursePrerequisites ToCoursePrequist(this CoursePrerequisiteRequest request, int prequistID = -1)
         {
-            if (request == null || request.CourseID <= 0 || request.PreRequestCourseID <= 0) return null;
             return new CoursePrerequisites(prequistID, new Course(request.CourseID, null, 0, null), new Course(request.PreRequestCourseID, null, 0, null));
         }
 
@@ -27,9 +26,8 @@ namespace Business.Mapper
         }
 
 
-        public static CoursePrerequisiteResponse? _CoursePrequistToResponse(CoursePrerequisites? coursePrequist)
+        public static CoursePrerequisiteResponse ToResponse(this CoursePrerequisites coursePrequist)
         {
-            if (coursePrequist == null) return null;
             return new CoursePrerequisiteResponse(coursePrequist.PreRequestID, coursePrequist.Course, coursePrequist.PreRequestCourse);
         }
 

@@ -12,7 +12,7 @@ namespace Business.Mapper
 {
     public static class CourseMapper
     {
-        public static Course _RequestToCourse(CourseRequest request, int courseID = 0)
+        public static Course ToCourse(this CourseRequest request, int courseID = 0)
         {
             Major major = new Major(request.MajorID, "");
 
@@ -34,7 +34,7 @@ namespace Business.Mapper
             course.Major = new Major(request.MajorID, "");
         }
 
-        public static CourseResponse _CourseToResponse(Course course)
+        public static CourseResponse ToResponse(this Course course)
         {
             if (course.Major == null)
             {

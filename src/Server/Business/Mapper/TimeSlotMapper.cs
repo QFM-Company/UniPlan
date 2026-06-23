@@ -13,7 +13,7 @@ namespace Business.Mapper
     {
         public static TimeSlot ToTimeSlot(this TimeSlotRequest request, int timeSlotID = -1)
         {
-                return new TimeSlot(timeSlotID, request.Day, new Period(request.PeriodID, TimeSpan.Zero, TimeSpan.Zero));
+            return new TimeSlot(timeSlotID, request.Day, new Period(request.PeriodID, TimeSpan.Zero, TimeSpan.Zero));
         }
 
         public static void UpdatePeriod(this TimeSlot timeSlot, TimeSlotRequest? request)
@@ -25,13 +25,9 @@ namespace Business.Mapper
             timeSlot!.Period!.PeriodID = request.PeriodID;
         }
 
-        public static TimeSlotResponse? ToResponse(this TimeSlot? timeSlot)
+        public static TimeSlotResponse ToResponse(this TimeSlot timeSlot)
         {
-            if (timeSlot != null)
-            {
-                return new TimeSlotResponse(timeSlot.SlotID, timeSlot.Day, timeSlot.Period);
-            }
-            return null;
+            return new TimeSlotResponse(timeSlot.SlotID, timeSlot.Day, timeSlot.Period);
         }
 
     }

@@ -14,18 +14,11 @@ namespace Business.Mapper
     public static class AdminMapper
     {
 
-        public static Administrator? ToAdministrator(this CreateAdministratorRequest request, int adminID = -1)
+        public static Administrator ToAdministrator(this CreateAdministratorRequest request, int adminID = -1)
         {
-            if (request.PersonID > 0)
-            {
-                if (request.Account != null)
-                {
-                    Person person = new Person(request.PersonID);
-                    Account account = request.Account.ToAccount();
-                    return new Administrator(adminID, person, account, true);
-                }
-            }
-            return null;
+            Person person = new Person(request.PersonID);
+            Account? account = request.Account?.ToAccount() ?? null;
+            return new Administrator(adminID, person, account, true);
         }
 
         public static void UpdateAdmin(this Administrator admin, UpdateAdministratorRequest? request)
@@ -38,21 +31,11 @@ namespace Business.Mapper
             admin.Person.PersonID = request.PersonID;
         }
 
-        public static AdministratorResponse? ToResponse(this Administrator? admin)
+        public static AdministratorResponse ToResponse(this Administrator admin)
         {
-            if (admin != null)
-            {
-                if (admin.Person != null)
-                {
-                    if (admin.Account != null)
-                    {
-                        PersonRequest person = new PersonRequest(admin.Person.FirstName, admin.Person.MiddleName, admin.Person.LastName);
-                        AccountResponse account = new AccountResponse(admin.Account.AccountID, admin.Account.AccountName, admin.Account.Email);
-                        return new AdministratorResponse(admin.AdminID, person, account, admin.IsActive);
-                    }
-                }
-            }
-            return null;
+            PersonRequest person = new PersonRequest(admin.Person!.FirstName , admin.Person.MiddleName, admin.Person.LastName);
+            AccountResponse account = new AccountResponse(admin.Account!.AccountID, admin.Account.AccountName, admin.Account.Email);
+            return new AdministratorResponse(admin.AdminID, person, account, admin.IsActive);
         }
 
     }

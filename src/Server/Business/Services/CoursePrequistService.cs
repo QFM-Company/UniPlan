@@ -9,6 +9,7 @@ using Business.DTOs.Responses;
 using Core.Interfaces.Repositories;
 using Core.Entities;
 using Business.Interfaces;
+using Business.Mapper;
 
 namespace Business.Services
 {
@@ -21,17 +22,6 @@ namespace Business.Services
             _coursePrequset = coursePrequset;
         }
 
-        private CoursePrerequisites? _RequestToCoursePrequist(CoursePrerequisiteRequest request, int prequistID = -1)
-        {
-            if (request == null || request.CourseID <= 0 || request.PreRequestCourseID <= 0) return null;
-            return new CoursePrerequisites(prequistID , new Course(request.CourseID ,null , 0 , null) , new Course(request.PreRequestCourseID , null , 0 , null) );
-        }
-
-        private CoursePrerequisiteResponse? _CoursePrequistToResponse(CoursePrerequisites? coursePrequist)
-        {
-            if (coursePrequist == null) return null;
-            return new CoursePrerequisiteResponse(coursePrequist.PreRequestID, coursePrequist.Course, coursePrequist.PreRequestCourse);
-        }
 
         public async Task<bool> DeleteCoursePrequistAsync(int prequistID)
         {
@@ -40,20 +30,20 @@ namespace Business.Services
         }
         public async Task<CoursePrerequisiteResponse?> AddCoursePrequistAsync(CoursePrerequisiteRequest request)
         {
-            CoursePrerequisites? coursePrequist = _RequestToCoursePrequist(request);
+            CoursePrerequisites? coursePrequist = request.ToCoursePrequist();
             if (coursePrequist == null) { return null; }
 
             coursePrequist = await _coursePrequset.AddPrequestAsync(coursePrequist);
 
             if (coursePrequist?.PreRequestID <= 0) return null;
-            return _CoursePrequistToResponse(coursePrequist);
+            return coursePrequist?.ToResponse() ?? null;
         }
 
         public async Task<IEnumerable<CoursePrerequisiteResponse?>?> GetPagedCoursePrequistsAsync(int pageNumber = 1, int pageSize = 10)
         {
             if (pageNumber <= 0 || pageSize <= 0) return null;
             return (await _coursePrequset.GetCoursePrerequisitesPagedAsync(pageNumber, pageSize))
-                .Select(n => _CoursePrequistToResponse(n));
+                .Select(n => n.ToResponse());
         }
 
         public async Task<CoursePrerequisiteResponse?> GetCoursePrequistByIDAsync(int prequistID)
@@ -62,7 +52,7 @@ namespace Business.Services
 
             var pre = await _coursePrequset.GetCoursePrerequisitesByIDAsync(prequistID);
 
-            return _CoursePrequistToResponse(pre);
+            return pre?.ToResponse() ?? null;
         }
 
     }
