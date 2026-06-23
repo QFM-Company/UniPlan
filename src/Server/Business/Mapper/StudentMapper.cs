@@ -13,7 +13,7 @@ namespace Business.Mapper
             Person person = request.PersonData.ToPerson();
             Major major = new Major(request.MajorID);
 
-            return new Student(-1, person, account, major);
+            return new Student(request.StudentID, person, account, major);
         }
 
         public static void UpdateStudent(this Student student, UpdateStudentRequest? request)
