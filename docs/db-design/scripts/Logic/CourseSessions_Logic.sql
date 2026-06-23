@@ -51,16 +51,6 @@ BEGIN
    ; THROW 50806, 'Time Slot not found.', 1;
 END;
 
-IF @CreatedByAdminID IS NOT NULL
-   AND NOT EXISTS
-   (
-        SELECT 1
-        FROM dbo.Administrators
-        WHERE AdminID = @CreatedByAdminID
-   )
-BEGIN
-   ; THROW 50808, 'Administrator not found.', 1;
-END;
 
 IF EXISTS
 (
@@ -92,15 +82,13 @@ BEGIN TRY
     (
         OfferingID,
         HallID,
-        SlotID,
-        CreatedByAdminID
+        SlotID
     )
     VALUES
     (
         @OfferingID,
         @HallID,
-        @SlotID,
-        @CreatedByAdminID
+        @SlotID
     );
 
     SET @SessionID = CONVERT(INT, SCOPE_IDENTITY());

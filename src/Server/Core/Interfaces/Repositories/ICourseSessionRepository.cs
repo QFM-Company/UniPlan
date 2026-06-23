@@ -9,9 +9,11 @@ namespace Core.Interfaces.Repositories
 {
     public interface ICourseSessionRepository
     {
-        Task<CourseSession?> AddCourseSessionAsync(CourseSession courseSession);
+        Task<int> AddCourseSessionAsync(CourseSession courseSession);
 
-        Task<CourseSession?> UpdateCourseSessionAsync(CourseSession courseSession);
+        Task<bool> UpdateCourseSessionAsync(CourseSession courseSession);
+
+        Task<bool> DeleteCourseSessionAsync(int sessionID);
 
         Task<CourseSession?> GetCourseSessionByIDAsync(int sessionID);
 

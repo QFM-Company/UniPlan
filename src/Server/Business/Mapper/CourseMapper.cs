@@ -33,10 +33,6 @@ namespace Business.Mapper
 
         public static CourseResponse ToResponse(this Course course)
         {
-            if (course.Major == null)
-            {
-                throw new ArgumentException("Course must have a Major associated with it.");
-            }
             return new CourseResponse(
                 course.CourseID,
                 course.CourseName,

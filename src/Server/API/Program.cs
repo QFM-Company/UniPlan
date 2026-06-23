@@ -35,6 +35,7 @@ builder.Services.AddScoped<IAcademicTermRepository, AcademicTermRepository>();
 builder.Services.AddScoped<ICourseOfferingRepository, CourseOfferingRepository>();
 builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
 builder.Services.AddScoped<ICoursePrequsetRepository, CoursePrequstRepository>();
+builder.Services.AddScoped<ICourseSessionRepository, CourseSessionRepository>();
 
 // Services
 builder.Services.AddScoped<IPeriodService, PeriodsService>();
@@ -49,6 +50,7 @@ builder.Services.AddScoped<IAcademicTermService, AcademicTermService>();
 builder.Services.AddScoped<ICourseOfferingService, CourseOfferingService>();
 builder.Services.AddScoped<ICoursesService, CoursesService>();
 builder.Services.AddScoped<ICoursePrequistService, CoursePrequistService>();
+builder.Services.AddScoped<ICourseSessionService, CourseSessionService>();
 
 
 var app = builder.Build();

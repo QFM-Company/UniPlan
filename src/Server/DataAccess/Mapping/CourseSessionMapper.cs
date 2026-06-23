@@ -23,7 +23,7 @@ namespace DataAccess.Mapping
                 adminID = -1;
             }
 
-            if (!int.TryParse(reader["@SessionID"]?.ToString(), out int courseSessionID))
+            if (!int.TryParse(reader["SessionID"]?.ToString(), out int courseSessionID))
             {
                 courseSessionID = -1;
             }

@@ -11,19 +11,19 @@ namespace Business.DTOs.Requests.Create
     public class CreateCourseSessionRequest
     {
 
-        public CourseOffering? CourseOffering { get; set; }
+        public int CourseOfferingID { get; set; }
 
-        public Hall? Hall { get; set; }
+        public int HallID { get; set; }
 
-        public TimeSlot? TimeSlot { get; set; }
+        public int TimeSlotID { get; set; }
 
-        public int? CreatedByAdminID { get; set; }
+        public int CreatedByAdminID { get; set; }
 
-        public CreateCourseSessionRequest(CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot, int createdByAdminID)
+        public CreateCourseSessionRequest(int courseOfferingID, int hallID, int timeSlotID, int createdByAdminID)
         {
-            CourseOffering = courseOffering;
-            Hall = hall;
-            TimeSlot = timeSlot;
+            CourseOfferingID = courseOfferingID;
+            HallID = hallID;
+            TimeSlotID = timeSlotID;
             CreatedByAdminID = createdByAdminID;
         }
 

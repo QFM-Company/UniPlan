@@ -9,17 +9,17 @@ namespace Business.DTOs.Requests.Update
 {
     public class UpdateCourseSessionRequest
     {
-        public CourseOffering? CourseOffering { get; set; }
+        public int CourseOfferingID { get; set; }
 
-        public Hall? Hall { get; set; }
+        public int HallID { get; set; }
 
-        public TimeSlot? TimeSlot { get; set; }
+        public int TimeSlotID { get; set; }
 
-        public UpdateCourseSessionRequest(CourseOffering? courseOffering, Hall? hall, TimeSlot? timeSlot)
+        public UpdateCourseSessionRequest(int courseOfferingID, int hallID, int timeSlotID)
         {
-            CourseOffering = courseOffering;
-            Hall = hall;
-            TimeSlot = timeSlot;
+            CourseOfferingID = courseOfferingID;
+            HallID = hallID;
+            TimeSlotID = timeSlotID;
         }
 
         public UpdateCourseSessionRequest()

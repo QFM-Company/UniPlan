@@ -7,7 +7,7 @@ using System.Data;
 
 namespace DataAccess.Repositories
 {
-    public class CourseSessionRepository //: ICourseSessionRepository
+    public class CourseSessionRepository : ICourseSessionRepository
     {
         private readonly DBHelpers _dBHelpers;
         private readonly ILogService _logService;
@@ -63,7 +63,6 @@ namespace DataAccess.Repositories
                 (
                     "@CreatedByAdminID",
                     courseSession.CreatedByAdminID
-                        ?? (object)DBNull.Value
                 );
 
                 await connection.OpenAsync();
@@ -131,7 +130,6 @@ namespace DataAccess.Repositories
                 (
                     "@CreatedByAdminID",
                     courseSession.CreatedByAdminID
-                        ?? (object)DBNull.Value
                 );
 
                 await connection.OpenAsync();
@@ -234,7 +232,7 @@ namespace DataAccess.Repositories
             return courseSession;
         }
 
-        public async Task<IEnumerable<CourseSession>>
+        public async Task<IEnumerable<CourseSession?>?>
             GetCourseSessionsPagedAsync
             (
                 int pageNumber,
@@ -270,7 +268,6 @@ namespace DataAccess.Repositories
                 using SqlDataReader reader =
                     await command.ExecuteReaderAsync();
 
-                // تجاوز نتيجة TotalRows
                 if (reader.HasRows)
                 {
                     await reader.ReadAsync();
