@@ -28,7 +28,7 @@ namespace Business.Services
         {
             if (request != null)
             {
-                return new TimeSlot(timeSlotID, request.Day, request.Period);
+                return new TimeSlot(timeSlotID, request.Day, new Period( request.PeriodID , TimeSpan.Zero , TimeSpan.Zero));
             }
             return null;
         }
@@ -48,8 +48,11 @@ namespace Business.Services
             if (_timeSlot != null)
             {
                 _timeSlot.SlotID = await _TimeSlotsRepository.AddTimeSlotAsync(_timeSlot);
-                if(_timeSlot.SlotID > 0)
-                    return TimeSlotToResponse(_timeSlot);
+                if (_timeSlot.SlotID > 0)
+                {
+                    _timeSlot.Period = await _PeriodRepository.GetPeriodByIDAsync(_timeSlot.Period?.PeriodID ?? -1);
+                    if(_timeSlot.Period != null) return TimeSlotToResponse(_timeSlot);
+                }
             }
 
             return null;

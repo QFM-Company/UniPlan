@@ -11,13 +11,9 @@ namespace Business.Mapper
 {
     public static class TimeSlotMapper
     {
-        public static TimeSlot? ToTimeSlot(this TimeSlotRequest? request, int timeSlotID = -1)
+        public static TimeSlot ToTimeSlot(this TimeSlotRequest request, int timeSlotID = -1)
         {
-            if (request != null)
-            {
-                return new TimeSlot(timeSlotID, request.Day, request.Period);
-            }
-            return null;
+                return new TimeSlot(timeSlotID, request.Day, new Period(request.PeriodID, TimeSpan.Zero, TimeSpan.Zero));
         }
 
         public static void UpdatePeriod(this TimeSlot timeSlot, TimeSlotRequest? request)
@@ -25,8 +21,8 @@ namespace Business.Mapper
             if (request == null)
                 return;
 
-//            timeSlot.Period. = request.StartTime;
-  //          period.EndTime = request.EndTime;
+            timeSlot.Day = request.Day;
+            timeSlot!.Period!.PeriodID = request.PeriodID;
         }
 
         public static TimeSlotResponse? ToResponse(this TimeSlot? timeSlot)

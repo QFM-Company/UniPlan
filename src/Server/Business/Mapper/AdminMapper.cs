@@ -14,18 +14,15 @@ namespace Business.Mapper
     public static class AdminMapper
     {
 
-        public static Administrator? ToAdministrator(this CreateAdministratorRequest? request, int adminID = -1)
+        public static Administrator? ToAdministrator(this CreateAdministratorRequest request, int adminID = -1)
         {
-            if (request != null)
+            if (request.PersonID > 0)
             {
-                if (request.PersonID > 0)
+                if (request.Account != null)
                 {
-                    if (request.Account != null)
-                    {
-                        Person person = new Person(request.PersonID);
-                        Account account = request.Account.ToAccount();
-                        return new Administrator(adminID, person, account, true);
-                    }
+                    Person person = new Person(request.PersonID);
+                    Account account = request.Account.ToAccount();
+                    return new Administrator(adminID, person, account, true);
                 }
             }
             return null;
