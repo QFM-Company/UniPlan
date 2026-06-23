@@ -21,5 +21,10 @@ namespace Presentation.Forms
         {
 
         }
+
+        private void SchedulingConfigurationForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

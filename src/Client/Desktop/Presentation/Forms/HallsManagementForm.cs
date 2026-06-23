@@ -31,5 +31,10 @@ namespace Presentation.Forms
         {
 
         }
+
+        private void header1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

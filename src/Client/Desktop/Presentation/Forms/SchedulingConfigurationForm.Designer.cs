@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            pictureBox1 = new PictureBox();
-            pnlHeader = new Panel();
-            lbHeader = new Label();
             dgvHalls = new DataGridView();
             col1 = new DataGridViewTextBoxColumn();
             col2 = new DataGridViewTextBoxColumn();
@@ -40,47 +37,15 @@
             col6 = new DataGridViewTextBoxColumn();
             col5 = new DataGridViewButtonColumn();
             panel1 = new Panel();
+            TineSloteBtn = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            textBox1 = new TextBox();
             txtFloorNumber = new TextBox();
             txtBuildingName = new TextBox();
             cmbHallName = new ComboBox();
-            uniPlanButton1 = new UniPlan.Controls.CustomButtons.UniPlanButton();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            pnlHeader.SuspendLayout();
+            header1 = new Controls.UserControls.Header();
             ((System.ComponentModel.ISupportInitialize)dgvHalls).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = Properties.Resources.UniPlan;
-            pictureBox1.Location = new Point(1, 1);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(103, 103);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 1;
-            pictureBox1.TabStop = false;
-            // 
-            // pnlHeader
-            // 
-            pnlHeader.BackColor = SystemColors.HighlightText;
-            pnlHeader.Controls.Add(lbHeader);
-            pnlHeader.Controls.Add(pictureBox1);
-            pnlHeader.Dock = DockStyle.Top;
-            pnlHeader.Location = new Point(0, 0);
-            pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(1378, 100);
-            pnlHeader.TabIndex = 1;
-            // 
-            // lbHeader
-            // 
-            lbHeader.AutoSize = true;
-            lbHeader.Font = new Font("Tajawal", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbHeader.ForeColor = Color.FromArgb(30, 58, 71);
-            lbHeader.Location = new Point(110, 26);
-            lbHeader.Name = "lbHeader";
-            lbHeader.Size = new Size(126, 47);
-            lbHeader.TabIndex = 2;
-            lbHeader.Text = "UniPlan";
             // 
             // dgvHalls
             // 
@@ -145,7 +110,8 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(244, 247, 249);
-            panel1.Controls.Add(uniPlanButton1);
+            panel1.Controls.Add(TineSloteBtn);
+            panel1.Controls.Add(textBox1);
             panel1.Controls.Add(txtFloorNumber);
             panel1.Controls.Add(txtBuildingName);
             panel1.Controls.Add(cmbHallName);
@@ -154,60 +120,76 @@
             panel1.Size = new Size(1170, 91);
             panel1.TabIndex = 3;
             // 
+            // TineSloteBtn
+            // 
+            TineSloteBtn.BackColor = Color.FromArgb(23, 147, 177);
+            TineSloteBtn.BorderRadius = 15;
+            TineSloteBtn.FlatAppearance.BorderSize = 0;
+            TineSloteBtn.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            TineSloteBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            TineSloteBtn.FlatStyle = FlatStyle.Flat;
+            TineSloteBtn.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            TineSloteBtn.ForeColor = Color.FromArgb(255, 255, 255);
+            TineSloteBtn.Location = new Point(977, 11);
+            TineSloteBtn.Name = "TineSloteBtn";
+            TineSloteBtn.Size = new Size(180, 68);
+            TineSloteBtn.TabIndex = 6;
+            TineSloteBtn.Text = "SAVE";
+            TineSloteBtn.UseVisualStyleBackColor = false;
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(279, 25);
+            textBox1.Name = "textBox1";
+            textBox1.PlaceholderText = "Day";
+            textBox1.Size = new Size(188, 35);
+            textBox1.TabIndex = 5;
+            // 
             // txtFloorNumber
             // 
-            txtFloorNumber.Location = new Point(704, 22);
+            txtFloorNumber.Location = new Point(742, 25);
             txtFloorNumber.Name = "txtFloorNumber";
-            txtFloorNumber.PlaceholderText = "Floor Number";
-            txtFloorNumber.Size = new Size(240, 35);
+            txtFloorNumber.PlaceholderText = "End Time";
+            txtFloorNumber.Size = new Size(215, 35);
             txtFloorNumber.TabIndex = 2;
             // 
             // txtBuildingName
             // 
-            txtBuildingName.Location = new Point(400, 25);
+            txtBuildingName.Location = new Point(505, 25);
             txtBuildingName.Name = "txtBuildingName";
-            txtBuildingName.PlaceholderText = "Building Name";
-            txtBuildingName.Size = new Size(240, 35);
+            txtBuildingName.PlaceholderText = "Start Time";
+            txtBuildingName.Size = new Size(213, 35);
             txtBuildingName.TabIndex = 1;
             // 
             // cmbHallName
             // 
             cmbHallName.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbHallName.FormattingEnabled = true;
-            cmbHallName.Location = new Point(66, 22);
+            cmbHallName.Location = new Point(21, 22);
             cmbHallName.Name = "cmbHallName";
             cmbHallName.Size = new Size(240, 38);
             cmbHallName.TabIndex = 0;
             // 
-            // uniPlanButton1
+            // header1
             // 
-            uniPlanButton1.BackColor = Color.FromArgb(23, 147, 177);
-            uniPlanButton1.FlatAppearance.BorderSize = 0;
-            uniPlanButton1.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton1.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton1.FlatStyle = FlatStyle.Flat;
-            uniPlanButton1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton1.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton1.Location = new Point(988, 8);
-            uniPlanButton1.Name = "uniPlanButton1";
-            uniPlanButton1.Size = new Size(150, 68);
-            uniPlanButton1.TabIndex = 4;
-            uniPlanButton1.Text = "SAVE";
-            uniPlanButton1.UseVisualStyleBackColor = false;
+            header1.BackColor = Color.White;
+            header1.Location = new Point(-2, 0);
+            header1.Name = "header1";
+            header1.Size = new Size(2100, 105);
+            header1.TabIndex = 5;
+            header1.Title = "UniPlan";
             // 
             // SchedulingConfigurationForm
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1378, 844);
+            Controls.Add(header1);
             Controls.Add(dgvHalls);
             Controls.Add(panel1);
-            Controls.Add(pnlHeader);
             Name = "SchedulingConfigurationForm";
             Text = "SchedulingConfigurationForm";
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            pnlHeader.ResumeLayout(false);
-            pnlHeader.PerformLayout();
+            Load += SchedulingConfigurationForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvHalls).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -215,10 +197,6 @@
         }
 
         #endregion
-
-        private PictureBox pictureBox1;
-        private Panel pnlHeader;
-        private Label lbHeader;
         private DataGridView dgvHalls;
         private Panel panel1;
         private TextBox txtFloorNumber;
@@ -230,6 +208,8 @@
         private DataGridViewTextBoxColumn col4;
         private DataGridViewTextBoxColumn col6;
         private DataGridViewButtonColumn col5;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton1;
+        private TextBox textBox1;
+        private UniPlan.Controls.CustomButtons.UniPlanButton TineSloteBtn;
+        private Controls.UserControls.Header header1;
     }
 }

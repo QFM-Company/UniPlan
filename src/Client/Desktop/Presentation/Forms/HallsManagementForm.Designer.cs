@@ -28,26 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             panel1 = new Panel();
+            HallsBtn = new UniPlan.Controls.CustomButtons.UniPlanButton();
             txtFloorNumber = new TextBox();
             txtBuildingName = new TextBox();
             cmbHallName = new ComboBox();
-            dgvHalls = new DataGridView();
+            S = new DataGridView();
             col1 = new DataGridViewTextBoxColumn();
             col2 = new DataGridViewTextBoxColumn();
             col3 = new DataGridViewTextBoxColumn();
             col4 = new DataGridViewTextBoxColumn();
             col5 = new DataGridViewButtonColumn();
-            uniPlanButton1 = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            header1 = new Controls.UserControls.Header();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvHalls).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)S).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(244, 247, 249);
-            panel1.Controls.Add(uniPlanButton1);
+            panel1.Controls.Add(HallsBtn);
             panel1.Controls.Add(txtFloorNumber);
             panel1.Controls.Add(txtBuildingName);
             panel1.Controls.Add(cmbHallName);
@@ -55,6 +56,23 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1170, 91);
             panel1.TabIndex = 1;
+            // 
+            // HallsBtn
+            // 
+            HallsBtn.BackColor = Color.FromArgb(23, 147, 177);
+            HallsBtn.BorderRadius = 15;
+            HallsBtn.FlatAppearance.BorderSize = 0;
+            HallsBtn.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            HallsBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            HallsBtn.FlatStyle = FlatStyle.Flat;
+            HallsBtn.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            HallsBtn.ForeColor = Color.FromArgb(255, 255, 255);
+            HallsBtn.Location = new Point(970, 8);
+            HallsBtn.Name = "HallsBtn";
+            HallsBtn.Size = new Size(180, 68);
+            HallsBtn.TabIndex = 3;
+            HallsBtn.Text = "SAVE";
+            HallsBtn.UseVisualStyleBackColor = false;
             // 
             // txtFloorNumber
             // 
@@ -82,28 +100,28 @@
             cmbHallName.TabIndex = 0;
             cmbHallName.SelectedIndexChanged += cmbHallName_SelectedIndexChanged;
             // 
-            // dgvHalls
+            // S
             // 
-            dgvHalls.AllowUserToAddRows = false;
-            dgvHalls.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvHalls.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvHalls.BackgroundColor = Color.FromArgb(244, 247, 249);
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(52, 84, 99);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10.5F);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvHalls.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dgvHalls.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvHalls.Columns.AddRange(new DataGridViewColumn[] { col1, col2, col3, col4, col5 });
-            dgvHalls.EnableHeadersVisualStyles = false;
-            dgvHalls.Location = new Point(105, 260);
-            dgvHalls.Name = "dgvHalls";
-            dgvHalls.RowHeadersWidth = 62;
-            dgvHalls.Size = new Size(1170, 541);
-            dgvHalls.TabIndex = 2;
+            S.AllowUserToAddRows = false;
+            S.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            S.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            S.BackgroundColor = Color.FromArgb(244, 247, 249);
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(52, 84, 99);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10.5F);
+            dataGridViewCellStyle1.ForeColor = Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            S.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            S.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            S.Columns.AddRange(new DataGridViewColumn[] { col1, col2, col3, col4, col5 });
+            S.EnableHeadersVisualStyles = false;
+            S.Location = new Point(105, 260);
+            S.Name = "S";
+            S.RowHeadersWidth = 62;
+            S.Size = new Size(1170, 541);
+            S.TabIndex = 2;
             // 
             // col1
             // 
@@ -135,21 +153,14 @@
             col5.MinimumWidth = 8;
             col5.Name = "col5";
             // 
-            // uniPlanButton1
+            // header1
             // 
-            uniPlanButton1.BackColor = Color.FromArgb(23, 147, 177);
-            uniPlanButton1.FlatAppearance.BorderSize = 0;
-            uniPlanButton1.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton1.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton1.FlatStyle = FlatStyle.Flat;
-            uniPlanButton1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton1.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton1.Location = new Point(990, 8);
-            uniPlanButton1.Name = "uniPlanButton1";
-            uniPlanButton1.Size = new Size(150, 68);
-            uniPlanButton1.TabIndex = 3;
-            uniPlanButton1.Text = "SAVE";
-            uniPlanButton1.UseVisualStyleBackColor = false;
+            header1.BackColor = Color.White;
+            header1.Location = new Point(2, 0);
+            header1.Name = "header1";
+            header1.Size = new Size(2100, 102);
+            header1.TabIndex = 3;
+            header1.Title = "UniPlan";
             // 
             // HallsManagement
             // 
@@ -157,14 +168,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
             ClientSize = new Size(1378, 844);
-            Controls.Add(dgvHalls);
+            Controls.Add(header1);
+            Controls.Add(S);
             Controls.Add(panel1);
             Name = "HallsManagement";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "HallsManagementForm";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvHalls).EndInit();
+            ((System.ComponentModel.ISupportInitialize)S).EndInit();
             ResumeLayout(false);
         }
 
@@ -173,12 +184,13 @@
         private ComboBox cmbHallName;
         private TextBox txtFloorNumber;
         private TextBox txtBuildingName;
-        private DataGridView dgvHalls;
+        private DataGridView S;
         private DataGridViewTextBoxColumn col1;
         private DataGridViewTextBoxColumn col2;
         private DataGridViewTextBoxColumn col3;
         private DataGridViewTextBoxColumn col4;
         private DataGridViewButtonColumn col5;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton1;
+        private UniPlan.Controls.CustomButtons.UniPlanButton HallsBtn;
+        private Controls.UserControls.Header header1;
     }
 }

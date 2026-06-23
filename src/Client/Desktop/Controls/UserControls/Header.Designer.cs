@@ -2,15 +2,8 @@
 {
     partial class Header
     {
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             lbHeader = new Label();
@@ -40,7 +29,7 @@
             lbHeader.AutoSize = true;
             lbHeader.Font = new Font("Tajawal", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbHeader.ForeColor = Color.FromArgb(30, 58, 71);
-            lbHeader.Location = new Point(110, 26);
+            lbHeader.Location = new Point(115, 28);
             lbHeader.Name = "lbHeader";
             lbHeader.Size = new Size(126, 47);
             lbHeader.TabIndex = 2;
@@ -59,13 +48,13 @@
             // 
             // pnlHeader
             // 
-            pnlHeader.BackColor = SystemColors.HighlightText;
+            pnlHeader.BackColor = Color.White;
             pnlHeader.Controls.Add(lbHeader);
             pnlHeader.Controls.Add(piclogo);
-            pnlHeader.Dock = DockStyle.Top;
+            pnlHeader.Dock = DockStyle.Fill;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(1400, 100);
+            pnlHeader.Size = new Size(1400, 105);
             pnlHeader.TabIndex = 1;
             // 
             // Header
@@ -75,7 +64,7 @@
             BackColor = Color.White;
             Controls.Add(pnlHeader);
             Name = "Header";
-            Size = new Size(1400, 100);
+            Size = new Size(1400, 105);
             ((System.ComponentModel.ISupportInitialize)piclogo).EndInit();
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
