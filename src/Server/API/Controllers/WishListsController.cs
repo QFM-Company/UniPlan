@@ -9,39 +9,39 @@ using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
-    [Route("api/academicTerms")]
+    [Route("api/wishLists")]
     [ApiController]
-    public class AcademicTermsController : ControllerBase
+    public class WishListsController : ControllerBase
     {
-        private IAcademicTermService _listService;
+        private IWishListService _listService;
         private ILogService _logService;
         private IExceptionService _exceptionService;
 
-        public AcademicTermsController(IAcademicTermService listService, ILogService logService, IExceptionService exceptionService)
+        public WishListsController(IWishListService listService, ILogService logService, IExceptionService exceptionService)
         {
             _listService = listService;
             _logService = logService;
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddAcademicTermAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AcademicTermResponse))]
+        [HttpPost("add", Name = "AddWishListAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WishListResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<AcademicTermResponse?>> AddAcademicTermAsync(AcademicTermRequest request)
+        public async Task<ActionResult<WishListResponse?>> AddWishListAsync(WishListRequest request)
         {
             try
             {
-                AcademicTermResponse? response = await _listService.AddAcademicTermAsync(request);
+                WishListResponse? response = await _listService.AddWishListAsync(request);
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("AcademicTerm added successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync("WishList added successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync("Failed to add AcademicTerm.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add AcademicTerm.");
+                await _logService.LogAsync("Failed to add WishList.", ExternalServicesEnums.LogType.Warning);
+                return BadRequest("Failed to add WishList.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -53,24 +53,24 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{listID}", Name = "DeleteAcademicTermAsync")]
+        [HttpDelete("delete/{listID}", Name = "DeleteWishListAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteAcademicTermAsync(int listID)
+        public async Task<ActionResult<bool>> DeleteWishListAsync(int listID)
         {
             try
             {
-                bool res = await _listService.DeleteAcademicTermAsync(listID);
+                bool res = await _listService.DeleteWishListAsync(listID);
 
                 if (res)
                 {
-                    await _logService.LogAsync("AcademicTerm deleted successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync("WishList deleted successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(res);
                 }
 
-                await _logService.LogAsync("Failed to delete AcademicTerm.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete AcademicTerm.");
+                await _logService.LogAsync("Failed to delete WishList.", ExternalServicesEnums.LogType.Warning);
+                return BadRequest("Failed to delete WishList.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -82,24 +82,24 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{listID}", Name = "GetAcademicTermByIDAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AcademicTermResponse))]
+        [HttpGet("get/{listID}", Name = "GetWishListByIDAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WishListResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<AcademicTermResponse>> GetAcademicTermByIDAsync(int listID)
+        public async Task<ActionResult<WishListResponse>> GetWishListByIDAsync(int listID)
         {
             try
             {
-                AcademicTermResponse? response = await _listService.GetAcademicTermByIDAsync(listID);
+                WishListResponse? response = await _listService.GetWishListByIDAsync(listID);
 
                 if (response != null)
                 {
-                    await _logService.LogAsync($"AcademicTerm with ID {listID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync($"WishList with ID {listID} fetched successfully.", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync($"AcademicTerm with ID {listID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"AcademicTerm with ID {listID} was not found.");
+                await _logService.LogAsync($"WishList with ID {listID} was not found.", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"WishList with ID {listID} was not found.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -111,24 +111,24 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedAcademicTermsAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AcademicTermResponse>))]
+        [HttpGet("get/all/{registrationID}", Name = "GetPagedWishListsAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<WishListResponse>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<AcademicTermResponse>?>> GetPagedAcademicTermsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<WishListResponse>?>> GetWishListsByRegistrationIDAsync(int registrationID)
         {
             try
             {
-                IEnumerable<AcademicTermResponse>? responses = await _listService.GetPagedAcademicTermsAsync(pageNumber, pageSize);
+                IEnumerable<WishListResponse>? responses = await _listService.GetWishListsByRegistrationIDAsync(registrationID);
 
                 if (responses != null && responses.Any())
                 {
-                    await _logService.LogAsync($"AcademicTerms fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync($"WishList fetched successfully for registration ID: {registrationID}", ExternalServicesEnums.LogType.Info);
                     return Ok(responses);
                 }
 
-                await _logService.LogAsync($"No lists found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No lists found on page {pageNumber}.");
+                await _logService.LogAsync($"WishList with registration ID {registrationID} was not found.", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"WishList with registration ID {registrationID} was not found.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
