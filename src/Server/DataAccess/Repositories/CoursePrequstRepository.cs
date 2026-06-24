@@ -36,6 +36,14 @@ namespace DataAccess.Repositories
                         {
                             Direction = ParameterDirection.Output
                         };
+
+
+                        var result = new SqlParameter("@Result", SqlDbType.Bit)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+
+                        command.Parameters.Add(result);
                         command.Parameters.Add(preRequestID);
                         command.Parameters.AddWithValue("@CourseID", coursePrequst.Course?.CourseID);
                         command.Parameters.AddWithValue("@PrerequisiteCourseID", coursePrequst.PreRequestCourse?.CourseID);
@@ -43,15 +51,19 @@ namespace DataAccess.Repositories
 
 
 
-                        int rows = command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
 
-                        if (preRequestID.Value != DBNull.Value &&
-                           int.TryParse(preRequestID.Value.ToString(), out int id))
-                        {          
-                            if (rows > 0)  
-                                return id;
+                        if (!(preRequestID.Value != DBNull.Value &&
+                           int.TryParse(preRequestID.Value.ToString(), out int id)))
+                        {
+                            id = -1;
                         }
 
+
+                        if (result.Value != DBNull.Value && bool.TryParse(result.Value.ToString(), out bool res))
+                        {
+                            return id;
+                        }
                     }
                 }
             }
