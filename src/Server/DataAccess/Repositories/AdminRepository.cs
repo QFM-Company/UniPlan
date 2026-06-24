@@ -43,21 +43,27 @@ namespace DataAccess.Repositories
                     };
 
 
+                    var result = new SqlParameter("@Result", SqlDbType.Bit)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+
                     command.Parameters.Add(adminID);
                     command.Parameters.Add(accountID);
+                    command.Parameters.Add(result);
 
                     command.Parameters.AddWithValue("@IsActive", admin.IsActive);
 
-                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null"); ;
+                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null"); 
                     command.Parameters.AddWithValue("@PersonID", admin.Person.PersonID);
-                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null"); ;
+                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null"); 
                     command.Parameters.AddWithValue("@AccountName", admin.Account.AccountName);
                     command.Parameters.AddWithValue("@Password", admin.Account.Password);
                     command.Parameters.AddWithValue("@Email", admin.Account.Email);
 
                     await connection.OpenAsync();
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                     if (!(adminID.Value != DBNull.Value && int.TryParse(adminID.Value.ToString(), out int admID)))
                     {
                         admID = -1;
@@ -68,9 +74,10 @@ namespace DataAccess.Repositories
                         accntID = -1;
                     }
                     admin.Account.AccountID = accntID;
-                    if (rowsAffected > 0)
+
+                    if (result.Value != DBNull.Value && bool.TryParse(result.Value.ToString(), out bool res))
                     {
-                        return true;
+                        return res;
                     }
                 }
             }
@@ -101,11 +108,11 @@ namespace DataAccess.Repositories
 
                     command.Parameters.AddWithValue("@IsActive", admin.IsActive);
                     command.Parameters.AddWithValue("@AdministratorID", admin.AdminID);
-                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null"); ;
+                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null"); 
                     command.Parameters.AddWithValue("@AccountName", admin.Account.AccountName);
                     command.Parameters.AddWithValue("@Password", admin.Account.Password);
                     command.Parameters.AddWithValue("@Email", admin.Account.Email);
-                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null"); ;
+                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null"); 
                     command.Parameters.AddWithValue("@FirstName", admin.Person.FirstName);
                     command.Parameters.AddWithValue("@LastName", admin.Person.LastName);
                     command.Parameters.AddWithValue("@MiddleName", admin.Person.MiddleName ?? (object)DBNull.Value);

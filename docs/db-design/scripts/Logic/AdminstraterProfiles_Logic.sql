@@ -34,9 +34,9 @@ RETURNS bit
 AS
 BEGIN
     -- CHANGED: Empty strings are now invalid, not only NULL values.
-    IF NULLIF(LTRIM(RTRIM(@AccountName)), '') IS NULL
-        OR NULLIF(LTRIM(RTRIM(@Email)), '') IS NULL
-        OR NULLIF(LTRIM(RTRIM(@Password)), '') IS NULL
+    IF (NULLIF(LTRIM(RTRIM(@AccountName)), '') IS NULL)
+        OR (NULLIF(LTRIM(RTRIM(@Email)), '') IS NULL)
+        OR (NULLIF(LTRIM(RTRIM(@Password)), '') IS NULL)
     BEGIN
         RETURN 0;
     END
@@ -146,15 +146,15 @@ CREATE OR ALTER PROCEDURE SP_AdminProfile_Insert
     @AccountName nvarchar(50),
     @Password nvarchar(255),
     @Email nvarchar(255),
-    @AccountID int OUT
+    @AccountID int OUT ,
+
+	@Result bit out
 AS
 BEGIN
     SET NOCOUNT ON;
 
     IF @IsActive IS NULL
         SET @IsActive = 1;
-
-
 
     -- CHANGED: THROW stops the procedure immediately.
     -- RAISERROR in your original code raised the error but the procedure could continue.
@@ -190,13 +190,17 @@ BEGIN
         -- CHANGED: Explicitly converts SCOPE_IDENTITY() to int.
         SET @AdministratorID = CONVERT(int, SCOPE_IDENTITY());
 
+		select 1;
+
         COMMIT TRANSACTION;
+
+		set @Result = 1;
 
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
             ROLLBACK TRANSACTION;
-
+		set @Result = 0;
         -- CHANGED: THROW keeps the original error details.
         THROW;
     END CATCH
@@ -429,7 +433,3 @@ where AdminID = @AdminID;
 End
 
 go
-
-
-
-

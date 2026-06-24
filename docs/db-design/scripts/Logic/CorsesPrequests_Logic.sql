@@ -7,7 +7,8 @@ GO
 CREATE OR ALTER PROCEDURE SP_CoursePrerequisites_Insert
     @CourseID INT,
     @PrerequisiteCourseID INT,
-    @PrerequisiteID INT OUT
+    @PrerequisiteID INT OUT,
+	@Result bit out
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -34,8 +35,11 @@ BEGIN
 
         SET @PrerequisiteID = CONVERT(INT, SCOPE_IDENTITY());
 
+		set @Result = 1;
+
     END TRY
     BEGIN CATCH
+	set @Result = 0;
         THROW;
     END CATCH
 END;
