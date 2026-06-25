@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces.ExternalServices;
+using Core.Interfaces.Repositories;
 using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Repositories
 {
-    public class StudentTermRepository
+    public class StudentTermRepository : IStudentTermRepository
     {
         private readonly DBHelpers _dBHelpers;
         private readonly ILogService _logService;

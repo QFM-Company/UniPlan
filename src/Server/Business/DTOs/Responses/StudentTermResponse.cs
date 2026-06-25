@@ -13,7 +13,7 @@ namespace Business.DTOs.Responses
 
         public int StudentID { get; set; }
 
-        public AcademicTerm? AcademicTerm { get; set; }
+        public AcademicTermResponse? AcademicTerm { get; set; }
 
 
 
@@ -24,7 +24,7 @@ namespace Business.DTOs.Responses
             AcademicTerm = null;
         }
 
-        public StudentTermResponse(int registrationID, int studentID, AcademicTerm? academicTerm)
+        public StudentTermResponse(int registrationID, int studentID, AcademicTermResponse? academicTerm)
         {
             RegistrationID = registrationID;
             StudentID = studentID;
