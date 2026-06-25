@@ -64,3 +64,18 @@ BEGIN
     ORDER BY RegistrationID;
 END;
 GO
+
+
+
+CREATE OR ALTER PROCEDURE SP_StudentTerms_GetById
+    @RegistrationID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM VW_StudentTerms
+    WHERE RegistrationID = @RegistrationID
+    ORDER BY RegistrationID;
+END;
+GO
