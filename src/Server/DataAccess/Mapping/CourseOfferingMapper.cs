@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace DataAccess.Mapping
 {
@@ -24,6 +25,19 @@ namespace DataAccess.Mapping
             }
 
             return new CourseOffering(offeringID, sectionNumber, createdByAdminID, term, lecture);
+        }
+
+        public static DataTable ToDataTable(this List<CourseOffering> Offerings)
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("OfferingID", typeof(int));
+
+            foreach (CourseOffering item in Offerings)
+            {
+                dataTable.Rows.Add(item.OfferingID);
+            }
+
+            return dataTable;
         }
     }
 }

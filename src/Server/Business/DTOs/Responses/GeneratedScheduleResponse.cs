@@ -1,3 +1,5 @@
+using Core.Entities;
+
 namespace Business.DTOs.Responses
 {
     public class GeneratedScheduleResponse
@@ -5,6 +7,8 @@ namespace Business.DTOs.Responses
         public int ScheduleID { get; set; }
 
         public WishListResponse WishListInfo { get; set; }
+
+        public List<CourseOfferingResponse>? Offerings { get; set; }
 
         public GeneratedScheduleResponse()
         {
@@ -15,6 +19,13 @@ namespace Business.DTOs.Responses
         {
             ScheduleID = scheduleID;
             WishListInfo = wishListInfo;
+        }
+
+        public GeneratedScheduleResponse(int scheduleID, WishListResponse wishListInfo, List<CourseOfferingResponse>? offerings)
+        {
+            ScheduleID = scheduleID;
+            WishListInfo = wishListInfo;
+            Offerings = offerings;
         }
     }
 }

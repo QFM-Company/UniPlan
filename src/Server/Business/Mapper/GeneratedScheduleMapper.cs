@@ -13,8 +13,10 @@ namespace Business.Mapper
 
         public static GeneratedScheduleResponse ToResponse(this GeneratedSchedule schedule)
         {
-            WishListResponse response = schedule.WishList.ToResponse();
-            return new GeneratedScheduleResponse(schedule.ScheduleID, response);
+            WishListResponse listResponse = schedule.WishList.ToResponse();
+            List<CourseOfferingResponse>? offeringsResponse = schedule.Offerings?.Select(o => o.ToResponse()).ToList();
+
+            return new GeneratedScheduleResponse(schedule.ScheduleID, listResponse, offeringsResponse);
         }
     }
 }

@@ -23,12 +23,24 @@ namespace Business.Services
             schedule.ScheduleID = await _scheduleRepository.AddGeneratedScheduleAsync(schedule);
 
             if (schedule.ScheduleID != -1)
-                return await GetGeneratedScheduleByWishListIDAsync(schedule.WishList.WishListID);
+            {
+                if (_GeneratedSchedule(schedule))
+                {
+                    await _AddScheduleDetailsAsync(schedule);
+                }
+            }
+            else
+                return null;
 
-            return null;
+            return schedule.ToResponse();
         }
 
-        public async Task<bool> AddScheduleDetailsAsync(GeneratedSchedule schedule)
+        private bool _GeneratedSchedule(GeneratedSchedule schedule)
+        {
+            return false;
+        }
+
+        public async Task<bool> _AddScheduleDetailsAsync(GeneratedSchedule schedule)
         {
             return await _scheduleRepository.AddScheduleDetailsAsync(schedule);
         }
