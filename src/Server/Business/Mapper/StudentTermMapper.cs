@@ -15,7 +15,7 @@ namespace Business.Mapper
     {
         public static StudentTerm ToStudentTerm(this StudentTermRequest request, int regestirationID = 0)
         {
-            return new StudentTerm(regestirationID , request.StudentID , request.AcademicTerm);
+            return new StudentTerm(regestirationID , request.StudentID , new AcademicTerm(request.AcademicTermID));
         }
 
         public static StudentTermResponse ToResponse(this StudentTerm studentTerm)

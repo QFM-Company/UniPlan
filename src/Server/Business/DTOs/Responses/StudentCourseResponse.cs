@@ -15,7 +15,7 @@ namespace Business.DTOs.Responses
 
         public int StudentID { get; set; }
 
-        public Course? Course { get; set; }
+        public CourseResponse? Course { get; set; }
 
 
         public StudentCourseResponse()
@@ -26,7 +26,7 @@ namespace Business.DTOs.Responses
             IsPassed = false;
         }
 
-        public StudentCourseResponse(int enrolmentID, bool isPassed, int studentID, Course course)
+        public StudentCourseResponse(int enrolmentID, bool isPassed, int studentID, CourseResponse course)
         {
             EnrolmentID = enrolmentID;
             IsPassed = isPassed;

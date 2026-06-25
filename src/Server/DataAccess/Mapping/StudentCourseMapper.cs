@@ -10,7 +10,7 @@ namespace DataAccess.Mapping
 {
     public static class StudentCourseMapper
     {
-        public static StudentCourse ToStudentCourse(SqlDataReader reader)
+        public static StudentCourse ToStudentCourse(this SqlDataReader reader)
         {
 
             if (!int.TryParse(reader["EnrollmentID"]?.ToString(), out int enrolmentID))

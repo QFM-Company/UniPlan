@@ -11,12 +11,12 @@ namespace Business.DTOs.Requests
     {
         public int StudentID { get; set; }
 
-        public AcademicTerm? AcademicTerm { get; set; }
+        public int AcademicTermID { get; set; }
 
-        public StudentTermRequest(int studentID, AcademicTerm? academicTerm)
+        public StudentTermRequest(int studentID, int academicTermID)
         {
             StudentID = studentID;
-            AcademicTerm = academicTerm;
+            AcademicTermID = academicTermID;
         }
     }
 }

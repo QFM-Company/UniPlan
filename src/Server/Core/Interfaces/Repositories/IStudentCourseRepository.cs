@@ -20,4 +20,4 @@ namespace Core.Interfaces.Repositories
         Task<IEnumerable<StudentCourse>?> GetStudentCoursesByStudentIDAsync(int studentID);
     }
 }
-}
+

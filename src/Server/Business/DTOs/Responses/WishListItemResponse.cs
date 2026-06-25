@@ -11,9 +11,9 @@ namespace Business.DTOs.Responses
     {
         public int ItemID { get; set; }
 
-        public WishList? WishList { get; set; }
+        public WishListResponse? WishList { get; set; }
 
-        public Course? Course { get; set; }
+        public CourseResponse? Course { get; set; }
 
 
         public WishListItemResponse()
@@ -23,7 +23,7 @@ namespace Business.DTOs.Responses
             Course = null;
         }
 
-        public WishListItemResponse(int itemID, WishList? wishList, Course? course)
+        public WishListItemResponse(int itemID, WishListResponse? wishList, CourseResponse? course)
         {
             ItemID = itemID;
             WishList = wishList;
