@@ -21,6 +21,11 @@ namespace Core.Entities
             Major = major;
         }
 
+        public Course(int courseID)
+        {
+            CourseID = courseID;
+        }
+
         public Course() { }
     }
 }
