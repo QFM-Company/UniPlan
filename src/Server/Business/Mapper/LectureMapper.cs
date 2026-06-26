@@ -28,7 +28,7 @@ namespace Business.Mapper
 
             if (lecture.Course != null && lecture.Course.Major != null)
             {
-               CourseResponse course = new CourseResponse(lecture.Course.CourseID, lecture.Course.CourseName, lecture.Course.CreditHours, lecture.Course.Major.MajorID);
+                CourseResponse course = lecture.Course.ToResponse();
                return new LectureResponse(lecture.LectureID, lecture.LectureType, lecture.DurationValue, course);
             }
 
