@@ -1,55 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Business.DTOs.Responses;
+using System.Data;
+using Core.Interfaces.Repositories;
 
 namespace ViewModels
 {
-    public class HallModel
-    {
-        public string HallId { get; set; } = string.Empty;
-        public string HallName { get; set; } = string.Empty;
-        public string Building { get; set; } = string.Empty;
-        public string Floor { get; set; } = string.Empty;
-    }
-
     public class HallsViewModel
     {
-        public List<HallModel> HallsList { get; set; }
 
-        public HallsViewModel()
+        private readonly IHallRepository _hallRepository;
+        public List<HallResponse> HallsList { get; set; }
+
+        public HallsViewModel(IHallRepository hallRepository)
         {
-            HallsList = new List<HallModel>();
+            _hallRepository = hallRepository;
+            HallsList = new List<HallResponse>();
         }
 
-        public bool AddHall(string name, string build, string floor, out string errorMsg)
+        public DataView GetDataView()
         {
-            errorMsg = "";
+            DataTable table = new DataTable();
 
-            if (string.IsNullOrEmpty(name) || name.Trim() == "" || name == "Halls Name")
+            table.Columns.Add("Hall ID");
+            table.Columns.Add("Hall Name");
+            table.Columns.Add("Building");
+            table.Columns.Add("Floor");
+
+            foreach (var hall in HallsList)
             {
-                errorMsg = "Enter Name of Hall Please : ";
-                return false;
-            }
-            if (string.IsNullOrEmpty(floor) || floor.Trim() == "")
-            {
-                errorMsg = "Enter Floor of Hall Please : ";
-                return false;
-            }
-            if (string.IsNullOrEmpty(build) || build.Trim() == "")
-            {
-                errorMsg = "Enter Building of Hall Please : ";
-                return false;
+                table.Rows.Add(
+                    hall.HallID,
+                    hall.HallName,
+                    hall.Building,
+                    hall.Floor
+                );
             }
 
-            var newHall = new HallModel
-            {
-                HallId = Guid.NewGuid().ToString(),
-                HallName = name.Trim(),
-                Building = build.Trim(),
-                Floor = floor.Trim()
-            };
+            return table.DefaultView;
+        }
 
-            HallsList.Add(newHall);
-            return true;
+
+        public async Task LoadHallsAsync()
+        {
+            var halls = await _hallRepository.GetPagedHallsAsync();
+
+            HallsList.Clear();
+
+            if (halls == null)
+                return;
+
+            foreach (var hall in halls)
+            {
+                HallsList.Add(new HallResponse(
+                    hall.HallID,
+                    hall.HallName,
+                    hall.Building,
+                    hall.Floor,
+                    hall.CreatedByAdminID
+                ));
+            }
         }
     }
 }
