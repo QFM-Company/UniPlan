@@ -27,7 +27,7 @@ namespace Business.Services
             list.WishListID = await _listRepository.AddWishListAsync(list);
 
             if (list.WishListID != -1)
-                return list.ToResponse();
+                return await GetWishListByIDAsync(list.WishListID);
 
             return null;
         }

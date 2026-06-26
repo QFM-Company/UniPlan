@@ -36,7 +36,7 @@ namespace DataAccess.Repositories
 
                     command.Parameters.Add(listID);
 
-                    command.Parameters.AddWithValue("@RegistrationID", /*(int)list*/ -1);
+                    command.Parameters.AddWithValue("@RegistrationID", (int)list.StudentTerm.RegistrationID);
 
 
                     await connection.OpenAsync();

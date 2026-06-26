@@ -19,7 +19,7 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<int> AddGeneratedScheduleAsync(GeneratedSchedule schedule)
+        public async Task<bool> AddGeneratedScheduleAsync(GeneratedSchedule schedule)
         {
             try
             {
@@ -32,52 +32,25 @@ namespace DataAccess.Repositories
                     {
                         Direction = ParameterDirection.Output
                     };
-
-
-                    command.Parameters.Add(scheduleID);
-                    command.Parameters.AddWithValue("@WishListID", (int)schedule.WishList.WishListID);
-
-                    await connection.OpenAsync();
-                    await command.ExecuteNonQueryAsync();
-
-
-                    if (scheduleID.Value != DBNull.Value && int.TryParse(scheduleID.Value.ToString(), out int tID))
-                    {
-                        return tID;
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                await _logService.LogAsync(ex);
-                throw;
-            }
-
-            return -1;
-        }
-
-        public async Task<bool> AddScheduleDetailsAsync(GeneratedSchedule schedule)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_ScheduleDetails_Insert", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
                     var result = new SqlParameter("@Result", SqlDbType.Bit)
                     {
                         Direction = ParameterDirection.Output
                     };
 
                     command.Parameters.Add(result);
-                    command.Parameters.AddWithValue("@ScheduleID", (int)schedule.ScheduleID);
+
+                    command.Parameters.Add(scheduleID);
+                    command.Parameters.AddWithValue("@WishListID", (int)schedule.WishList.WishListID);
                     command.Parameters.AddWithValue("@OfferingIDs", schedule?.Offerings?.ToDataTable());
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
+
+                    if (schedule != null && scheduleID.Value != DBNull.Value && int.TryParse(scheduleID.Value.ToString(), out int sID))
+                    {
+                        schedule.ScheduleID = sID;
+                    }
 
                     if (result.Value != DBNull.Value && bool.TryParse(result.Value.ToString(), out bool res))
                     {
@@ -115,12 +88,14 @@ namespace DataAccess.Repositories
                             schedule = reader.ToGeneratedSchedule();
                         }
 
-                        if (reader != null && await reader.NextResultAsync())
+                        if (schedule != null && reader != null && await reader.NextResultAsync())
                         {
+                            schedule.Offerings = new List<CourseOffering>();
+
                             while (await reader.ReadAsync())
                             {
                                 CourseOffering offering = reader.ToCourseOffering();
-                                schedule?.Offerings?.Add(offering);
+                                schedule.Offerings.Add(offering);
                             }
                         }
 

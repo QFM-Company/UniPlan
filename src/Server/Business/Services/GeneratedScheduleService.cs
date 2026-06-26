@@ -20,29 +20,15 @@ namespace Business.Services
         {
             GeneratedSchedule schedule = request.ToGeneratedSchedule();
 
-            schedule.ScheduleID = await _scheduleRepository.AddGeneratedScheduleAsync(schedule);
+            if(_GeneratedSchedule(schedule) && await _scheduleRepository.AddGeneratedScheduleAsync(schedule))
+                return await GetGeneratedScheduleByWishListIDAsync(schedule.WishList.WishListID);
 
-            if (schedule.ScheduleID != -1)
-            {
-                if (_GeneratedSchedule(schedule))
-                {
-                    await _AddScheduleDetailsAsync(schedule);
-                }
-            }
-            else
-                return null;
-
-            return schedule.ToResponse();
+            return null;
         }
 
         private bool _GeneratedSchedule(GeneratedSchedule schedule)
         {
-            return false;
-        }
-
-        public async Task<bool> _AddScheduleDetailsAsync(GeneratedSchedule schedule)
-        {
-            return await _scheduleRepository.AddScheduleDetailsAsync(schedule);
+            return true;
         }
 
         public async Task<GeneratedScheduleResponse?> GetGeneratedScheduleByWishListIDAsync(int listID)

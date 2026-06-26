@@ -63,11 +63,10 @@ GO
 
 CREATE OR ALTER VIEW WishLists_view
 AS
-    SELECT W.WishListID, ST.RegistrationID
-    , SP.*, A.*
+    SELECT W.WishListID, ST.RegistrationID, ST.StudentID
+    , A.*
     FROM WishLists W
     JOIN StudentTerms ST ON ST.RegistrationID = W.RegistrationID
-    JOIN StudentProfiles_view SP ON SP.StudentID = ST.StudentID
     JOIN AcademicTerms A ON A.TermID = ST.TermID;
 GO
 

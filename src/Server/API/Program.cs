@@ -39,6 +39,8 @@ builder.Services.AddScoped<ICourseSessionRepository, CourseSessionRepository>();
 builder.Services.AddScoped<IStudentTermRepository, StudentTermRepository>();
 builder.Services.AddScoped<IStudentCourseRepository, StudentCourseRepository>();
 builder.Services.AddScoped<IWishListItemRepository, WishListItemRepository>();
+builder.Services.AddScoped<IWishListRepository, WishListRepository>();
+builder.Services.AddScoped<IGeneratedScheduleRepository, GeneratedScheduleRepository>();
 
 // Services
 builder.Services.AddScoped<IPeriodService, PeriodsService>();
@@ -57,6 +59,8 @@ builder.Services.AddScoped<ICourseSessionService, CourseSessionService>();
 builder.Services.AddScoped<IStudentCourseService, StudentCourseService>();
 builder.Services.AddScoped<IStudentTermService, StudentTermService>();
 builder.Services.AddScoped<IWishListItemService,  WishListItemService>();
+builder.Services.AddScoped<IWishListService, WishListService>();
+builder.Services.AddScoped<IGeneratedScheduleService, GeneratedScheduleService>();
 
 var app = builder.Build();
 

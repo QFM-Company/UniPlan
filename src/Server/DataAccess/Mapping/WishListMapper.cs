@@ -12,7 +12,9 @@ namespace DataAccess.Mapping
                 listID = 0;
             }
 
-            return new WishList(listID);
+            StudentTerm studentTerm = reader.ToStudentTerm();
+
+            return new WishList(listID, studentTerm);
         }
     }
 }
