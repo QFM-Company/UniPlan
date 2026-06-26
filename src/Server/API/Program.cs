@@ -36,6 +36,9 @@ builder.Services.AddScoped<ICourseOfferingRepository, CourseOfferingRepository>(
 builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
 builder.Services.AddScoped<ICoursePrequsetRepository, CoursePrequstRepository>();
 builder.Services.AddScoped<ICourseSessionRepository, CourseSessionRepository>();
+builder.Services.AddScoped<IStudentTermRepository, StudentTermRepository>();
+builder.Services.AddScoped<IStudentCourseRepository, StudentCourseRepository>();
+builder.Services.AddScoped<IWishListItemRepository, WishListItemRepository>();
 
 // Services
 builder.Services.AddScoped<IPeriodService, PeriodsService>();
@@ -51,7 +54,9 @@ builder.Services.AddScoped<ICourseOfferingService, CourseOfferingService>();
 builder.Services.AddScoped<ICoursesService, CoursesService>();
 builder.Services.AddScoped<ICoursePrequistService, CoursePrequistService>();
 builder.Services.AddScoped<ICourseSessionService, CourseSessionService>();
-
+builder.Services.AddScoped<IStudentCourseService, StudentCourseService>();
+builder.Services.AddScoped<IStudentTermService, StudentTermService>();
+builder.Services.AddScoped<IWishListItemService,  WishListItemService>();
 
 var app = builder.Build();
 

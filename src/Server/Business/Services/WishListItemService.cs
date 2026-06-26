@@ -7,13 +7,14 @@ using Business.DTOs.Requests;
 using Business.DTOs.Requests.Create;
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
+using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
 {
-    public class WishListItemService
+    public class WishListItemService : IWishListItemService
     {
         private IWishListItemRepository _wishListItemRepository;
 
