@@ -13,9 +13,9 @@ namespace Business.DTOs.Responses
 
         public DayOfWeek Day { get; set; }
 
-        public Period? Period { get; set; }
+        public PeriodResponse? Period { get; set; }
 
-        public TimeSlotResponse(int slotID, DayOfWeek day, Period? period)
+        public TimeSlotResponse(int slotID, DayOfWeek day, PeriodResponse? period)
         {
             SlotID = slotID;
             Day = day;
