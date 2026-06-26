@@ -24,7 +24,7 @@ namespace Business.Mapper
 
         public static TimeSlotResponse ToResponse(this TimeSlot timeSlot)
         {
-            return new TimeSlotResponse(timeSlot.SlotID, timeSlot.Day, timeSlot.Period);
+            return new TimeSlotResponse(timeSlot.SlotID, timeSlot.Day, timeSlot.Period?.ToResponse());
         }
 
     }

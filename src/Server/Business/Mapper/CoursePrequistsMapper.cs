@@ -25,7 +25,7 @@ namespace Business.Mapper
 
         public static CoursePrerequisiteResponse ToResponse(this CoursePrerequisites coursePrequist)
         {
-            return new CoursePrerequisiteResponse(coursePrequist.PreRequestID, coursePrequist.Course, coursePrequist.PreRequestCourse);
+            return new CoursePrerequisiteResponse(coursePrequist.PreRequestID, coursePrequist.Course?.ToResponse(), coursePrequist.PreRequestCourse?.ToResponse());
         }
 
     }
