@@ -20,13 +20,13 @@ namespace Business.Services
         {
             GeneratedSchedule schedule = request.ToGeneratedSchedule();
 
-            if(_GeneratedSchedule(schedule) && await _scheduleRepository.AddGeneratedScheduleAsync(schedule))
+            if(_GeneratedSchedule(schedule, request.Days) && await _scheduleRepository.AddGeneratedScheduleAsync(schedule))
                 return await GetGeneratedScheduleByWishListIDAsync(schedule.WishList.WishListID);
 
             return null;
         }
 
-        private bool _GeneratedSchedule(GeneratedSchedule schedule)
+        private bool _GeneratedSchedule(GeneratedSchedule schedule, List<DayOfWeek> days)
         {
             return true;
         }

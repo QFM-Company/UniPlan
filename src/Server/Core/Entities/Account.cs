@@ -11,24 +11,20 @@ namespace Core.Entities
 
         public string Email { get; set; } = string.Empty;
 
-        public Account(string accountName, string email)
+        
+        public Account(string accountName, string password)
         {
             AccountName = accountName;
-            Email = email;
-        }
-
-        public Account(string accountName, string password, string email) : this(accountName, email)
-        {
             Password = password;
         }
 
-        public Account(int accountID, string accountName, string password, string email)
+        public Account(string accountName, string password, string email) 
         {
-            AccountID = accountID;
             AccountName = accountName;
             Password = password;
             Email = email;
         }
+
         public Account(int accountID, string accountName, string email)
         {
             AccountID = accountID;

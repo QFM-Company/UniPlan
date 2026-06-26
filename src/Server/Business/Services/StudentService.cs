@@ -26,6 +26,9 @@ namespace Business.Services
         {
             Student student = request.ToStudent();
 
+//            if(student.Account != null)
+//                student.Account.Password = BCrypt.Net.BCrypt.HashPassword(student.Account.Password);
+
             if (await _studentRepository.AddStudentAsync(student))
                 return await GetStudentByIDAsync(student.StudentID);
 

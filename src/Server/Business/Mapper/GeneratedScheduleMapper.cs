@@ -8,7 +8,7 @@ namespace Business.Mapper
     {
         public static GeneratedSchedule ToGeneratedSchedule(this GeneratedScheduleRequest request)
         {
-            return new GeneratedSchedule(-1, new WishList(request.WishListID), request.Days);
+            return new GeneratedSchedule(-1, new WishList(request.WishListID));
         }
 
         public static GeneratedScheduleResponse ToResponse(this GeneratedSchedule schedule)

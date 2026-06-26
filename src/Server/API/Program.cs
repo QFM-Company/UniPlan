@@ -6,6 +6,7 @@ using DataAccess;
 using DataAccess.Repositories;
 using Infrastructure.ExternalServices;
 using Core.Interfaces.Services;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IStudentCourseRepository, StudentCourseRepository>();
 builder.Services.AddScoped<IWishListItemRepository, WishListItemRepository>();
 builder.Services.AddScoped<IWishListRepository, WishListRepository>();
 builder.Services.AddScoped<IGeneratedScheduleRepository, GeneratedScheduleRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 // Services
 builder.Services.AddScoped<IPeriodService, PeriodsService>();
@@ -61,6 +63,7 @@ builder.Services.AddScoped<IStudentTermService, StudentTermService>();
 builder.Services.AddScoped<IWishListItemService,  WishListItemService>();
 builder.Services.AddScoped<IWishListService, WishListService>();
 builder.Services.AddScoped<IGeneratedScheduleService, GeneratedScheduleService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using Business.DTOs.Requests.Create;
+﻿using Business.DTOs.Requests;
+using Business.DTOs.Requests.Create;
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Core.Entities;
@@ -12,6 +13,11 @@ namespace Business.Mapper
             return new Account(request.AccountName , request.Password, request.Email);
         }
 
+        public static Account ToAccount(this LoginRequest request)
+        {
+            return new Account(request.AccountName, request.Password);
+        }
+
         public static void UpdateAccount(this Account account, UpdateAccountRequest? request)
         {
             if (request == null)
@@ -19,6 +25,14 @@ namespace Business.Mapper
 
             account.AccountName = request.AccountName;
             account.Email = request.Email;
+        }
+
+        public static void UpdateAccount(this Account account,  ChangePasswordRequest? request)
+        {
+            if (request == null)
+                return;
+
+            account.Password = request.NewPassword;
         }
 
         public static AccountResponse ToResponse(this Account account)
