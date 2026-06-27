@@ -8,7 +8,7 @@ namespace Business.Mapper
     {
         public static Major ToMajor(this MajorRequest request)
         {
-            return new Major(-1, request.MajorName);
+            return new Major(-1, request.MajorName, request.ParentMajorID);
         }
 
         public static void UpdateMajor(this Major major, MajorRequest? request)

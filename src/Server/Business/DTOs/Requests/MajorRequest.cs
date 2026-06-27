@@ -4,9 +4,12 @@
     {
         public string MajorName { get; set; } = string.Empty;
 
-        public MajorRequest(string majorName)
+        public int ParentMajorID { get; set; }
+
+        public MajorRequest(string majorName, int parentMajorID)
         {
             MajorName = majorName;
+            ParentMajorID = parentMajorID;
         }
     }
 }

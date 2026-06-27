@@ -4,6 +4,7 @@ GO
 
 CREATE OR ALTER PROCEDURE SP_Majors_Insert
     @MajorName nvarchar(50),
+    @ParentMajorID int,
     @MajorID int out
 AS
 BEGIN
@@ -14,8 +15,8 @@ BEGIN
  
 
     BEGIN TRY
-        INSERT INTO [dbo].[Majors] ([MajorName])
-        VALUES (@MajorName)
+        INSERT INTO [dbo].[Majors] ([MajorName],[ParentMajorID])
+        VALUES (@MajorName, @ParentMajorID)
         
         SET @MajorID = CONVERT(int, SCOPE_IDENTITY());
     END TRY
@@ -28,6 +29,7 @@ GO
 CREATE OR ALTER PROCEDURE SP_Majors_Update
     @MajorName nvarchar(50),
     @MajorID int,
+    @ParentMajorID int,
     @Result bit out 
 AS
 BEGIN
@@ -38,7 +40,8 @@ BEGIN
 
     BEGIN TRY
         UPDATE [dbo].[Majors] 
-        SET [MajorName] = @MajorName
+        SET [MajorName] = @MajorName,
+        [ParentMajorID] = @ParentMajorID
         WHERE MajorID = @MajorID;
 
         IF @@ROWCOUNT > 0
@@ -88,7 +91,7 @@ BEGIN
         IF @PageSize IS NULL OR @PageSize < 1
             SET @PageSize = 10;
 
-        SELECT * FROM Majors
+        SELECT MajorID, MajorName FROM Majors
         ORDER BY [MajorID]
         OFFSET (@PageNumber - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY;
@@ -106,7 +109,7 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        SELECT * FROM Majors
+        SELECT MajorID, MajorName FROM Majors
         WHERE MajorID = @MajorID;
     END TRY
     BEGIN CATCH

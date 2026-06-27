@@ -34,6 +34,7 @@ namespace DataAccess.Repositories
 
                     command.Parameters.Add(majorID);
                     command.Parameters.AddWithValue("@MajorName", major.MajorName);
+                    command.Parameters.AddWithValue("@ParentMajorID", major.ParentMajorID == 0 ? DBNull.Value : major.ParentMajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -70,6 +71,7 @@ namespace DataAccess.Repositories
                     command.Parameters.Add(result);
                     command.Parameters.AddWithValue("@MajorID", major.MajorID);
                     command.Parameters.AddWithValue("@MajorName", major.MajorName);
+                    command.Parameters.AddWithValue("@ParentMajorID", major.ParentMajorID == 0 ? DBNull.Value : major.ParentMajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
