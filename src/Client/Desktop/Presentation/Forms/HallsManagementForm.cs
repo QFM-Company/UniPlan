@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using ViewModels.Interface;
+﻿using ViewModels.Interface;
 
 namespace Presentation.Forms
 {
@@ -33,9 +32,17 @@ namespace Presentation.Forms
 
         }
 
-        private void HallsManagement_Load(object sender, EventArgs e)
+        private async void HallsManagement_Load(object sender, EventArgs e)
         {
-            DV_halls.DataSource = HallsViewModel.GetDataView();
+            try
+            {
+                DV_halls.Columns.Clear();
+                DV_halls.DataSource = await HallsViewModel.GetDataView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "UniPlan", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

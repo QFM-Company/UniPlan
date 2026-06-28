@@ -10,6 +10,17 @@ using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000", "http://localhost:5173") // —Ê«»ÿ «·›—Ê‰  („À· React √Ê Vue)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();

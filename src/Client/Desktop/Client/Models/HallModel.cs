@@ -8,15 +8,6 @@
 
         public string Building { get; set; } = string.Empty;
 
-        public string Floor { get; set; } = string.Empty;
-
-
-        public HallModel(int hallID, string hallName, string building, string floor)
-        {
-            HallID = hallID;
-            HallName = hallName;
-            Building = building;
-            Floor = floor;
-        }
+        public int Floor { get; set; }
     }
 }

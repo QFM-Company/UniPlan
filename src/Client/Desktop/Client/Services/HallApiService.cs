@@ -15,19 +15,9 @@ namespace Client.Services
 
         public async Task<List<HallModel>> GetHallsAsync()
         {
-            try
-            {
-                var dtos = await _httpClient.GetFromJsonAsync<List<HallModel>>("api/halls/get/1/10");
+            var dtos = await _httpClient.GetFromJsonAsync<List<HallModel>>("api/halls/get/1/10");
 
-                if (dtos == null)
-                    return new List<HallModel>();
-
-                return dtos.ToList();
-            }
-            catch
-            {
-                return new List<HallModel>();
-            }
+            return dtos?.ToList() ?? new List<HallModel>();
         }
     }
 }
