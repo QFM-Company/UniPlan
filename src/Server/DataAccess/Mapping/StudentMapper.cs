@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -11,10 +12,7 @@ namespace DataAccess.Mapping
             Account account = reader.ToAccount();
             Major major = reader.ToMajor();
 
-            if (!int.TryParse(reader["StudentID"]?.ToString(), out int studentID))
-            {
-                studentID = 0;
-            }
+            reader.ReadInt("StudentID", out int studentID, 0);
 
             return new Student(studentID, person, account, major);
         }

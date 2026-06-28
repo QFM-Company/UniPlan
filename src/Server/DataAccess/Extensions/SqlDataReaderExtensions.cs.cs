@@ -254,5 +254,42 @@ namespace DataAccess.Extensions
             return false;
         }
 
+
+
+        public static bool ReadInt(this SqlDataReader reader, string columnName, out int value, int defaultValue = -1)
+        {
+            value = ReadInt(reader, columnName, defaultValue);
+            return value != defaultValue;
+        }
+
+        public static bool ReadString(this SqlDataReader reader, string columnName, out string value, string defaultValue = "")
+        {
+            value = ReadString(reader, columnName, defaultValue);
+            return value != defaultValue;
+        }
+
+        public static bool ReadTimeSpan(this SqlDataReader reader, string columnName, out TimeSpan value, TimeSpan defaultValue = default)
+        {
+            value = ReadTimeSpan(reader, columnName, defaultValue);
+            return value != defaultValue;
+        }
+
+        public static bool ReadDateTime(this SqlDataReader reader, string columnName, out DateTime value, DateTime defaultValue = default)
+        {
+            value = ReadDateTime(reader, columnName, defaultValue);
+            return value != defaultValue;
+        }
+
+        public static bool ReadBool(this SqlDataReader reader, string columnName, out bool value, bool defaultValue = false)
+        {
+            value = ReadBool(reader, columnName, defaultValue);
+            return value != defaultValue;
+        }
+
+        public static bool ReadDouble(this SqlDataReader reader, string columnName, out Double value, Double defaultValue = default)
+        {
+            value = ReadDouble(reader, columnName, defaultValue);
+            return value != defaultValue;
+        }
     }
 }

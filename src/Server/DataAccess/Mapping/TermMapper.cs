@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Enums;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -8,18 +9,9 @@ namespace DataAccess.Mapping
     {
         public static AcademicTerm ToAcademicTerm(this SqlDataReader reader)
         {
-            if (!int.TryParse(reader["TermID"]?.ToString(), out int termID))
-            {
-                termID = 0;
-            }
-            if (!int.TryParse(reader["TermYear"]?.ToString(), out int termYear))
-            {
-                termYear = 0;
-            }
-            if (!int.TryParse(reader["TermType"]?.ToString(), out int termType))
-            {
-                termType = 0;
-            }
+            reader.ReadInt("TermID", out int termID, 0);
+            reader.ReadInt("TermYear", out int termYear, 0);
+            reader.ReadInt("TermType", out int termType, 0);
 
             return new AcademicTerm(termID, (TermType)termType, termYear);
         }

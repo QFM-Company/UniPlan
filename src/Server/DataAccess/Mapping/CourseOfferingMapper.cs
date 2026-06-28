@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -11,18 +12,9 @@ namespace DataAccess.Mapping
             Lecture lecture = reader.ToLecture();
             AcademicTerm term = reader.ToAcademicTerm();
 
-            if (!int.TryParse(reader["OfferingID"]?.ToString(), out int offeringID))
-            {
-                offeringID = 0;
-            }
-            if (!int.TryParse(reader["SectionNumber"]?.ToString(), out int sectionNumber))
-            {
-                sectionNumber = 0;
-            }
-            if (!int.TryParse(reader["CreatedByAdminID"]?.ToString(), out int createdByAdminID))
-            {
-                createdByAdminID = 0;
-            }
+            reader.ReadInt("OfferingID", out int offeringID, 0);
+            reader.ReadInt("SectionNumber", out int sectionNumber, 0);
+            reader.ReadInt("CreatedByAdminID", out int createdByAdminID, 0);
 
             return new CourseOffering(offeringID, sectionNumber, createdByAdminID, term, lecture);
         }

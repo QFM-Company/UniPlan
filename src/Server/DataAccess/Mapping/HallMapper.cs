@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -7,20 +8,11 @@ namespace DataAccess.Mapping
     {
         public static Hall ToHall(this SqlDataReader reader)
         {
-            if (!int.TryParse(reader["HallID"]?.ToString(), out int hallID))
-            {
-                hallID = 0;
-            }
-            if (!int.TryParse(reader["CreatedByAdminID"]?.ToString(), out int createdByAdminID))
-            {
-                createdByAdminID = 0;
-            }
-            if (!int.TryParse(reader["Floor"]?.ToString(), out int floor))
-            {
-                floor = 0;
-            }
-            string hallName = reader["HallName"].ToString() ?? string.Empty;
-            string building = reader["Building"].ToString() ?? string.Empty;
+            reader.ReadInt("HallID", out int hallID, 0);
+            reader.ReadString("HallName", out string hallName, string.Empty);
+            reader.ReadInt("CreatedByAdminID", out int createdByAdminID, 0);
+            reader.ReadInt("Floor", out int floor, 0);
+            reader.ReadString("Building", out string building, string.Empty);
 
             return new Hall(hallID, hallName, building, floor, createdByAdminID);
         }

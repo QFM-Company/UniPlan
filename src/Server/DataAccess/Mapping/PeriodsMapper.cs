@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -12,13 +13,9 @@ namespace DataAccess.Mapping
     {
         public static Period ToPeriod(this SqlDataReader reader)
         {
-
-            if (!int.TryParse(reader["PeriodID"]?.ToString(), out int periodID))
-            {
-                periodID = 0;
-            }
-            TimeSpan startTime = reader["StartTime"] is TimeSpan start ? start : TimeSpan.Parse(reader["StartTime"].ToString()!);
-            TimeSpan endTime = reader["EndTime"] is TimeSpan end ? end : TimeSpan.Parse(reader["EndTime"].ToString()!);
+            reader.ReadInt("PeriodID", out int periodID, -1);
+            reader.ReadTimeSpan("StartTime", out TimeSpan startTime);
+            reader.ReadTimeSpan("EndTime", out TimeSpan endTime);
 
             return new Period(periodID, startTime, endTime);
         }

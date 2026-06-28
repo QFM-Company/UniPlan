@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -7,10 +8,8 @@ namespace DataAccess.Mapping
     {
         public static GeneratedSchedule ToGeneratedSchedule(this SqlDataReader reader)
         {
-            if (!int.TryParse(reader["ScheduleID"]?.ToString(), out int scheduleID))
-            {
-                scheduleID = 0;
-            }
+            reader.ReadInt("ScheduleID", out int scheduleID, 0);
+     
             WishList list = reader.ToWishList();
 
             return new GeneratedSchedule(scheduleID, list);

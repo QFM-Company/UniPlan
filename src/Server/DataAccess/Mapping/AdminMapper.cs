@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -17,10 +18,7 @@ namespace DataAccess.Mapping
 
             Account account = reader.ToAccount();
 
-            if (!int.TryParse(reader["AdminID"]?.ToString(), out int adminID))
-            {
-                adminID = -1;
-            }
+            reader.ReadInt("AdminID", out int adminID, -1);
 
             return new Administrator(adminID, person, account, true);
         }

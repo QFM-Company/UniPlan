@@ -1,6 +1,7 @@
 ﻿
 using Core.Entities;
 using Core.Enums;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -11,12 +12,8 @@ namespace DataAccess.Mapping
         {
             AcademicTerm academicTerm = reader.ToAcademicTerm();
 
-            int.TryParse(reader["StudentID"]?.ToString(), out int studentID);
-
-            if (!int.TryParse(reader["RegistrationID"]?.ToString(), out int registrationID))
-            {
-                registrationID = 0;
-            }
+            reader.ReadInt("StudentID", out int studentID, -1);
+            reader.ReadInt("RegistrationID", out int registrationID, -1);
 
             return new StudentTerm(registrationID , studentID , academicTerm);
         }

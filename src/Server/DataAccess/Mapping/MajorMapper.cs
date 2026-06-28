@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -7,12 +8,8 @@ namespace DataAccess.Mapping
     {
         public static Major ToMajor(this SqlDataReader reader)
         {
-            if (!int.TryParse(reader["MajorID"]?.ToString(), out int majorID))
-            {
-                majorID = 0;
-            }
-
-            string majorName = reader["MajorName"].ToString() ?? string.Empty;
+            reader.ReadInt("MajorID", out int majorID, 0);
+            reader.ReadString("MajorName", out string majorName, string.Empty);
 
             return new Major(majorID, majorName);
         }

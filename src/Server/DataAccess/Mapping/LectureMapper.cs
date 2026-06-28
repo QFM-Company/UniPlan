@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Enums;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -10,10 +11,10 @@ namespace DataAccess.Mapping
         {
             Course course = reader.ToCourse();
 
-            int.TryParse(reader["LectureID"]?.ToString(), out int lectureID);
-            int.TryParse(reader["DurationValue"]?.ToString(), out int durationValue);
-            int.TryParse(reader["LectureType"]?.ToString(), out int lectureType);
-
+            reader.ReadInt("LectureID", out int lectureID, 0);
+            reader.ReadInt("DurationValue", out int durationValue, 0);
+            reader.ReadInt("LectureType", out int lectureType, 0);
+           
             return new Lecture(lectureID, (LectureType)lectureType, durationValue, course);
         }
     }

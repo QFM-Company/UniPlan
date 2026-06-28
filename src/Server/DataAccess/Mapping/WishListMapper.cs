@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -7,10 +8,7 @@ namespace DataAccess.Mapping
     {
         public static WishList ToWishList(this SqlDataReader reader)
         {
-            if (!int.TryParse(reader["WishListID"]?.ToString(), out int listID))
-            {
-                listID = 0;
-            }
+            reader.ReadInt("WishListID", out int listID, 0);
 
             StudentTerm studentTerm = reader.ToStudentTerm();
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -18,15 +19,8 @@ namespace DataAccess.Mapping
 
             TimeSlot timeSlot = reader.ToTimeSlot();
 
-            if (!int.TryParse(reader["AdminID"]?.ToString(), out int adminID))
-            {
-                adminID = -1;
-            }
-
-            if (!int.TryParse(reader["SessionID"]?.ToString(), out int courseSessionID))
-            {
-                courseSessionID = -1;
-            }
+            reader.ReadInt("AdminID", out int adminID, -1);
+            reader.ReadInt("SessionID", out int courseSessionID, -1);
 
             return new CourseSession(courseSessionID , courseOffering , hall , timeSlot , adminID);
         }

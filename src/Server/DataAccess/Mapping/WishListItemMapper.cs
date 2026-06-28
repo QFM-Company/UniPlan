@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -15,23 +16,9 @@ namespace DataAccess.Mapping
 
             WishList wishList = reader.ToWishList();
 
-            string courseName = reader["CourseName"]?.ToString() ?? string.Empty;
+            Course course = reader.ToCourse();
 
-            int.TryParse(reader["CreditHours"]?.ToString(), out int creditHours);
-
-            if (!int.TryParse(reader["CourseID"]?.ToString(), out int courseID))
-            {
-                courseID = -1;
-            }
-
-            Course course = new Course(courseID, courseName, creditHours, null);
-
-            if (!int.TryParse(reader["ItemID"]?.ToString(), out int itemID))
-            {
-                itemID = -1;
-            }
-
-            int.TryParse(reader["MajorID"]?.ToString(), out int studentID);
+            reader.ReadInt("ItemID", out int itemID, -1);
 
             return new WishListItem(itemID, wishList, course);
         }

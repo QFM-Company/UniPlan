@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -7,12 +8,9 @@ namespace DataAccess.Mapping
     {
         public static Account ToAccount(this SqlDataReader reader)
         {
-            if (!int.TryParse(reader["AccountID"]?.ToString(), out int accountID))
-            {
-                accountID = 0;
-            }
-            string accountName = reader["AccountName"].ToString() ?? string.Empty;
-            string email = reader["Email"].ToString() ?? string.Empty;
+            reader.ReadInt("AccountID", out int accountID, 0);
+            reader.ReadString("AccountName", out string accountName , string.Empty);
+            reader.ReadString("Email", out string email, string.Empty);
 
             return new Account(accountID, accountName, email);
         }

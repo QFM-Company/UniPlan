@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -14,14 +15,8 @@ namespace DataAccess.Mapping
         {
             Period period = reader.ToPeriod();
 
-            if (!int.TryParse(reader["SlotID"]?.ToString(), out int slotID))
-            {
-                slotID = 0;
-            }
-            if (!int.TryParse(reader["DayNum"]?.ToString(), out int day))
-            {
-                day = 0;
-            }
+            reader.ReadInt("SlotID", out int slotID, -1);
+            reader.ReadInt("DayNum", out int day, -1);
 
             return new TimeSlot(slotID , (DayOfWeek)day , period);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccess.Mapping
@@ -14,21 +15,17 @@ namespace DataAccess.Mapping
         {
             Course mainCourse = reader.ToCourse();
 
-            string courseName2 = reader["CourseName2"]?.ToString() ?? string.Empty;
+            reader.ReadInt("CourseID2", out int PreCourseID2, -1);
+            reader.ReadString("CourseName2", out string courseName2, string.Empty);
+            reader.ReadInt("CreditHours2", out int creditHours2, -1);
 
-            int.TryParse(reader["CreditHours2"]?.ToString(), out int creditHours2);
-            int.TryParse(reader["MajorID2"]?.ToString(), out int majorID2);
-            string majorName2 = reader["MajorName2"].ToString() ?? string.Empty;
-            int.TryParse(reader["CourseID2"]?.ToString(), out int PreCourseID2);
+            reader.ReadInt("MajorID2", out int majorID2, -1);
+            reader.ReadString("MajorName2", out string majorName2, string.Empty);
+            reader.ReadInt("PrerequisiteID", out int prerequisiteID, -1);
 
             Major major2 = new Major(majorID2, majorName2);
 
             Course preCourse = new Course(PreCourseID2, courseName2, creditHours2, major2);
-
-            if(!int.TryParse(reader["PrerequisiteID"]?.ToString(), out int prerequisiteID))
-            {
-                prerequisiteID = -1;
-            }
 
             return new CoursePrerequisites(
                  prerequisiteID,
