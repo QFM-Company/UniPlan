@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Threading.Tasks;
+using ViewModels.Interface;
 
 namespace Presentation.Forms
 {
     public partial class HallsManagement : Form
     {
-        public HallsManagement()
+        public IHallsViewModel HallsViewModel { get; set; } 
+
+        public HallsManagement(IHallsViewModel hallsViewModel)
         {
             InitializeComponent();
+            HallsViewModel = hallsViewModel;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -35,6 +31,11 @@ namespace Presentation.Forms
         private void header1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void HallsManagement_Load(object sender, EventArgs e)
+        {
+            DV_halls.DataSource = HallsViewModel.GetDataView();
         }
     }
 }
