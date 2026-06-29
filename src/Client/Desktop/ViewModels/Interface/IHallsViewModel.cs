@@ -4,6 +4,6 @@ namespace ViewModels.Interface
 {
     public interface IHallsViewModel
     {
-        Task<DataView> GetDataView();
+        Task<DataView> GetDataView(int pageNumber, int pageSize);
     }
 }

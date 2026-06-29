@@ -14,7 +14,7 @@ namespace ViewModels
             _hallApi = hallApiService;
         }
 
-        public async Task<DataView> GetDataView()
+        private DataView _ConvertToDataView(List<HallModel>? hallModels)
         {
             DataTable table = new DataTable();
 
@@ -23,7 +23,8 @@ namespace ViewModels
             table.Columns.Add("Building");
             table.Columns.Add("Floor");
 
-            List<HallModel> hallModels = await _hallApi.GetHallsAsync();
+            if (hallModels == null)
+                return table.DefaultView;
 
             foreach (var hall in hallModels)
             {
@@ -36,6 +37,12 @@ namespace ViewModels
             }
 
             return table.DefaultView;
+        }
+
+        public async Task<DataView> GetDataView(int pageNumber, int pageSize)
+        {
+            List<HallModel>? hallModels = await _hallApi.GetHallsAsync(pageNumber, pageSize);
+            return _ConvertToDataView(hallModels);
         }
     }
 }
