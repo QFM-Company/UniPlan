@@ -1,22 +1,20 @@
-﻿using Business.DTOs.Responses;
-using System.Data;
-using Core.Interfaces.Repositories;
+﻿using System.Data;
+using ViewModels.Interface;
+using Client.Models;
+using Client.Services;
 
 namespace ViewModels
 {
-    public class HallsViewModel
+    public class HallsViewModel : IHallsViewModel
     {
+        private readonly HallApiService _hallApi;
 
-        private readonly IHallRepository _hallRepository;
-        public List<HallResponse> HallsList { get; set; }
-
-        public HallsViewModel(IHallRepository hallRepository)
+        public HallsViewModel(HallApiService hallApiService)
         {
-            _hallRepository = hallRepository;
-            HallsList = new List<HallResponse>();
+            _hallApi = hallApiService;
         }
 
-        public DataView GetDataView()
+        public async Task<DataView> GetDataView()
         {
             DataTable table = new DataTable();
 
@@ -25,7 +23,9 @@ namespace ViewModels
             table.Columns.Add("Building");
             table.Columns.Add("Floor");
 
-            foreach (var hall in HallsList)
+            List<HallModel> hallModels = await _hallApi.GetHallsAsync();
+
+            foreach (var hall in hallModels)
             {
                 table.Rows.Add(
                     hall.HallID,
@@ -36,28 +36,6 @@ namespace ViewModels
             }
 
             return table.DefaultView;
-        }
-
-
-        public async Task LoadHallsAsync()
-        {
-            var halls = await _hallRepository.GetPagedHallsAsync();
-
-            HallsList.Clear();
-
-            if (halls == null)
-                return;
-
-            foreach (var hall in halls)
-            {
-                HallsList.Add(new HallResponse(
-                    hall.HallID,
-                    hall.HallName,
-                    hall.Building,
-                    hall.Floor,
-                    hall.CreatedByAdminID
-                ));
-            }
         }
     }
 }

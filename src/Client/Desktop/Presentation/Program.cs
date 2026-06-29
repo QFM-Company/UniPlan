@@ -1,17 +1,42 @@
+using Client.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Presentation.Forms;
+using System;
+using System.Windows.Forms;
+using ViewModels;
+using ViewModels.Interface;
+
 namespace Presentation
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        public static IServiceProvider? ServiceProvider { get; private set; }
+
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            //Application.Run(new Form1());
+
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+
+            ServiceProvider = services.BuildServiceProvider();
+
+            var mainForm = ServiceProvider.GetRequiredService<HallsManagement>();
+            Application.Run(mainForm);
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddScoped(sp => new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7068/")
+            });
+
+            services.AddScoped<HallApiService>();
+
+            services.AddTransient<IHallsViewModel, HallsViewModel>();
+            services.AddTransient<HallsManagement>();
         }
     }
 }

@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using ViewModels.Interface;
 
 namespace Presentation.Forms
 {
     public partial class HallsManagement : Form
     {
-        public HallsManagement()
+        public IHallsViewModel HallsViewModel { get; set; } 
+
+        public HallsManagement(IHallsViewModel hallsViewModel)
         {
             InitializeComponent();
+            HallsViewModel = hallsViewModel;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -35,6 +30,19 @@ namespace Presentation.Forms
         private void header1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private async void HallsManagement_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                DV_halls.Columns.Clear();
+                DV_halls.DataSource = await HallsViewModel.GetDataView();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}", "UniPlan", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
