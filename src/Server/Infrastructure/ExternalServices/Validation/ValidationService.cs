@@ -36,9 +36,15 @@ namespace Infrastructure.ExternalServices.Validation
                 {
                     if (item is IValidationAttribute attribute)
                     {
-                        if (!attribute.Check(value))
+                        if (attribute is CompareAttribute compareAttr)
                         {
-                            errors.Add(attribute.ErrorMeesage);
+                            if (!compareAttr.Check(value, obj))
+                                errors.Add(attribute.ErrorMeesage);
+                        }
+                        else
+                        {
+                            if (!attribute.Check(value))
+                                errors.Add(attribute.ErrorMeesage);
                         }
                     }
                 }

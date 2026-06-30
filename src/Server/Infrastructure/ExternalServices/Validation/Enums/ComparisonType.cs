@@ -1,5 +1,4 @@
-﻿
-namespace Infrastructure.ExternalServices.Validation
+﻿namespace Infrastructure.ExternalServices.Validation.Enums
 {
     public enum ComparisonType
     {
