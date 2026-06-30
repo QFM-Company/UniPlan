@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces.ExternalServices;
 using System.Reflection;
 using Core.Exceptions;
+using Infrastructure.ExternalServices.Validation.Attributes;
 
 namespace Infrastructure.ExternalServices.Validation
 {
@@ -38,7 +39,6 @@ namespace Infrastructure.ExternalServices.Validation
                         if (!attribute.Check(value))
                         {
                             errors.Add(attribute.ErrorMeesage);
-                            break;
                         }
                     }
                 }
