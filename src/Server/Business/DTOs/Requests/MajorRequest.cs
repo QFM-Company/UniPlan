@@ -1,15 +1,26 @@
-﻿namespace Business.DTOs.Requests
+﻿using Infrastructure.ExternalServices.Validation.Attributes;
+
+namespace Business.DTOs.Requests
 {
     public class MajorRequest
     {
-        public string MajorName { get; set; } = string.Empty;
+        [Required<string>("major name is required")]
+        public string? MajorName { get; set; }
 
         public int ParentMajorID { get; set; }
+
+
 
         public MajorRequest(string majorName, int parentMajorID)
         {
             MajorName = majorName;
             ParentMajorID = parentMajorID;
+        }
+
+        public MajorRequest()
+        {
+            MajorName = null;
+            ParentMajorID = default;
         }
     }
 }

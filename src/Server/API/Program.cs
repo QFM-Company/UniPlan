@@ -6,7 +6,7 @@ using DataAccess;
 using DataAccess.Repositories;
 using Infrastructure.ExternalServices;
 using Core.Interfaces.Services;
-using Microsoft.Data.SqlClient;
+using Infrastructure.ExternalServices.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +33,7 @@ builder.Services.AddScoped<DBHelpers>();
 //  External Services 
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IExceptionService,ExceptionService>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 
 // Repositories
 builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();

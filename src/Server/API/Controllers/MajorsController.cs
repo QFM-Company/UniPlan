@@ -2,6 +2,7 @@
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,10 @@ namespace API.Controllers
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {

@@ -3,6 +3,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -10,10 +11,11 @@ namespace Business.Services
     public class MajorService : IMajorService
     {
         private IMajorRepository _majorRepository;
-
-        public MajorService(IMajorRepository majorRepository)
+        private readonly IValidationService _validationService;
+        public MajorService(IMajorRepository majorRepository, IValidationService validationService)
         {
             _majorRepository = majorRepository;
+            _validationService = validationService;
         }
 
         public async Task<bool> DeleteMajorAsync(int majorID)
@@ -23,6 +25,8 @@ namespace Business.Services
 
         public async Task<MajorResponse?> AddMajorAsync(MajorRequest request)
         {
+            _validationService.Validate(request);
+
             Major major = request.ToMajor();
 
             major.MajorID = await _majorRepository.AddMajorAsync(major);
@@ -35,6 +39,8 @@ namespace Business.Services
 
         public async Task<bool> UpdateMajorAsync(MajorRequest request, int majorID)
         {
+            _validationService.Validate(request);
+
             Major? major = await _majorRepository.GetMajorByIDAsync(majorID);
 
             major?.UpdateMajor(request);
