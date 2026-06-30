@@ -34,6 +34,7 @@ builder.Services.AddScoped<DBHelpers>();
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<IExceptionService,ExceptionService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // Repositories
 builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();

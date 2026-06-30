@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.ExternalServices;
+using Infrastructure.ExternalServices.Validation.Enums;
 using System.Reflection;
 
 namespace Infrastructure.ExternalServices.Validation.Attributes
