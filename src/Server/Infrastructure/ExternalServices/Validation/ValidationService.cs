@@ -59,7 +59,7 @@ namespace Infrastructure.ExternalServices.Validation
 
                 perValue = value;
 
-                if (value != null && property.PropertyType.IsClass && property.Name.Contains("Request"))
+                if (value != null && property.PropertyType.IsClass && property.PropertyType.Name.Contains("Request"))
                 {
                     ExecuteValidation(value, errors);
                 }
