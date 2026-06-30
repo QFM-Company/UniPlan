@@ -27,6 +27,7 @@ namespace Infrastructure.ExternalServices.Validation
                 return;
 
             Type type = obj.GetType();
+            object? perValue = null;
 
             foreach (PropertyInfo property in type.GetProperties())
             {
@@ -38,18 +39,27 @@ namespace Infrastructure.ExternalServices.Validation
                     {
                         if (attribute is CompareAttribute compareAttr)
                         {
+                            // استخدم perValue
                             if (!compareAttr.Check(value, obj))
+                            {
                                 errors.Add(attribute.ErrorMeesage);
+                                break;
+                            }
                         }
                         else
                         {
                             if (!attribute.Check(value))
+                            {
                                 errors.Add(attribute.ErrorMeesage);
+                                break;
+                            }
                         }
                     }
                 }
 
-                if (value != null && property.PropertyType.IsClass && property.PropertyType != typeof(string))
+                perValue = value;
+
+                if (value != null && property.PropertyType.IsClass && property.Name.Contains("Request"))
                 {
                     ExecuteValidation(value, errors);
                 }
