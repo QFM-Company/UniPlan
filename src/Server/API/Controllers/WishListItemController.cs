@@ -12,7 +12,7 @@ using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
-    [Route("api/wishListItem")]
+    [Route("api/wishListItems")]
     [ApiController]
     public class WishListItemController : ControllerBase
     {

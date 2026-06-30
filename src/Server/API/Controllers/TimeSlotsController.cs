@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/TimeSlots")]
+    [Route("api/timeSlots")]
     [ApiController]
     public class TimeSlotsController : ControllerBase
     {

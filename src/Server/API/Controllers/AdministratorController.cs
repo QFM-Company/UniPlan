@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/Admin")]
+    [Route("api/admins")]
     [ApiController]
     public class AdministratorController : ControllerBase
     {

@@ -11,7 +11,7 @@ using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
-    [Route("api/courseSession")]
+    [Route("api/courseSessions")]
     [ApiController]
     public class CourseSessionController : ControllerBase
     {

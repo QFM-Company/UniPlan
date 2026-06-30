@@ -9,7 +9,7 @@ using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
-    [Route("api/coursePrequist")]
+    [Route("api/coursePrequists")]
     [ApiController]
     public class CoursePrequistsController : ControllerBase
     {
