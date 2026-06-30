@@ -4,6 +4,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -11,10 +12,12 @@ namespace Business.Services
     public class StudentService : IStudentService
     {
         private IStudentRepository _studentRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(IStudentRepository studentRepository, IPasswordHasher passwordHasher)
         {
             _studentRepository = studentRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<bool> DeleteStudentAsync(int studentID)
@@ -26,8 +29,8 @@ namespace Business.Services
         {
             Student student = request.ToStudent();
 
-//            if(student.Account != null)
-//                student.Account.Password = BCrypt.Net.BCrypt.HashPassword(student.Account.Password);
+            if (student.Account != null)
+                student.Account.Password = _passwordHasher.HashPassword(student.Account.Password);
 
             if (await _studentRepository.AddStudentAsync(student))
                 return await GetStudentByIDAsync(student.StudentID);

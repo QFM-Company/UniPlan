@@ -2,7 +2,7 @@
 
 namespace Infrastructure.ExternalServices.Validation.Attributes
 {
-    internal class LengthAttribute : Attribute, IValidationAttribute
+    public class LengthAttribute : Attribute, IValidationAttribute
     {
         public string ErrorMeesage { get; set; }
 

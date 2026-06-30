@@ -4,6 +4,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -11,10 +12,12 @@ namespace Business.Services
     public class AccountService : IAccountService
     {
         private IAccountRepository _accountRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public AccountService(IAccountRepository accountRepository)
+        public AccountService(IAccountRepository accountRepository, IPasswordHasher passwordHasher)
         {
             _accountRepository = accountRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<AccountResponse?> GetAccountByIDAsync(int accountID)
@@ -25,7 +28,7 @@ namespace Business.Services
 
         public async Task<AccountResponse?> LoginAsync(LoginRequest request)
         {
-            //request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            request.Password = _passwordHasher.HashPassword(request.Password);
 
             Account account = request.ToAccount();
             account.AccountID = await _accountRepository.LoginAsync(account);
@@ -43,7 +46,7 @@ namespace Business.Services
             account?.UpdateAccount(request);
             if(account != null)
             {
- //               account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
+                account.Password = _passwordHasher.HashPassword(account.Password);
                 return await _accountRepository.UpdatePasswordAsync(account, request.OLdPassword);
             }
 

@@ -38,6 +38,7 @@ namespace Infrastructure.ExternalServices.Validation
                         if (!attribute.Check(value))
                         {
                             errors.Add(attribute.ErrorMeesage);
+                            break;
                         }
                     }
                 }
