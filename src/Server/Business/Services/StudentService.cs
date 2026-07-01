@@ -11,11 +11,13 @@ namespace Business.Services
 {
     public class StudentService : IStudentService
     {
-        private IStudentRepository _studentRepository;
+        private readonly IStudentRepository _studentRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IValidationService _validationService;
 
-        public StudentService(IStudentRepository studentRepository, IPasswordHasher passwordHasher)
+        public StudentService(IStudentRepository studentRepository, IPasswordHasher passwordHasher, IValidationService validationService)
         {
+            _validationService = validationService;
             _studentRepository = studentRepository;
             _passwordHasher = passwordHasher;
         }
@@ -27,6 +29,8 @@ namespace Business.Services
 
         public async Task<StudentResponse?> AddStudentAsync(CreateStudentRequest request)
         {
+            _validationService.Validate(request);
+
             Student student = request.ToStudent();
 
             if (student.Account != null)
@@ -40,6 +44,8 @@ namespace Business.Services
 
         public async Task<bool> UpdateStudentAsync(UpdateStudentRequest request, int studentID)
         {
+            _validationService.Validate(request);
+
             Student? student = await _studentRepository.GetStudentByIDAsync(studentID);
 
             student?.UpdateStudent(request);

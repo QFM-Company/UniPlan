@@ -3,6 +3,7 @@ using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -13,9 +14,9 @@ namespace API.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        private IStudentService _studentService;
-        private ILogService _logService;
-        private IExceptionService _exceptionService;
+        private readonly IStudentService _studentService;
+        private readonly ILogService _logService;
+        private readonly IExceptionService _exceptionService;
 
         public StudentsController(IStudentService studentService, ILogService logService, IExceptionService exceptionService)
         {
@@ -47,6 +48,11 @@ namespace API.Controllers
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
+            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -75,6 +81,11 @@ namespace API.Controllers
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {

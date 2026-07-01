@@ -4,16 +4,19 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
 {
     public class CourseOfferingService : ICourseOfferingService
     {
-        private ICourseOfferingRepository _offeringRepository;
+        private readonly ICourseOfferingRepository _offeringRepository;
+        private readonly IValidationService _validationService;
 
-        public CourseOfferingService(ICourseOfferingRepository offeringRepository)
+        public CourseOfferingService(ICourseOfferingRepository offeringRepository, IValidationService validationService)
         {
+            _validationService = validationService;
             _offeringRepository = offeringRepository;
         }
 
@@ -25,6 +28,8 @@ namespace Business.Services
 
         public async Task<CourseOfferingResponse?> AddCourseOfferingAsync(CreateCourseOfferingRequest request)
         {
+            _validationService.Validate(request);
+
             CourseOffering offering = request.ToCourseOffering();
 
             offering.OfferingID = await _offeringRepository.AddCourseOfferingAsync(offering);
@@ -37,6 +42,8 @@ namespace Business.Services
 
         public async Task<bool> UpdateCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID)
         {
+            _validationService.Validate(request);
+
             CourseOffering? offering = await _offeringRepository.GetCourseOfferingByIDAsync(offeringID);
 
             offering?.UpdateOffering(request);

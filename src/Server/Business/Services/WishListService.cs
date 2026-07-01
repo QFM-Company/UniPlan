@@ -3,15 +3,18 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 
 namespace Business.Services
 {
     public class WishListService : IWishListService
     {
-        private IWishListRepository _listRepository;
+        private readonly IWishListRepository _listRepository;
+        private readonly IValidationService _validationService;
 
-        public WishListService(IWishListRepository listRepository)
+        public WishListService(IWishListRepository listRepository, IValidationService validationService)
         {
+            _validationService = validationService;
             _listRepository = listRepository;
         }
 
@@ -22,6 +25,8 @@ namespace Business.Services
 
         public async Task<WishListResponse?> AddWishListAsync(WishListRequest request)
         {
+            _validationService.Validate(request);
+
             WishList list = request.ToWishList();
 
             list.WishListID = await _listRepository.AddWishListAsync(list);

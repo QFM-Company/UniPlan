@@ -1,20 +1,22 @@
-﻿using Business.DTOs.Requests;
-using Business.DTOs.Requests.Create;
+﻿using Business.DTOs.Requests.Create;
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
 {
     public class HallService : IHallService
     {
-        private IHallRepository _hallRepository;
+        private readonly IHallRepository _hallRepository;
+        private readonly IValidationService _validationService;
 
-        public HallService(IHallRepository hallRepository)
+        public HallService(IHallRepository hallRepository, IValidationService validationService)
         {
+            _validationService = validationService;
             _hallRepository = hallRepository;
         }
 
@@ -25,8 +27,9 @@ namespace Business.Services
 
         public async Task<HallResponse?> AddHallAsync(CreateHallRequest request)
         {
-            Hall hall = request.ToHall();
+            _validationService.Validate(request);
 
+            Hall hall = request.ToHall();
 
             hall.HallID = await _hallRepository.AddHallAsync(hall);
 
@@ -38,6 +41,8 @@ namespace Business.Services
 
         public async Task<bool> UpdateHallAsync(UpdateHallRequest request, int hallID)
         {
+            _validationService.Validate(request);
+
             Hall? hall = await _hallRepository.GetHallByIDAsync(hallID);
 
             hall?.UpdateHall(request);

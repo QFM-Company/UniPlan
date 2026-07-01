@@ -3,21 +3,26 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
 {
     public class GeneratedScheduleService : IGeneratedScheduleService
     {
-        private IGeneratedScheduleRepository _scheduleRepository;
+        private readonly IGeneratedScheduleRepository _scheduleRepository;
+        private readonly IValidationService _validationService;
 
-        public GeneratedScheduleService(IGeneratedScheduleRepository scheduleRepository)
+        public GeneratedScheduleService(IGeneratedScheduleRepository scheduleRepository, IValidationService validationService)
         {
+            _validationService = validationService;
             _scheduleRepository = scheduleRepository;
         }
 
         public async Task<GeneratedScheduleResponse?> AddGeneratedScheduleAsync(GeneratedScheduleRequest request)
         {
+            _validationService.Validate(request);
+
             GeneratedSchedule schedule = request.ToGeneratedSchedule();
 
             if(_GeneratedSchedule(schedule, request.Days) && await _scheduleRepository.AddGeneratedScheduleAsync(schedule))

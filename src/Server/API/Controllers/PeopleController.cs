@@ -2,11 +2,10 @@
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace API.Controllers
 {
@@ -14,9 +13,9 @@ namespace API.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private IPeopleService _peopleService;
-        private ILogService _logService;
-        private IExceptionService _exceptionService;
+        private readonly IPeopleService _peopleService;
+        private readonly ILogService _logService;
+        private readonly IExceptionService _exceptionService;
 
         public PeopleController(IPeopleService peopleService, ILogService logService, IExceptionService exceptionService)
         {
@@ -47,6 +46,11 @@ namespace API.Controllers
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {

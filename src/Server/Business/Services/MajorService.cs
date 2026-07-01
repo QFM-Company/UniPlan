@@ -10,7 +10,7 @@ namespace Business.Services
 {
     public class MajorService : IMajorService
     {
-        private IMajorRepository _majorRepository;
+        private readonly IMajorRepository _majorRepository;
         private readonly IValidationService _validationService;
         public MajorService(IMajorRepository majorRepository, IValidationService validationService)
         {

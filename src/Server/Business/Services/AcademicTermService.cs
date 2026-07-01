@@ -3,16 +3,19 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
 {
     public class AcademicTermService : IAcademicTermService
     {
-        private IAcademicTermRepository _termRepository;
+        private readonly IAcademicTermRepository _termRepository;
+        private readonly IValidationService _validationService;
 
-        public AcademicTermService(IAcademicTermRepository termRepository)
+        public AcademicTermService(IAcademicTermRepository termRepository, IValidationService validationService)
         {
+            _validationService = validationService;
             _termRepository = termRepository;
         }
 
@@ -23,6 +26,8 @@ namespace Business.Services
 
         public async Task<AcademicTermResponse?> AddAcademicTermAsync(AcademicTermRequest request)
         {
+            _validationService.Validate(request);
+
             AcademicTerm term = request.ToAcademicTerm();
 
             term.TermID = await _termRepository.AddAcademicTermAsync(term);

@@ -1,19 +1,21 @@
 ﻿using Business.DTOs.Requests;
-using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
 {
     public class LectureService : ILectureService
     {
-        private ILectureRepository _lectureRepository;
+        private readonly ILectureRepository _lectureRepository;
+        private readonly IValidationService _validationService;
 
-        public LectureService(ILectureRepository lectureRepository)
+        public LectureService(ILectureRepository lectureRepository, IValidationService validationService)
         {
+            _validationService = validationService;
             _lectureRepository = lectureRepository;
         }
 
@@ -25,8 +27,9 @@ namespace Business.Services
 
         public async Task<LectureResponse?> AddLectureAsync(LectureRequest request)
         {
-            Lecture lecture = request.ToLecture();
+            _validationService.Validate(request);
 
+            Lecture lecture = request.ToLecture();
 
             lecture.LectureID = await _lectureRepository.AddLectureAsync(lecture);
 
@@ -38,6 +41,8 @@ namespace Business.Services
 
         public async Task<bool> UpdateLectureAsync(LectureRequest request, int lectureID)
         {
+            _validationService.Validate(request);
+
             Lecture? lecture = await _lectureRepository.GetLectureByIDAsync(lectureID);
 
             lecture?.UpdateLecture(request);

@@ -11,11 +11,13 @@ namespace Business.Services
 {
     public class AccountService : IAccountService
     {
-        private IAccountRepository _accountRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IValidationService _validationService;
 
-        public AccountService(IAccountRepository accountRepository, IPasswordHasher passwordHasher)
+        public AccountService(IAccountRepository accountRepository, IPasswordHasher passwordHasher, IValidationService validationService)
         {
+            _validationService = validationService;
             _accountRepository = accountRepository;
             _passwordHasher = passwordHasher;
         }
@@ -28,6 +30,8 @@ namespace Business.Services
 
         public async Task<AccountResponse?> LoginAsync(LoginRequest request)
         {
+            _validationService.Validate(request);
+
             request.Password = _passwordHasher.HashPassword(request.Password);
 
             Account account = request.ToAccount();
@@ -41,6 +45,8 @@ namespace Business.Services
 
         public async Task<bool> UpdatePasswordAsync(ChangePasswordRequest request, int accountID)
         {
+            _validationService.Validate(request);
+
             Account? account = await _accountRepository.GetAccountByIDAsync(accountID);
 
             account?.UpdateAccount(request);
