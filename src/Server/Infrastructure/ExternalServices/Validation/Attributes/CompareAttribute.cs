@@ -7,10 +7,12 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
 
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class CompareAttribute : ValidationAttribute
+    public class CompareAttribute : Attribute
     {
         public string OtherPropertyName { get; set; }
         public ComparisonType Comparison { get; set; }
+        public string ErrorMeesage { get; set; }
+
 
         public CompareAttribute(string otherPropertyName, ComparisonType comparison, string errorMeesage) : base(errorMeesage)
         {
@@ -40,7 +42,5 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
 
             return false;
         }
-
-        public override bool Check(object? obj) => throw new NotImplementedException("استخدم Overload التي تستقبل parentObject");
     }
 }
