@@ -69,8 +69,7 @@ SELECT
     WLI.WishListID,
     WLI.CourseID,
     C.CourseName,
-    C.CreditHours,
-    C.MajorID
+    C.CreditHours
 FROM dbo.WishListItems WLI
 INNER JOIN dbo.WishLists WL
     ON WLI.WishListID = WL.WishListID

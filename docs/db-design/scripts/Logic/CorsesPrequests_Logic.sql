@@ -75,18 +75,27 @@ GO
 
 create or Alter View VW_Main
 As
-select main.CourseID , main.CourseName , main.CreditHours , main.MajorID , Majors.MajorName
-from Courses as main inner join Majors on main.MajorID = Majors.MajorID;
+select main.CourseID , main.CourseName , main.CreditHours 
+from Courses as main;
 GO
 
 
 create or Alter View VW_Pre
 AS
-select pre.CourseID as CourseID2 , pre.CourseName as CourseName2 , pre.CreditHours as CreditHours2,
-pre.MajorID as MajorID2 , m.MajorName as MajorName2
-from Courses as pre inner join Majors as m on pre.MajorID = m.MajorID;
+select pre.CourseID as CourseID2 , pre.CourseName as CourseName2 , pre.CreditHours as CreditHours2
+from Courses as pre;
 GO
 
+
+Create Or Alter View VW_PrequistCourses
+AS
+SELECT
+             m.CourseID , m.CourseName , m.CreditHours ,
+			 p.CourseID2 , p.CourseName2 , p.CreditHours2 ,
+			 CP.PrerequisiteID
+        FROM [dbo].[VW_Main]as m inner join CoursePrerequisites As CP on  CP.CourseID = m.CourseID 
+		inner Join VW_Pre as p on CP.PrerequisiteCourseID = p.CourseID2
+go
 
 
 -- ==========================================
@@ -107,13 +116,8 @@ BEGIN
             SET @PageSize = 10;
 
 
-        SELECT
-             m.CourseID , m.CourseName , m.CreditHours , m.MajorID , m.MajorName ,
-			 p.CourseID2 , p.CourseName2 , p.CreditHours2 , p.MajorID2 , p.MajorName2 ,
-			 CP.PrerequisiteID
-        FROM [dbo].[VW_Main]as m inner join CoursePrerequisites As CP on  CP.CourseID = m.CourseID 
-		inner Join VW_Pre as p on CP.PrerequisiteCourseID = p.CourseID2
-        ORDER BY CP.PrerequisiteID
+        SELECT * from VW_PrequistCourses
+        ORDER BY PrerequisiteID
         OFFSET (@PageNumber - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY;
 
@@ -136,11 +140,7 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        SELECT
-             m.CourseID , m.CourseName , m.CreditHours , m.MajorID , m.MajorName , CP.PrerequisiteID ,
-			 p.CourseID2 , p.CourseName2 , p.CreditHours2 , p.MajorID2 , p.MajorName2
-             FROM [dbo].[VW_Main]as m inner join CoursePrerequisites As CP on  CP.CourseID = m.CourseID 
-		    inner Join VW_Pre as p on CP.PrerequisiteCourseID = p.CourseID2
+        SELECT * from VW_PrequistCourses
             WHERE PrerequisiteID = @PrerequisiteID;
     END TRY
     BEGIN CATCH

@@ -103,7 +103,6 @@ SELECT
 	SC.IsPassed ,
     C.CourseName,
     C.CreditHours,
-	C.MajorID ,
 	SC.EnrollmentID ,
 	SC.StudentID
 FROM dbo.StudentCourses SC

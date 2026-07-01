@@ -4,7 +4,6 @@ GO
 CREATE OR ALTER PROCEDURE SP_Courses_Insert
     @CourseName NVARCHAR(100),
     @CreditHours INT,
-    @MajorID INT,
     @CourseID INT OUT
 AS
 BEGIN
@@ -12,7 +11,6 @@ BEGIN
 
     IF NULLIF(LTRIM(RTRIM(@CourseName)), '') IS NULL
         OR @CreditHours <= 0
-        OR @MajorID <= 0
     BEGIN
         ;THROW 50801, 'Course validation failed', 1;
     END
@@ -21,14 +19,12 @@ BEGIN
         INSERT INTO [dbo].[Courses]
         (
             [CourseName],
-            [CreditHours],
-            [MajorID]
+            [CreditHours]
         )
         VALUES
         (
             @CourseName,
-            @CreditHours,
-            @MajorID
+            @CreditHours
         );
 
         SET @CourseID = CONVERT(INT, SCOPE_IDENTITY());
@@ -44,7 +40,6 @@ CREATE OR ALTER PROCEDURE SP_Courses_Update
     @CourseID INT,
     @CourseName NVARCHAR(100),
     @CreditHours INT,
-    @MajorID INT,
     @Result BIT OUT
 AS
 BEGIN
@@ -53,7 +48,6 @@ BEGIN
     IF @CourseID <= 0
         OR NULLIF(LTRIM(RTRIM(@CourseName)), '') IS NULL
         OR @CreditHours <= 0
-        OR @MajorID <= 0
     BEGIN
         ;THROW 50801, 'Course validation failed', 1;
     END
@@ -62,8 +56,7 @@ BEGIN
         UPDATE [dbo].[Courses]
         SET
             [CourseName] = @CourseName,
-            [CreditHours] = @CreditHours,
-            [MajorID] = @MajorID
+            [CreditHours] = @CreditHours
         WHERE [CourseID] = @CourseID;
 
         IF @@ROWCOUNT > 0
@@ -101,6 +94,12 @@ END;
 GO
 
 
+Create Or Alter View VW_Courses
+AS
+select * from Courses;
+go
+
+
 CREATE OR ALTER PROCEDURE SP_Courses_GetAll
     @PageNumber INT = 1,
     @PageSize INT = 10
@@ -115,14 +114,8 @@ BEGIN
         IF @PageSize IS NULL OR @PageSize < 1
             SET @PageSize = 10;
 
-        SELECT
-            C.CourseID,
-            C.CourseName,
-            C.CreditHours,
-            C.MajorID ,
-			Majors.MajorName
-        FROM [dbo].[Courses] C  inner join Majors on C.MajorID = Majors.MajorID
-        ORDER BY C.CourseID
+        SELECT * from VW_Courses
+		order by CourseID
         OFFSET (@PageNumber - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY;
     END TRY
@@ -142,13 +135,7 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        SELECT
-            CourseID,
-            CourseName,
-            CreditHours,
-            Courses.MajorID ,
-			Majors.MajorName
-        FROM [dbo].[Courses] inner join Majors on Courses.MajorID = Majors.MajorID
+        SELECT * from VW_Courses
         WHERE CourseID = @CourseID;
     END TRY
     BEGIN CATCH
