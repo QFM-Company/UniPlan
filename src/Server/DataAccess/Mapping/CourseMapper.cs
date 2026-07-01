@@ -13,8 +13,6 @@ namespace DataAccess.Mapping
     {
         public static Course ToCourse(this SqlDataReader reader)
         {
-            Major major = reader.ToMajor();
-
             reader.ReadInt("CourseID", out int courseID, -1);
             reader.ReadString("CourseName", out string courseName, string.Empty);
             reader.ReadInt("CreditHours", out int creditHours, -1);

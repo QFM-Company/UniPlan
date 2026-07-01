@@ -19,11 +19,7 @@ namespace DataAccess.Mapping
             reader.ReadString("CourseName2", out string courseName2, string.Empty);
             reader.ReadInt("CreditHours2", out int creditHours2, -1);
 
-            reader.ReadInt("MajorID2", out int majorID2, -1);
-            reader.ReadString("MajorName2", out string majorName2, string.Empty);
             reader.ReadInt("PrerequisiteID", out int prerequisiteID, -1);
-
-            Major major2 = new Major(majorID2, majorName2);
 
             Course preCourse = new Course(PreCourseID2, courseName2, creditHours2);
 
