@@ -15,8 +15,12 @@
             if (obj is string str && string.IsNullOrWhiteSpace(str))
                 return false;
 
-            T value = (T)obj;
-            return !EqualityComparer<T>.Default.Equals(value, default(T));
+            if (obj is T value)
+            {
+                return !EqualityComparer<T>.Default.Equals(value, default(T));
+            }
+
+            return true;
         }
     }
 }

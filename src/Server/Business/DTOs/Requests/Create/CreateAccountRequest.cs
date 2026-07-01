@@ -4,30 +4,29 @@ namespace Business.DTOs.Requests.Create
 {
     public class CreateAccountRequest
     {
-        [Required<string>("Account name is required")]
-        [Length("Account name cannot exceed 50 characters.", 50, 3)]
+        [Required<string>("اسم المستخدم مطلوب")]
+        [Length("يجب ألا يتجاوز اسم المستخدم 50 حرفًا", 50, 3)]
         public string AccountName { get; set; } = string.Empty;
 
-        [Required<string>("password is required")]
-        [Length("Password must be between 8 and 50 characters long.", 50, 8)]
-        [Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$", 
-            "Password must include an uppercase letter, a lowercase letter, a number, and a special character.")]
+        [Required<string>("كلمة المرور مطلوبة")]
+        [Length("يجب أن تكون كلمة المرور بين 8 و 50 حرفًا", 50, 8)]
+        [Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$",
+            "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم ورمز خاص")]
         public string Password { get; set; } = string.Empty;
 
-
-        [Required<string>("Email is required")]
-        [Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", "Invalid email format.")]
-        [Length("Email cannot exceed 255 characters.", 255, 5)]
+        [Required<string>("البريد الإلكتروني مطلوب")]
+        [Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", "صيغة البريد الإلكتروني غير صحيحة")]
+        [Length("يجب ألا يتجاوز البريد الإلكتروني 255 حرفًا", 255, 5)]
         public string Email { get; set; } = string.Empty;
 
-        public CreateAccountRequest(string accountName, string password, string email) 
+        public CreateAccountRequest(string accountName, string password, string email)
         {
             AccountName = accountName;
             Email = email;
             Password = password;
         }
 
-        public CreateAccountRequest() 
+        public CreateAccountRequest()
         {
             AccountName = string.Empty;
             Email = string.Empty;

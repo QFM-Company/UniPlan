@@ -1,9 +1,14 @@
+using Infrastructure.ExternalServices.Validation.Attributes;
+
 namespace Business.DTOs.Requests
 {
     public class GeneratedScheduleRequest
     {
+        [Required<int>("ãÚÑİ ŞÇÆãÉ ÇáÑÛÈÇÊ ãØáæÈ")]
+        [Range<int>("íÌÈ Ãä íßæä ÇáãÚÑİ ÃßÈÑ ãä 0", 1, int.MaxValue)]
         public int WishListID { get; set; }
 
+        [Required<object>("íÌÈ ÊÍÏíÏ ÃíÇã ÇáÃÓÈæÚ")] 
         public List<DayOfWeek> Days { get; set; }
 
         public GeneratedScheduleRequest()

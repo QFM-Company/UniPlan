@@ -2,11 +2,11 @@
 {
     public abstract class ValidationAttribute : Attribute
     {
-        public string ErrorMeesage { get; set; }
+        public string ErrorMessage { get; set; }
 
-        protected ValidationAttribute(string errorMeesage)
+        protected ValidationAttribute(string errorMessage)
         {
-            ErrorMeesage = errorMeesage;
+            ErrorMessage = errorMessage;
         }
 
         public abstract bool Check(object? obj);

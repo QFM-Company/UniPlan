@@ -53,6 +53,8 @@ namespace Business.Services
             if(account != null)
             {
                 account.Password = _passwordHasher.HashPassword(account.Password);
+                request.OLdPassword = _passwordHasher.HashPassword(request.OLdPassword);
+
                 return await _accountRepository.UpdatePasswordAsync(account, request.OLdPassword);
             }
 

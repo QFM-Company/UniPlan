@@ -7,6 +7,7 @@ namespace Business.DTOs.Requests
     {
         [Required<TimeSpan>("الفترة مطلوبة")]
         public TimeSpan StartTime { get; set; }
+
         [Required<TimeSpan>("الفترة مطلوبة")]
         [Compare(nameof(StartTime) , ComparisonType.GreaterThan , "يجب ان تكون الفنرة الثانية اكبر من الفترة الاولى")]
         public TimeSpan EndTime { get; set; }

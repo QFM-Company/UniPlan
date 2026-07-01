@@ -11,14 +11,14 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
     {
         public string OtherPropertyName { get; set; }
         public ComparisonType Comparison { get; set; }
-        public string ErrorMeesage { get; set; }
+        public string ErrorMessage { get; set; }
 
 
-        public CompareAttribute(string otherPropertyName, ComparisonType comparison, string errorMeesage)
+        public CompareAttribute(string otherPropertyName, ComparisonType comparison, string errorMessage)
         {
             OtherPropertyName = otherPropertyName;
             Comparison = comparison;
-            ErrorMeesage = errorMeesage;
+            ErrorMessage = errorMessage;
         }
 
 

@@ -4,12 +4,12 @@ namespace Business.DTOs.Requests
 {
     public class MajorRequest
     {
-        [Required<string>("major name is required")]
+        [Required<string>("اسم التخصص مطلوب")]
+        [Length("يجب ألا يزيد طول الاسم عن 100 حرف", 100, 1)]
         public string? MajorName { get; set; }
 
-        public int ParentMajorID { get; set; }
-
-
+        [Range<int>("معرف الأختصاص الأب يجب أن لا يكون عدد سالب", 0, int.MaxValue)]
+        public int ParentMajorID { get; set; } 
 
         public MajorRequest(string majorName, int parentMajorID)
         {
@@ -20,7 +20,7 @@ namespace Business.DTOs.Requests
         public MajorRequest()
         {
             MajorName = null;
-            ParentMajorID = default;
+            ParentMajorID = default; 
         }
     }
 }

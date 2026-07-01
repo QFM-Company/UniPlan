@@ -37,19 +37,19 @@ namespace Infrastructure.ExternalServices.Validation
                 {
                     if (!attribute.Check(value))
                     {
-                        errors.Add(attribute.ErrorMeesage);
+                        errors.Add(attribute.ErrorMessage);
                         break;
                     }
                 }
 
                 foreach (CompareAttribute attribute in property.GetCustomAttributes<CompareAttribute>())
                 {
-                    object? otherValue = type.GetProperties().First(p => p.PropertyType.Name == attribute.OtherPropertyName).
+                    object? otherValue = type.GetProperties().FirstOrDefault(p => p.Name == attribute.OtherPropertyName)?.
                                        GetValue(obj, null);
 
                     if (!attribute.Check(value , otherValue))
                     {
-                        errors.Add(attribute.ErrorMeesage);
+                        errors.Add(attribute.ErrorMessage);
                         break;
                     }
                 }
