@@ -6,7 +6,7 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
 {
 
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class CompareAttribute : Attribute, IValidationAttribute
     {
         public string ErrorMeesage { get; set; }
@@ -20,11 +20,11 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
             ErrorMeesage = errorMeesage;
         }
 
-        public bool Check(object? obj, object parentObject)
+        public bool Check(object? obj,object parentObject, Type propertyes)
         {
-            if (obj == null || parentObject == null) return false;
+            if (obj == null || propertyes == null || parentObject == null) return false;
 
-            var otherProperty = parentObject.GetType().GetProperty(OtherPropertyName);
+            var otherProperty = propertyes.GetProperty(OtherPropertyName);
             if (otherProperty == null) return false;
 
             var otherValue = otherProperty.GetValue(parentObject);

@@ -39,8 +39,7 @@ namespace Infrastructure.ExternalServices.Validation
                     {
                         if (attribute is CompareAttribute compareAttr)
                         {
-                            // استخدم perValue
-                            if (!compareAttr.Check(value, obj))
+                            if (!compareAttr.Check(value, obj , type))
                             {
                                 errors.Add(attribute.ErrorMeesage);
                                 break;
