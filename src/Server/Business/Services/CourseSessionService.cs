@@ -10,6 +10,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Microsoft.VisualBasic;
 
@@ -18,10 +19,12 @@ namespace Business.Services
     public class CourseSessionService : ICourseSessionService
     {
         private ICourseSessionRepository _courseSessionRepository;
+        private IValidationService _ValidationService;
 
-        public CourseSessionService(ICourseSessionRepository courseSessionRepository)
+        public CourseSessionService(ICourseSessionRepository courseSessionRepository , IValidationService validationService)
         {
             _courseSessionRepository = courseSessionRepository;
+            _ValidationService = validationService;
         }
 
         public async Task<bool> DeleteCourseSessionAsync(int courseSessionID)
@@ -31,6 +34,8 @@ namespace Business.Services
 
         public async Task<CourseSessionResponse?> AddCourseSessionAsync(CreateCourseSessionRequest request)
         {
+            _ValidationService.Validate(request);
+
             CourseSession? courseSession = request!.ToCourseSession();
 
             courseSession.SessionID = await _courseSessionRepository.AddCourseSessionAsync(courseSession);
@@ -46,6 +51,8 @@ namespace Business.Services
 
         public async Task<bool> UpdateCourseSessionAsync(UpdateCourseSessionRequest request, int courseSessionID)
         {
+            _ValidationService.Validate(request);
+
             CourseSession? courseSession = await _courseSessionRepository.GetCourseSessionByIDAsync(courseSessionID);
 
             courseSession?.UpdateCourseSession(request);

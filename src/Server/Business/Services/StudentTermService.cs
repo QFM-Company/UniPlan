@@ -10,6 +10,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -17,14 +18,18 @@ namespace Business.Services
     public class StudentTermService : IStudentTermService
     {
         private IStudentTermRepository _studentTermRepository;
+        private IValidationService _ValidationService;
 
-        public StudentTermService(IStudentTermRepository studentTermRepository)
+        public StudentTermService(IStudentTermRepository studentTermRepository , IValidationService validationService)
         {
             _studentTermRepository = studentTermRepository;
+            _ValidationService = validationService;
         }
 
         public async Task<StudentTermResponse?> AddStudentTermAsync(StudentTermRequest request)
         {
+            _ValidationService.Validate(request);
+
             StudentTerm studentTerm = request.ToStudentTerm();
 
             studentTerm.RegistrationID = await _studentTermRepository.AddStudentTermAsync(studentTerm);

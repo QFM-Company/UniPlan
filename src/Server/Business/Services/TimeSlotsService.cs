@@ -9,6 +9,7 @@ using Core.Entities;
 using Core.Interfaces.Repositories;
 using Business.Interfaces;
 using Business.Mapper;
+using Core.Interfaces.ExternalServices;
 namespace Business.Services
 {
     public class TimeSlotsService : ITimeSlotsService
@@ -17,18 +18,22 @@ namespace Business.Services
         private ITimeSlotRepository _TimeSlotsRepository;
         private IPeriodRepository _PeriodRepository;
         private TimeSlot? _timeSlot;
+        private IValidationService _ValidationService;
 
-        public TimeSlotsService(ITimeSlotRepository timeSlotsRepository, IPeriodRepository periodRepository)
+        public TimeSlotsService(ITimeSlotRepository timeSlotsRepository, IPeriodRepository periodRepository , IValidationService validationService)
         {
             _TimeSlotsRepository = timeSlotsRepository;
             _timeSlot = null;
             _PeriodRepository = periodRepository;
+            _ValidationService = validationService;
         }
 
      
 
         public async Task<TimeSlotResponse?> AddTimeSlotAsync(TimeSlotRequest request)
         {
+            _ValidationService.Validate(request);
+
             _timeSlot = request?.ToTimeSlot() ?? null;
             if (_timeSlot != null)
             {
@@ -57,6 +62,8 @@ namespace Business.Services
 
         public async Task<TimeSlotResponse?> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest request)
         {
+            _ValidationService.Validate(request);
+
             _timeSlot = request?.ToTimeSlot(timeSlotID) ?? null;
             if (_timeSlot != null)
             {

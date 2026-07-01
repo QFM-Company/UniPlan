@@ -10,16 +10,18 @@ using Core.Interfaces.Repositories;
 using Core.Entities;
 using Business.Interfaces;
 using Business.Mapper;
+using Core.Interfaces.ExternalServices;
 
 namespace Business.Services
 {
     public class CoursePrequistService : ICoursePrequistService
     {
         private readonly ICoursePrequsetRepository _coursePrequset;
-
-        public CoursePrequistService(ICoursePrequsetRepository coursePrequset)
+        private IValidationService _ValidationService;
+        public CoursePrequistService(ICoursePrequsetRepository coursePrequset , IValidationService validationService)
         {
             _coursePrequset = coursePrequset;
+            _ValidationService = validationService;
         }
 
 
@@ -30,6 +32,8 @@ namespace Business.Services
         }
         public async Task<CoursePrerequisiteResponse?> AddCoursePrequistAsync(CoursePrerequisiteRequest request)
         {
+            _ValidationService.Validate(request);
+
             CoursePrerequisites? coursePrequist = request.ToCoursePrequist();
             if (coursePrequist == null) { return null; }
 

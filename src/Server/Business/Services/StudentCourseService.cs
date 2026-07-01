@@ -9,6 +9,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -16,10 +17,13 @@ namespace Business.Services
     public class StudentCourseService : IStudentCourseService
     {
         private IStudentCourseRepository _studentCourseRepository;
+        private IValidationService _ValidationService;
 
-        public StudentCourseService(IStudentCourseRepository studentCourseRepository)
+
+        public StudentCourseService(IStudentCourseRepository studentCourseRepository , IValidationService validationService)
         {
             _studentCourseRepository = studentCourseRepository;
+            _ValidationService = validationService;
         }
 
         public async Task<bool> DeleteStudentCourseAsync(int enrolmentD)
@@ -29,6 +33,8 @@ namespace Business.Services
 
         public async Task<StudentCourseResponse?> AddStudentCourseAsync(CreateStudentCourseRequest request)
         {
+            _ValidationService.Validate(request);
+
             StudentCourse studentCourse = request.ToStudentCourse();
 
             studentCourse.EnrolmentID = await _studentCourseRepository.AddStudentCourseAsync(studentCourse);
@@ -41,6 +47,8 @@ namespace Business.Services
 
         public async Task<bool> UpdateStudentCourseAsync(UpdateStudentCourseRequest request, int enrolmentD)
         {
+            _ValidationService.Validate(request);
+
             StudentCourse? studentCourse = await _studentCourseRepository.GetStudentCourseByIDAsync(enrolmentD);
 
             studentCourse?.UpdateStudentCourse(request);

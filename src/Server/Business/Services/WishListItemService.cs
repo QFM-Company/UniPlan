@@ -10,6 +10,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -17,10 +18,12 @@ namespace Business.Services
     public class WishListItemService : IWishListItemService
     {
         private IWishListItemRepository _wishListItemRepository;
+        private IValidationService _ValidationService;
 
-        public WishListItemService(IWishListItemRepository wishListItemRepository)
+        public WishListItemService(IWishListItemRepository wishListItemRepository , IValidationService validationService)
         {
             _wishListItemRepository = wishListItemRepository;
+            _ValidationService = validationService;
         }
 
         public async Task<bool> DeleteWishListItemAsync(int itemID)
@@ -30,6 +33,8 @@ namespace Business.Services
 
         public async Task<WishListItemResponse?> AddWishListItemAsync(WishListItemRequest request)
         {
+            _ValidationService.Validate(request);
+
             WishListItem wishListItem = request.ToWishListItem();
 
             wishListItem.ItemID = await _wishListItemRepository.AddWishListItemAsync(wishListItem);

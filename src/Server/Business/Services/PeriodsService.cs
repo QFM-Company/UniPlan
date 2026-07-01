@@ -8,6 +8,7 @@ using Business.DTOs.Responses;
 using Business.Mapper;
 using Core.Entities;
 using Core.Enums;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
 
@@ -17,16 +18,21 @@ namespace Business.Services
     {
         private IPeriodRepository _PeriodRepository;
         private Period? _period;
+        private IValidationService _ValidationService;
 
-        public PeriodsService(IPeriodRepository PeriodRepository)
+
+        public PeriodsService(IPeriodRepository PeriodRepository , IValidationService validationService)
         {
             _PeriodRepository = PeriodRepository;
             _period = null;
+            _ValidationService = validationService;
         }
 
 
         public async Task<PeriodResponse?> AddPeriodAsync(PeriodRequest request)
         {
+            _ValidationService.Validate(request);
+
             _period = request?.ToPeriod() ?? null;
             if (_period != null)
             {

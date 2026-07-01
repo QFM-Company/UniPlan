@@ -7,6 +7,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -15,12 +16,13 @@ namespace Business.Services
     {
         private readonly ICourseRepository _courseRepository;
 
-        public CoursesService(ICourseRepository courseRepository)
+        private IValidationService _ValidationService;
+
+        public CoursesService(ICourseRepository courseRepository , IValidationService validationService)
         {
             _courseRepository = courseRepository;
+            _ValidationService = validationService;
         }
-
-        #region Service Methods
 
         public async Task<IEnumerable<CourseResponse>> GetPageCoursesAsync(int pageNumber, int pageSize)
         {
@@ -40,21 +42,24 @@ namespace Business.Services
             return course != null ? course.ToResponse() : null;
         }
 
-        public async Task<CourseResponse?> AddCourseAsync(CourseRequest courseRequest)
+        public async Task<CourseResponse?> AddCourseAsync(CourseRequest request)
         {
-            if (courseRequest == null) return null;
+            _ValidationService.Validate(request);
 
-            Course course = courseRequest.ToCourse();
+            if (request == null) return null;
+
+            Course course = request.ToCourse();
             course.CourseID = await _courseRepository.AddCourseAsync(course);
             if(course.CourseID <= 0) return null;
             return course.ToResponse();
         }
 
-        public async Task<CourseResponse?> UpdateCourseAsync(int courseID, CourseRequest courseRequest)
+        public async Task<CourseResponse?> UpdateCourseAsync(int courseID, CourseRequest request)
         {
-            if (courseRequest == null) return null;
+            _ValidationService.Validate(request);
+            if (request == null) return null;
 
-            Course course = courseRequest.ToCourse(courseID);
+            Course course = request.ToCourse(courseID);
             if(await _courseRepository.UpdateCourseAsync(course)) { return course.ToResponse(); }
             return null;
         }
@@ -64,6 +69,5 @@ namespace Business.Services
             return await _courseRepository.DeleteCourseAsync(courseID);
         }
 
-        #endregion
     }
 }

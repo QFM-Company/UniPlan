@@ -9,6 +9,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
 namespace Business.Services
@@ -18,19 +19,20 @@ namespace Business.Services
         
         private IAdminRepository _AdminRepository;
         private Administrator? _admin;
-        private IPeopleRepository IPeopleRepository;
+        private IValidationService _ValidationService;
 
-        public AdministratorService(IAdminRepository adminRepostery , IPeopleRepository iPeopleRepository)
+        public AdministratorService(IAdminRepository adminRepostery , IValidationService iValidationService)
         {
             _AdminRepository = adminRepostery;
             _admin = null;
-            IPeopleRepository = iPeopleRepository;
+            _ValidationService = iValidationService;
         }
 
 
 
         public async Task<AdministratorResponse?> AddAdministratorAsync(CreateAdministratorRequest request)
         {
+            _ValidationService.Validate(request);
             _admin = request?.ToAdministrator() ?? null;
             if (_admin != null && _admin.Account != null)
             {
@@ -64,6 +66,7 @@ namespace Business.Services
 
         public async Task<AdministratorResponse?> UpdateAdministratorAsync(int adminID, CreateAdministratorRequest request)
         {
+            _ValidationService.Validate(request);
             _admin = request.ToAdministrator(adminID);
             if (_admin != null)
             {
