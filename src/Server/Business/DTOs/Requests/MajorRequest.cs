@@ -8,7 +8,7 @@ namespace Business.DTOs.Requests
         [Length("يجب ألا يزيد طول الاسم عن 100 حرف", 100, 1)]
         public string? MajorName { get; set; }
 
-        [Range<int>("معرف الأختصاص الأب يجب أن لا يكون عدد سالب", 0, int.MaxValue)]
+        [Range<int>("معرف الأختصاص الأب يجب أن لا يكون عدد سالب", int.MaxValue, 0)]
         public int ParentMajorID { get; set; } 
 
         public MajorRequest(string majorName, int parentMajorID)
