@@ -14,7 +14,7 @@ BEGIN
     IF @WishListID <= 0
         OR @CourseID <= 0
     BEGIN
-        ;THROW 50801, 'WishListItem validation failed', 1;
+        ;THROW 51801, 'WishListItem validation failed', 1;
     END
 
     BEGIN TRY

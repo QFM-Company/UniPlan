@@ -18,7 +18,7 @@ IF @OfferingID <= 0
     OR @HallID <= 0
     OR @SlotID <= 0
 BEGIN
-   ; THROW 50801, 'Course session validation failed.', 1;
+   ; THROW 51301, 'Course session validation failed.', 1;
 END;
 
 IF NOT EXISTS
@@ -28,7 +28,7 @@ IF NOT EXISTS
     WHERE OfferingID = @OfferingID
 )
 BEGIN
-   ; THROW 50804, 'Course Offering not found.', 1;
+   ; THROW 51204, 'Course Offering not found.', 1;
 END;
 
 IF NOT EXISTS
@@ -48,7 +48,7 @@ IF NOT EXISTS
     WHERE SlotID = @SlotID
 )
 BEGIN
-   ; THROW 50806, 'Time Slot not found.', 1;
+   ; THROW 50706, 'Time Slot not found.', 1;
 END;
 
 
@@ -71,7 +71,7 @@ IF EXISTS
       AND SlotID = @SlotID
 )
 BEGIN
-  ;  THROW 50803, 'This course offering is already assigned to the selected time slot.', 1;
+  ;  THROW 51202, 'This course offering is already assigned to the selected time slot.', 1;
 END;
 
 BEGIN TRY
@@ -126,7 +126,7 @@ IF @SessionID <= 0
     OR @HallID <= 0
     OR @SlotID <= 0
 BEGIN
-   ; THROW 50801, 'Course session validation failed.', 1;
+   ; THROW 51301, 'Course session validation failed.', 1;
 END;
 
 IF NOT EXISTS
@@ -136,7 +136,7 @@ IF NOT EXISTS
     WHERE SessionID = @SessionID
 )
 BEGIN
-   ; THROW 50807, 'Course Session not found.', 1;
+   ; THROW 51303, 'Course Session not found.', 1;
 END;
 
 IF NOT EXISTS
@@ -146,7 +146,7 @@ IF NOT EXISTS
     WHERE OfferingID = @OfferingID
 )
 BEGIN
-   ; THROW 50804, 'Course Offering not found.', 1;
+   ; THROW 51203, 'Course Offering not found.', 1;
 END;
 
 IF NOT EXISTS
@@ -156,7 +156,7 @@ IF NOT EXISTS
     WHERE HallID = @HallID
 )
 BEGIN
-    ;THROW 50805, 'Hall not found.', 1;
+    ;THROW 50803, 'Hall not found.', 1;
 END;
 
 IF NOT EXISTS
@@ -166,7 +166,7 @@ IF NOT EXISTS
     WHERE SlotID = @SlotID
 )
 BEGIN
-   ; THROW 50806, 'Time Slot not found.', 1;
+   ; THROW 50703, 'Time Slot not found.', 1;
 END;
 
 
@@ -191,7 +191,7 @@ IF EXISTS
       AND SessionID <> @SessionID
 )
 BEGIN
-   ; THROW 50803, 'This course offering is already assigned to the selected time slot.', 1;
+   ; THROW 51202, 'This course offering is already assigned to the selected time slot.', 1;
 END;
 
 BEGIN TRY
@@ -238,7 +238,7 @@ SET NOCOUNT ON;
 
 IF @SessionID <= 0
 BEGIN
-    ;THROW 50801, 'Course session validation failed.', 1;
+    ;THROW 51301, 'Course session validation failed.', 1;
 END;
 
 IF NOT EXISTS

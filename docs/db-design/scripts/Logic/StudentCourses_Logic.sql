@@ -13,7 +13,7 @@ BEGIN
     IF @StudentID <= 0
         OR @CourseID <= 0
     BEGIN
-        ;THROW 50801, 'StudentCourse validation failed', 1;
+        ;THROW 51501, 'StudentCourse validation failed', 1;
     END
 
     BEGIN TRY
@@ -49,7 +49,7 @@ BEGIN
 
     IF @EnrollmentID <= 0
     BEGIN
-        ;THROW 50801, 'StudentCourse validation failed', 1;
+        ;THROW 51501, 'StudentCourse validation failed', 1;
     END
 
     BEGIN TRY

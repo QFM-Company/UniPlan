@@ -18,7 +18,7 @@ BEGIN
         OR @PrerequisiteCourseID <= 0 
         OR @CourseID = @PrerequisiteCourseID
     BEGIN
-        ;THROW 50801, 'Course prerequisite validation failed', 1;
+        ;THROW 51001, 'Course prerequisite validation failed', 1;
     END
 
     BEGIN TRY

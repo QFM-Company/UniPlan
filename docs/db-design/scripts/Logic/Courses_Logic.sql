@@ -12,7 +12,7 @@ BEGIN
     IF NULLIF(LTRIM(RTRIM(@CourseName)), '') IS NULL
         OR @CreditHours <= 0
     BEGIN
-        ;THROW 50801, 'Course validation failed', 1;
+        ;THROW 50901, 'Course validation failed', 1;
     END
 
     BEGIN TRY
@@ -49,7 +49,7 @@ BEGIN
         OR NULLIF(LTRIM(RTRIM(@CourseName)), '') IS NULL
         OR @CreditHours <= 0
     BEGIN
-        ;THROW 50801, 'Course validation failed', 1;
+        ;THROW 50901, 'Course validation failed', 1;
     END
 
     BEGIN TRY
