@@ -14,13 +14,10 @@ namespace Business.Mapper
     {
         public static Course ToCourse(this CourseRequest request, int courseID = 0)
         {
-            Major major = new Major(request.MajorID, "");
-
             return new Course(
                 courseID,
                 request.CourseName,
-                request.CreditHours,
-                major
+                request.CreditHours
             );
         }
 
@@ -28,7 +25,6 @@ namespace Business.Mapper
         {
             course.CreditHours = request.CreditHours;
             course.CourseName = request.CourseName;
-            course.Major = new Major(request.MajorID, "");
         }
 
         public static CourseResponse ToResponse(this Course course)
@@ -36,8 +32,7 @@ namespace Business.Mapper
             return new CourseResponse(
                 course.CourseID,
                 course.CourseName,
-                course.CreditHours,
-                course.Major!.MajorID
+                course.CreditHours
             );
         }
 

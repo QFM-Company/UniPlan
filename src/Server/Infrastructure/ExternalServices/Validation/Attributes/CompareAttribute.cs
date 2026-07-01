@@ -14,7 +14,7 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
         public string ErrorMeesage { get; set; }
 
 
-        public CompareAttribute(string otherPropertyName, ComparisonType comparison, string errorMeesage) : base(errorMeesage)
+        public CompareAttribute(string otherPropertyName, ComparisonType comparison, string errorMeesage)
         {
             OtherPropertyName = otherPropertyName;
             Comparison = comparison;

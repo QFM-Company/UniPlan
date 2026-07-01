@@ -44,10 +44,10 @@ namespace Infrastructure.ExternalServices.Validation
 
                 foreach (CompareAttribute attribute in property.GetCustomAttributes<CompareAttribute>())
                 {
-                    object? perValue = type.GetProperties().First(p => p.PropertyType.Name == attribute.OtherPropertyName).
+                    object? otherValue = type.GetProperties().First(p => p.PropertyType.Name == attribute.OtherPropertyName).
                                        GetValue(obj, null);
 
-                    if (!attribute.Check(value/*, perValue*/))
+                    if (!attribute.Check(value , otherValue))
                     {
                         errors.Add(attribute.ErrorMeesage);
                         break;

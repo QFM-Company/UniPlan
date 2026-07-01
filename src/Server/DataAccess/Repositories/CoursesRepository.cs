@@ -38,7 +38,6 @@ namespace DataAccess.Repositories
                     command.Parameters.Add(courseID);
                     command.Parameters.AddWithValue("@CourseName", course.CourseName);
                     command.Parameters.AddWithValue("@CreditHours", course.CreditHours);
-                    command.Parameters.AddWithValue("@MajorID", course.Major?.MajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -79,7 +78,6 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@CourseID", course.CourseID);
                     command.Parameters.AddWithValue("@CourseName", course.CourseName);
                     command.Parameters.AddWithValue("@CreditHours", course.CreditHours);
-                    command.Parameters.AddWithValue("@MajorID", course.Major?.MajorID);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
