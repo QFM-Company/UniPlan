@@ -52,7 +52,3 @@ We welcome contributions! Whether you are interested in developing the React cli
 This project is licensed under the **MIT License**. See the [LICENSE](https://choosealicense.com/licenses/mit/) file for details.
 
 ---
-
-**Pro-tip:** To add the license, create a new file named `LICENSE` in your repository root, go to GitHub's license selector, choose the MIT license, and it will automatically populate the text for you!
-
-Does this README cover everything you need, or would you like me to add any more sections?
