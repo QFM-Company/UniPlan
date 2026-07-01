@@ -47,7 +47,7 @@ namespace Infrastructure.ExternalServices.Validation
                     object? otherValue = type.GetProperties().First(p => p.PropertyType.Name == attribute.OtherPropertyName).
                                        GetValue(obj, null);
 
-                    if (!attribute.Check(value, otherValue))
+                    if (!attribute.Check(value , otherValue))
                     {
                         errors.Add(attribute.ErrorMeesage);
                         break;

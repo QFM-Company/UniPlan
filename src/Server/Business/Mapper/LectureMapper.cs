@@ -26,7 +26,7 @@ namespace Business.Mapper
         public static LectureResponse? ToResponse(this Lecture lecture)
         {
 
-            if (lecture.Course != null && lecture.Course.Major != null)
+            if (lecture.Course != null)
             {
                 CourseResponse course = lecture.Course.ToResponse();
                return new LectureResponse(lecture.LectureID, lecture.LectureType, lecture.DurationValue, course);

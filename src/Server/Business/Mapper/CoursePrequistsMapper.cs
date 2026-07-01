@@ -13,13 +13,13 @@ namespace Business.Mapper
     {
         public static CoursePrerequisites ToCoursePrequist(this CoursePrerequisiteRequest request, int prequistID = -1)
         {
-            return new CoursePrerequisites(prequistID, new Course(request.CourseID, null, 0, null), new Course(request.PreRequestCourseID, null, 0, null));
+            return new CoursePrerequisites(prequistID, new Course(request.CourseID, null , 0), new Course(request.PreRequestCourseID, null, 0));
         }
 
         public static void UpdateCourse(this CoursePrerequisites coursePrequist, CoursePrerequisiteRequest request)
         {
-            coursePrequist.Course = new Course(request.CourseID, null, 0, null);
-            coursePrequist.PreRequestCourse = new Course(request.PreRequestCourseID, null, 0, null);
+            coursePrequist.Course = new Course(request.CourseID, null, 0);
+            coursePrequist.PreRequestCourse = new Course(request.PreRequestCourseID, null, 0);
         }
 
 

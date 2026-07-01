@@ -25,7 +25,7 @@ namespace DataAccess.Mapping
 
             Major major2 = new Major(majorID2, majorName2);
 
-            Course preCourse = new Course(PreCourseID2, courseName2, creditHours2, major2);
+            Course preCourse = new Course(PreCourseID2, courseName2, creditHours2);
 
             return new CoursePrerequisites(
                  prerequisiteID,
