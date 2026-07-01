@@ -7,7 +7,7 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
 
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class CompareAttribute : Attribute, IValidationAttribute
+    public class CompareAttribute : Attribute, ValidationAttribute
     {
         public string ErrorMeesage { get; set; }
         public string OtherPropertyName { get; set; }

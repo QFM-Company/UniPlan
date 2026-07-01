@@ -27,36 +27,32 @@ namespace Infrastructure.ExternalServices.Validation
                 return;
 
             Type type = obj.GetType();
-            object? perValue = null;
+
 
             foreach (PropertyInfo property in type.GetProperties())
             {
                 object? value = property.GetValue(obj, null);
 
-                foreach (var item in property.GetCustomAttributes())
+                foreach (ValidationAttribute attribute in property.GetCustomAttributes<ValidationAttribute>())
                 {
-                    if (item is IValidationAttribute attribute)
+                    if (!attribute.Check(value))
                     {
-                        if (attribute is CompareAttribute compareAttr)
-                        {
-                            if (!compareAttr.Check(value, obj , type))
-                            {
-                                errors.Add(attribute.ErrorMeesage);
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            if (!attribute.Check(value))
-                            {
-                                errors.Add(attribute.ErrorMeesage);
-                                break;
-                            }
-                        }
+                        errors.Add(attribute.ErrorMeesage);
+                        break;
                     }
                 }
 
-                perValue = value;
+                foreach (CompareAttribute attribute in property.GetCustomAttributes<CompareAttribute>())
+                {
+                    object? perValue = type.GetProperties().First(p => p.PropertyType.Name == attribute.OtherPropertyName).
+                                       GetValue(obj, null);
+
+                    if (!attribute.Check(value/*, perValue*/))
+                    {
+                        errors.Add(attribute.ErrorMeesage);
+                        break;
+                    }
+                }
 
                 if (value != null && property.PropertyType.IsClass && property.PropertyType.Name.Contains("Request"))
                 {

@@ -1,24 +1,20 @@
-﻿using Core.Interfaces.ExternalServices;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Infrastructure.ExternalServices.Validation.Attributes
 {
-    internal class RangeAttribute<T> : Attribute, IValidationAttribute where T : INumber<T>
+    public class RangeAttribute<T> : ValidationAttribute where T : INumber<T>
     {
-        public string ErrorMeesage { get; set; }
-
         public T MaxNumber { get; set; }
 
         public T MinNumber { get; set; }
 
-        public RangeAttribute(string errorMeesage, T maxNumber, T minNumber)
+        public RangeAttribute(string errorMeesage, T maxNumber, T minNumber) : base(errorMeesage)
         {
-            ErrorMeesage = errorMeesage;
             MaxNumber = maxNumber;
             MinNumber = minNumber;
         }
 
-        public bool Check(object? obj) 
+        public override bool Check(object? obj) 
         {
             if (obj == null)
                 return false;

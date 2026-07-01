@@ -1,23 +1,18 @@
-﻿using Core.Interfaces.ExternalServices;
-
-namespace Infrastructure.ExternalServices.Validation.Attributes
+﻿namespace Infrastructure.ExternalServices.Validation.Attributes
 {
-    public class LengthAttribute : Attribute, IValidationAttribute
+    public class LengthAttribute : ValidationAttribute
     {
-        public string ErrorMeesage { get; set; }
-
         public int MaxLength { get; set; }
 
         public int MinLength { get; set; }
 
-        public LengthAttribute(string errorMeesage, int maxLength, int minLength)
+        public LengthAttribute(string errorMeesage, int maxLength, int minLength) : base(errorMeesage)
         {
-            ErrorMeesage = errorMeesage;
             MaxLength = maxLength;
             MinLength = minLength;
         }
 
-        public bool Check(object? obj)
+        public override bool Check(object? obj) 
         {
             if (obj == null)
                 return false;

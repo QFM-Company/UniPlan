@@ -1,18 +1,13 @@
-﻿using Core.Interfaces.ExternalServices;
-
-namespace Infrastructure.ExternalServices.Validation.Attributes
+﻿namespace Infrastructure.ExternalServices.Validation.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class RequiredAttribute<T> : Attribute, IValidationAttribute 
+    public class RequiredAttribute<T> : ValidationAttribute 
     {
-        public string ErrorMeesage { get; set; }
-
-        public RequiredAttribute(string errorMeesage)
+        public RequiredAttribute(string errorMeesage) : base(errorMeesage)
         {
-            ErrorMeesage = errorMeesage;
         }
 
-        public bool Check(object? obj)
+        public override bool Check(object? obj)
         {
             if (obj == null)
                 return false;
