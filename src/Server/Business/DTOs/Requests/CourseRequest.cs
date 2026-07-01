@@ -1,5 +1,6 @@
 ﻿using Business.DTOs.Responses;
 using Core.Entities;
+using Core.Interfaces.ExternalServices;
 
 namespace Business.DTOs.Requests
 {
@@ -9,7 +10,7 @@ namespace Business.DTOs.Requests
         public int CreditHours { get; set; }
         public int MajorID { get; set; }
 
-        public CourseRequest(string? courseName, int creditHours, int majorID)
+        public CourseRequest(IValidationService validationService , string? courseName, int creditHours, int majorID)
         {
             CourseName = courseName;
             CreditHours = creditHours;

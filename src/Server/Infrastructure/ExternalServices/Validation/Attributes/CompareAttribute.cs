@@ -7,28 +7,22 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
 
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class CompareAttribute : Attribute, ValidationAttribute
+    public class CompareAttribute : ValidationAttribute
     {
-        public string ErrorMeesage { get; set; }
         public string OtherPropertyName { get; set; }
         public ComparisonType Comparison { get; set; }
 
-        public CompareAttribute(string otherPropertyName, ComparisonType comparison, string errorMeesage)
+        public CompareAttribute(string otherPropertyName, ComparisonType comparison, string errorMeesage) : base(errorMeesage)
         {
             OtherPropertyName = otherPropertyName;
             Comparison = comparison;
             ErrorMeesage = errorMeesage;
         }
 
-        public bool Check(object? obj,object parentObject, Type propertyes)
+
+        public bool Check(object? obj, object? otherValue)
         {
-            if (obj == null || propertyes == null || parentObject == null) return false;
-
-            var otherProperty = propertyes.GetProperty(OtherPropertyName);
-            if (otherProperty == null) return false;
-
-            var otherValue = otherProperty.GetValue(parentObject);
-            if (otherValue == null) return false;
+            if (obj == null || otherValue == null) return false;
 
             if (obj is IComparable comparableValue && otherValue is IComparable comparableOther)
             {
@@ -47,6 +41,6 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
             return false;
         }
 
-        public bool Check(object? obj) => throw new NotImplementedException("استخدم Overload التي تستقبل parentObject");
+        public override bool Check(object? obj) => throw new NotImplementedException("استخدم Overload التي تستقبل parentObject");
     }
 }
