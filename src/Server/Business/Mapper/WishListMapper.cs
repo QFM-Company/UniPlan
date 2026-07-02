@@ -8,7 +8,7 @@ namespace Business.Mapper
     {
         public static WishList ToWishList(this WishListRequest request)
         {
-            return new WishList(-1, new StudentTerm { RegistrationID = request.RegistrationID});
+            return new WishList(-1, new StudentTerm { RegistrationID = request.RegistrationID });
         }
 
         public static WishListResponse ToResponse(this WishList wishList)

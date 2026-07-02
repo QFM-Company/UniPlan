@@ -39,10 +39,10 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@TermType", (int)term.TermType);
                     command.Parameters.AddWithValue("@TermYear", term.TermYear);
 
-                    
+
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
-                    
+
 
                     if (termID.Value != DBNull.Value && int.TryParse(termID.Value.ToString(), out int tID))
                     {

@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Core.Interfaces.ExternalServices;
+﻿using Core.Interfaces.ExternalServices;
+using Microsoft.Data.SqlClient;
 
 namespace Infrastructure.ExternalServices
 {
@@ -7,7 +7,7 @@ namespace Infrastructure.ExternalServices
     {
         private string _GetCustomSqlExceptionMessage(SqlException ex)
         {
-            string entityName = ( (ex.Number / 100) * 100 ) switch
+            string entityName = ((ex.Number / 100) * 100) switch
             {
                 50100 => "People",
                 50200 => "Admin",
@@ -68,13 +68,13 @@ namespace Infrastructure.ExternalServices
                     return $"The database operation took too long and timed out. Please try again.\n(Error code: {ex.Number})";
 
                 case 1205: // Deadlock
-                    return $"A database conflict occurred. Please try the operation again.\n(Error code: {ex.Number})"; 
+                    return $"A database conflict occurred. Please try the operation again.\n(Error code: {ex.Number})";
                 default:
                     // Generic fallback message
                     return $"{ex.Message}\n(Error code: {ex.Number})";
             }
         }
-        
+
         public string GetExceptionMessage(Exception ex)
         {
             switch (ex)

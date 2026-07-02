@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class StudentCourse
     {
         public int EnrolmentID { get; set; }
-        
-        public bool IsPassed {  get; set; }
+
+        public bool IsPassed { get; set; }
 
         public int StudentID { get; set; }
 
         public Course? Course { get; set; }
 
 
-        public StudentCourse() 
-        { 
+        public StudentCourse()
+        {
             EnrolmentID = -1;
             StudentID = -1;
             Course = null;

@@ -1,5 +1,5 @@
-﻿using Business.DTOs.Responses;
-using Business.DTOs.Requests;
+﻿using Business.DTOs.Requests;
+using Business.DTOs.Responses;
 
 namespace Business.Interfaces
 {

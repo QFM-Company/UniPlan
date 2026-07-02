@@ -1,7 +1,6 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Core.Enums;
+﻿using Core.Enums;
 using Core.Interfaces.ExternalServices;
+using System.Text;
 
 namespace Infrastructure.ExternalServices
 {
@@ -51,14 +50,14 @@ namespace Infrastructure.ExternalServices
 
             try
             {
-                if(!Directory.Exists(_logsFolder))
-                     Directory.CreateDirectory(_logsFolder);
+                if (!Directory.Exists(_logsFolder))
+                    Directory.CreateDirectory(_logsFolder);
 
                 // Append the log to the file.
                 // UTF8 is a safe standard encoding.
                 await File.AppendAllTextAsync(filePath, logText, Encoding.UTF8);
 
-                if(Directory.GetFiles(_logsFolder).Length > 40)
+                if (Directory.GetFiles(_logsFolder).Length > 40)
                 {
                     // If there are more than 40 log files, delete the oldest one.
                     var oldestFile = Directory.GetFiles(_logsFolder)

@@ -72,7 +72,7 @@ namespace DataAccess.Repositories
                         Direction = ParameterDirection.Output
                     };
 
-                    
+
                     command.Parameters.Add(result);
                     command.Parameters.AddWithValue("@OfferingID", offering.OfferingID);
                     command.Parameters.AddWithValue("@SectionNumber", offering.SectionNumber);

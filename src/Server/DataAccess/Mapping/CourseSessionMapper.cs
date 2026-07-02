@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Entities;
+﻿using Core.Entities;
 using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
@@ -22,7 +17,7 @@ namespace DataAccess.Mapping
             reader.ReadInt("AdminID", out int adminID, -1);
             reader.ReadInt("SessionID", out int courseSessionID, -1);
 
-            return new CourseSession(courseSessionID , courseOffering , hall , timeSlot , adminID);
+            return new CourseSession(courseSessionID, courseOffering, hall, timeSlot, adminID);
         }
     }
 }

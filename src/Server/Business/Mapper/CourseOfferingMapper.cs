@@ -21,7 +21,7 @@ namespace Business.Mapper
                 return;
 
             offering.SectionNumber = request.SectionNumber;
-            
+
             if (offering.Term != null && offering.Lecture != null && offering.Lecture.Course != null)
             {
                 offering.Term.TermID = request.TermID;

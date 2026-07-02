@@ -24,7 +24,7 @@ namespace Business.Mapper
             student.Account?.UpdateAccount(request.AccountData);
             student.Person?.UpdatePerson(request.PersonData);
 
-            if(student.Major != null)
+            if (student.Major != null)
                 student.Major.MajorID = request.MajorID;
         }
 
@@ -32,7 +32,7 @@ namespace Business.Mapper
         {
             PersonResponse person = student.Person?.ToResponse() ?? new PersonResponse();
             AccountResponse account = student.Account?.ToResponse() ?? new AccountResponse();
-            MajorResponse major = student.Major?.ToResponse()?? new MajorResponse();
+            MajorResponse major = student.Major?.ToResponse() ?? new MajorResponse();
 
             return new StudentResponse(student.StudentID, person, account, major);
         }

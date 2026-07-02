@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
@@ -18,7 +14,7 @@ namespace Business.Services
 
         private IValidationService _ValidationService;
 
-        public CoursesService(ICourseRepository courseRepository , IValidationService validationService)
+        public CoursesService(ICourseRepository courseRepository, IValidationService validationService)
         {
             _courseRepository = courseRepository;
             _ValidationService = validationService;
@@ -50,7 +46,7 @@ namespace Business.Services
 
             Course course = request.ToCourse();
             course.CourseID = await _courseRepository.AddCourseAsync(course);
-            if(course.CourseID <= 0) return null;
+            if (course.CourseID <= 0) return null;
             return course.ToResponse();
         }
 
@@ -60,7 +56,7 @@ namespace Business.Services
             if (request == null) return null;
 
             Course course = request.ToCourse(courseID);
-            if(await _courseRepository.UpdateCourseAsync(course)) { return course.ToResponse(); }
+            if (await _courseRepository.UpdateCourseAsync(course)) { return course.ToResponse(); }
             return null;
         }
 

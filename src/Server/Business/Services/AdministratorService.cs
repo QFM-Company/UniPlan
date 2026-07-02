@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
-using Business.DTOs.Requests.Create;
+﻿using Business.DTOs.Requests.Create;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
@@ -16,12 +10,12 @@ namespace Business.Services
 {
     public class AdministratorService : IAdministratorService
     {
-        
+
         private IAdminRepository _AdminRepository;
         private Administrator? _admin;
         private IValidationService _ValidationService;
 
-        public AdministratorService(IAdminRepository adminRepostery , IValidationService iValidationService)
+        public AdministratorService(IAdminRepository adminRepostery, IValidationService iValidationService)
         {
             _AdminRepository = adminRepostery;
             _admin = null;

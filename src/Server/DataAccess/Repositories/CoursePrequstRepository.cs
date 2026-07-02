@@ -5,7 +5,6 @@ using Core.Interfaces.Repositories;
 using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Data.SqlClient;
 
 
 namespace DataAccess.Repositories
@@ -150,7 +149,7 @@ namespace DataAccess.Repositories
 
 
 
-        public async Task<IEnumerable<CoursePrerequisites>> GetCoursePrerequisitesPagedAsync(int PageNumber , int PageSize)
+        public async Task<IEnumerable<CoursePrerequisites>> GetCoursePrerequisitesPagedAsync(int PageNumber, int PageSize)
         {
 
             List<CoursePrerequisites> coursesPre = new();

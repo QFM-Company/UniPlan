@@ -50,7 +50,7 @@ namespace Business.Services
             Account? account = await _accountRepository.GetAccountByIDAsync(accountID);
 
             account?.UpdateAccount(request);
-            if(account != null)
+            if (account != null)
             {
                 account.Password = _passwordHasher.HashPassword(account.Password);
                 request.OLdPassword = _passwordHasher.HashPassword(request.OLdPassword);

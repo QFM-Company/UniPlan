@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Interfaces.ExternalServices;
+﻿using Core.Interfaces.ExternalServices;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Infrastructure.ExternalServices
 {

@@ -1,15 +1,15 @@
-﻿using Core.Interfaces.ExternalServices;
-using System.Reflection;
-using Core.Exceptions;
+﻿using Core.Exceptions;
+using Core.Interfaces.ExternalServices;
 using Infrastructure.ExternalServices.Validation.Attributes;
+using System.Reflection;
 
 namespace Infrastructure.ExternalServices.Validation
 {
-    public class ValidationService : IValidationService 
+    public class ValidationService : IValidationService
     {
         public void Validate<T>(T dto) where T : class
         {
-            if (dto == null) 
+            if (dto == null)
                 return;
 
             List<string> errors = new List<string>();
@@ -23,7 +23,7 @@ namespace Infrastructure.ExternalServices.Validation
 
         private void ExecuteValidation(object obj, List<string> errors)
         {
-            if (obj == null) 
+            if (obj == null)
                 return;
 
             Type type = obj.GetType();
@@ -47,7 +47,7 @@ namespace Infrastructure.ExternalServices.Validation
                     object? otherValue = type.GetProperties().FirstOrDefault(p => p.Name == attribute.OtherPropertyName)?.
                                        GetValue(obj, null);
 
-                    if (!attribute.Check(value , otherValue))
+                    if (!attribute.Check(value, otherValue))
                     {
                         errors.Add(attribute.ErrorMessage);
                         break;

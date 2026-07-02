@@ -9,7 +9,7 @@ namespace DataAccess.Mapping
         public static Account ToAccount(this SqlDataReader reader)
         {
             reader.ReadInt("AccountID", out int accountID, 0);
-            reader.ReadString("AccountName", out string accountName , string.Empty);
+            reader.ReadString("AccountName", out string accountName, string.Empty);
             reader.ReadString("Email", out string email, string.Empty);
 
             return new Account(accountID, accountName, email);

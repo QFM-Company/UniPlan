@@ -10,7 +10,7 @@ namespace Business.Mapper
     {
         public static Account ToAccount(this CreateAccountRequest request)
         {
-            return new Account(request.AccountName , request.Password, request.Email);
+            return new Account(request.AccountName, request.Password, request.Email);
         }
 
         public static Account ToAccount(this LoginRequest request)
@@ -27,7 +27,7 @@ namespace Business.Mapper
             account.Email = request.Email;
         }
 
-        public static void UpdateAccount(this Account account,  ChangePasswordRequest? request)
+        public static void UpdateAccount(this Account account, ChangePasswordRequest? request)
         {
             if (request == null)
                 return;

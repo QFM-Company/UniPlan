@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Requests.Create;
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
@@ -23,13 +18,13 @@ namespace Business.Mapper
 
         public static void UpdateAdmin(this Administrator admin, UpdateAdministratorRequest request)
         {
-            admin.Account?.UpdateAccount(request.Account);   
+            admin.Account?.UpdateAccount(request.Account);
             admin.Person!.PersonID = request.PersonID;
         }
 
         public static AdministratorResponse ToResponse(this Administrator admin)
         {
-            PersonRequest person = new PersonRequest(admin.Person!.FirstName , admin.Person.MiddleName, admin.Person.LastName);
+            PersonRequest person = new PersonRequest(admin.Person!.FirstName, admin.Person.MiddleName, admin.Person.LastName);
             AccountResponse account = new AccountResponse(admin.Account!.AccountID, admin.Account.AccountName, admin.Account.Email);
             return new AdministratorResponse(admin.AdminID, person, account, admin.IsActive);
         }

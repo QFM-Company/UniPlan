@@ -33,7 +33,7 @@ namespace DataAccess.Repositories
                         Direction = ParameterDirection.Output
                     };
 
-                    
+
                     command.Parameters.Add(hallID);
 
 
@@ -82,7 +82,7 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@HallName", hall.HallName);
                     command.Parameters.AddWithValue("@Building", hall.Building ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Floor", hall.Floor != 0 ? hall.Floor : DBNull.Value);
-                    
+
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class StudentTerm
     {
@@ -16,7 +10,7 @@ namespace Core.Entities
 
 
 
-        public StudentTerm() 
+        public StudentTerm()
         {
             RegistrationID = -1;
             StudentID = -1;

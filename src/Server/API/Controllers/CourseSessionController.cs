@@ -1,11 +1,9 @@
-﻿using Business.DTOs.Requests;
-using Business.DTOs.Requests.Create;
+﻿using Business.DTOs.Requests.Create;
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
 using Core.Interfaces.ExternalServices;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -63,7 +61,7 @@ namespace API.Controllers
         {
             try
             {
-                var result = await _courseSessionService.UpdateCourseSessionAsync(request , courseID);
+                var result = await _courseSessionService.UpdateCourseSessionAsync(request, courseID);
 
                 if (result)
                 {

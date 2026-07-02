@@ -15,7 +15,7 @@
             Email = string.Empty;
         }
 
-        public AccountResponse(int accountID ,string accountName, string email) 
+        public AccountResponse(int accountID, string accountName, string email)
         {
             AccountID = accountID;
             AccountName = accountName;

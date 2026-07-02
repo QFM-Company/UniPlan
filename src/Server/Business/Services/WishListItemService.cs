@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
-using Business.DTOs.Requests.Create;
-using Business.DTOs.Requests.Update;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
@@ -20,7 +13,7 @@ namespace Business.Services
         private IWishListItemRepository _wishListItemRepository;
         private IValidationService _ValidationService;
 
-        public WishListItemService(IWishListItemRepository wishListItemRepository , IValidationService validationService)
+        public WishListItemService(IWishListItemRepository wishListItemRepository, IValidationService validationService)
         {
             _wishListItemRepository = wishListItemRepository;
             _ValidationService = validationService;

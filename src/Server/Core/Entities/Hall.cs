@@ -1,6 +1,4 @@
-using System.Drawing;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class Hall
     {

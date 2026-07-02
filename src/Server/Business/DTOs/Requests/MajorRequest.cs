@@ -9,7 +9,7 @@ namespace Business.DTOs.Requests
         public string? MajorName { get; set; }
 
         [Range<int>("معرف الأختصاص الأب يجب أن لا يكون عدد سالب", int.MaxValue, 0)]
-        public int ParentMajorID { get; set; } 
+        public int ParentMajorID { get; set; }
 
         public MajorRequest(string majorName, int parentMajorID)
         {
@@ -20,7 +20,7 @@ namespace Business.DTOs.Requests
         public MajorRequest()
         {
             MajorName = null;
-            ParentMajorID = default; 
+            ParentMajorID = default;
         }
     }
 }

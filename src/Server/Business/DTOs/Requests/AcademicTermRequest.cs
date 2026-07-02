@@ -1,5 +1,5 @@
+ï»¿using Core.Enums;
 using Infrastructure.ExternalServices.Validation.Attributes;
-using Core.Enums;
 
 namespace Business.DTOs.Requests
 {
@@ -7,8 +7,8 @@ namespace Business.DTOs.Requests
     {
         public TermType TermType { get; set; }
 
-        [Required<int>("ÇáÓäÉ ÇáÃßÇÏíãíÉ ãØáæÈÉ")]
-        [Range<int>("íÌÈ Ãä Êßæä ÇáÓäÉ Èíä 2000 æ 2100", 2000, 2100)]
+        [Required<int>("Ø§Ù„Ø³Ù†Ø© Ø§Ù„Ø£ÙƒØ§Ø¯ÙŠÙ…ÙŠØ© Ù…Ø·Ù„ÙˆØ¨Ø©")]
+        [Range<int>("ÙŠØ¬Ø¨ Ø£Ù† ØªÙƒÙˆÙ† Ø§Ù„Ø³Ù†Ø© Ø¨ÙŠÙ† 2000 Ùˆ 2100", 2000, 2100)]
         public int TermYear { get; set; }
 
         public AcademicTermRequest()

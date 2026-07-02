@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Mapper;
 using Core.Entities;
-using Core.Enums;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Services;
@@ -21,7 +15,7 @@ namespace Business.Services
         private IValidationService _ValidationService;
 
 
-        public PeriodsService(IPeriodRepository PeriodRepository , IValidationService validationService)
+        public PeriodsService(IPeriodRepository PeriodRepository, IValidationService validationService)
         {
             _PeriodRepository = PeriodRepository;
             _period = null;
@@ -38,7 +32,7 @@ namespace Business.Services
             {
                 _period.PeriodID = await _PeriodRepository.AddPeriodAsync(_period);
                 if (_period.PeriodID > 0)
-                     return _period.ToResponse();
+                    return _period.ToResponse();
             }
 
             return null;

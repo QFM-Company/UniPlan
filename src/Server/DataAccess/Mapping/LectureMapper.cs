@@ -14,7 +14,7 @@ namespace DataAccess.Mapping
             reader.ReadInt("LectureID", out int lectureID, 0);
             reader.ReadInt("DurationValue", out int durationValue, 0);
             reader.ReadInt("LectureType", out int lectureType, 0);
-           
+
             return new Lecture(lectureID, (LectureType)lectureType, durationValue, course);
         }
     }

@@ -1,11 +1,8 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
-using Business.Services;
 using Core.Enums;
 using Core.Interfaces.ExternalServices;
-using Core.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -60,7 +57,7 @@ namespace API.Controllers
         {
             try
             {
-                var response = await _timeSlotsSevice.UpdateTimeSlotAsync(timeSlotID , request);
+                var response = await _timeSlotsSevice.UpdateTimeSlotAsync(timeSlotID, request);
 
                 if (response != null)
                 {

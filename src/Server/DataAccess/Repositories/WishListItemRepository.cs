@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace DataAccess.Repositories
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Core.Entities;
 
@@ -13,7 +8,7 @@ namespace Business.Mapper
     {
         public static Period ToPeriod(this PeriodRequest request, int periodID = -1)
         {
-           return new Period(periodID, request.StartTime, request.EndTime);       
+            return new Period(periodID, request.StartTime, request.EndTime);
         }
 
         public static PeriodResponse ToResponse(this Period period)

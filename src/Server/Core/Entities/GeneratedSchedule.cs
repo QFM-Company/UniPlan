@@ -1,11 +1,9 @@
-﻿using System.Data;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class GeneratedSchedule
     {
         public int ScheduleID { get; set; }
-        
+
         public WishList WishList { get; set; }
 
         public List<CourseOffering>? Offerings { get; set; }

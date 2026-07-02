@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class Administrator
     {
@@ -16,7 +10,7 @@ namespace Core.Entities
 
         public bool IsActive { get; set; }
 
-      
+
 
         public Administrator(int adminID, Person? person, Account? account, bool isActive)
         {

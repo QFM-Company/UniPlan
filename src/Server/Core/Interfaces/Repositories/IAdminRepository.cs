@@ -7,7 +7,7 @@ namespace Core.Interfaces.Repositories
         Task<bool> DeleteAdminAsync(int AdminID);
         Task<bool> AddAdminAsync(Administrator Admin);
         Task<bool> UpdateAdminAsync(Administrator Admin);
-        Task<IReadOnlyCollection<Administrator>?> GetPageAdminsAsync(int pageNumber , int pageSize);
+        Task<IReadOnlyCollection<Administrator>?> GetPageAdminsAsync(int pageNumber, int pageSize);
         Task<Administrator?> GetAdminByIDAsync(int AdminID);
 
     }

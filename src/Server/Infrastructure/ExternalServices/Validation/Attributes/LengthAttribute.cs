@@ -12,7 +12,7 @@
             MinLength = minLength;
         }
 
-        public override bool Check(object? obj) 
+        public override bool Check(object? obj)
         {
             if (obj == null)
                 return false;

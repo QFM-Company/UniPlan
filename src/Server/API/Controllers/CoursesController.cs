@@ -3,13 +3,8 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
 using Core.Interfaces.ExternalServices;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Controllers
 {

@@ -1,12 +1,9 @@
-﻿
-using System;
-using System.Data;
-using Core.Entities;
-using Core.Enums;
+﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace DataAccess.Repositories
 {
@@ -54,9 +51,9 @@ namespace DataAccess.Repositories
 
                     command.Parameters.AddWithValue("@IsActive", admin.IsActive);
 
-                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null"); 
+                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null");
                     command.Parameters.AddWithValue("@PersonID", admin.Person.PersonID);
-                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null"); 
+                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null");
                     command.Parameters.AddWithValue("@AccountName", admin.Account.AccountName);
                     command.Parameters.AddWithValue("@Password", admin.Account.Password);
                     command.Parameters.AddWithValue("@Email", admin.Account.Email);
@@ -108,11 +105,11 @@ namespace DataAccess.Repositories
 
                     command.Parameters.AddWithValue("@IsActive", admin.IsActive);
                     command.Parameters.AddWithValue("@AdministratorID", admin.AdminID);
-                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null"); 
+                    if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null");
                     command.Parameters.AddWithValue("@AccountName", admin.Account.AccountName);
                     command.Parameters.AddWithValue("@Password", admin.Account.Password);
                     command.Parameters.AddWithValue("@Email", admin.Account.Email);
-                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null"); 
+                    if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null");
                     command.Parameters.AddWithValue("@FirstName", admin.Person.FirstName);
                     command.Parameters.AddWithValue("@LastName", admin.Person.LastName);
                     command.Parameters.AddWithValue("@MiddleName", admin.Person.MiddleName ?? (object)DBNull.Value);

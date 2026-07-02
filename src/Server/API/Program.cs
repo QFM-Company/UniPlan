@@ -1,11 +1,11 @@
+ï»¿using Business.Interfaces;
 using Business.Services;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
-using Business.Interfaces;
+using Core.Interfaces.Services;
 using DataAccess;
 using DataAccess.Repositories;
 using Infrastructure.ExternalServices;
-using Core.Interfaces.Services;
 using Infrastructure.ExternalServices.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000", "http://localhost:5173") // ÑæÇÈØ ÇáİÑæäÊ (ãËá React Ãæ Vue)
+            policy.WithOrigins("http://localhost:3000", "http://localhost:5173") // Ø±ÙˆØ§Ø¨Ø· Ø§Ù„ÙØ±ÙˆÙ†Øª (Ù…Ø«Ù„ React Ø£Ùˆ Vue)
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -32,7 +32,7 @@ builder.Services.AddScoped<DBHelpers>();
 
 //  External Services 
 builder.Services.AddScoped<ILogService, LogService>();
-builder.Services.AddScoped<IExceptionService,ExceptionService>();
+builder.Services.AddScoped<IExceptionService, ExceptionService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
@@ -73,7 +73,7 @@ builder.Services.AddScoped<ICoursePrequistService, CoursePrequistService>();
 builder.Services.AddScoped<ICourseSessionService, CourseSessionService>();
 builder.Services.AddScoped<IStudentCourseService, StudentCourseService>();
 builder.Services.AddScoped<IStudentTermService, StudentTermService>();
-builder.Services.AddScoped<IWishListItemService,  WishListItemService>();
+builder.Services.AddScoped<IWishListItemService, WishListItemService>();
 builder.Services.AddScoped<IWishListService, WishListService>();
 builder.Services.AddScoped<IGeneratedScheduleService, GeneratedScheduleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();

@@ -34,7 +34,7 @@ namespace Business.Services
 
             if (term.TermID != -1)
                 return term.ToResponse();
-            
+
             return null;
         }
 

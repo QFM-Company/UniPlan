@@ -33,7 +33,7 @@ namespace Business.Services
 
             if (major.MajorID != -1)
                 return major.ToResponse();
-           
+
             return null;
         }
 

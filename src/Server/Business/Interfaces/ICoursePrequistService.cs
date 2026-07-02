@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
-using Business.DTOs.Requests.Create;
-using Business.DTOs.Requests.Update;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 
 namespace Business.Interfaces
 {
-    public interface ICoursePrequistService 
+    public interface ICoursePrequistService
     {
         Task<bool> DeleteCoursePrequistAsync(int prequistID);
 

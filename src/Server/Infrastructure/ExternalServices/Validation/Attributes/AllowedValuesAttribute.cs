@@ -1,7 +1,7 @@
 ﻿namespace Infrastructure.ExternalServices.Validation.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class AllowedValuesAttribute :  ValidationAttribute
+    public class AllowedValuesAttribute : ValidationAttribute
     {
         public object[] AllowedValues { get; set; }
 

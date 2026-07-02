@@ -1,6 +1,5 @@
 ﻿
 using Core.Entities;
-using Core.Enums;
 using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
@@ -15,7 +14,7 @@ namespace DataAccess.Mapping
             reader.ReadInt("StudentID", out int studentID, -1);
             reader.ReadInt("RegistrationID", out int registrationID, -1);
 
-            return new StudentTerm(registrationID , studentID , academicTerm);
+            return new StudentTerm(registrationID, studentID, academicTerm);
         }
 
     }

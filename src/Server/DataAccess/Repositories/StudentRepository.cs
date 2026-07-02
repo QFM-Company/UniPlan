@@ -176,13 +176,13 @@ namespace DataAccess.Repositories
                     await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if(reader != null && await reader.ReadAsync())
+                        if (reader != null && await reader.ReadAsync())
                         {
                             student = reader.ToStudent();
                         }
                     }
 
-          
+
                 }
             }
             catch (Exception ex)
@@ -194,7 +194,7 @@ namespace DataAccess.Repositories
             return student;
         }
 
-        public async Task<IEnumerable<Student>?> GetPagedStudentsAsync(int pageNumber = 1 , int pageSize = 10)
+        public async Task<IEnumerable<Student>?> GetPagedStudentsAsync(int pageNumber = 1, int pageSize = 10)
         {
             List<Student>? students = new List<Student>();
 
@@ -211,16 +211,16 @@ namespace DataAccess.Repositories
                     await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if(reader != null)
+                        if (reader != null)
                         {
-                           while(await reader.ReadAsync())
-                           {
+                            while (await reader.ReadAsync())
+                            {
                                 students.Add(reader.ToStudent());
-                           }
+                            }
                         }
                     }
 
-          
+
                 }
             }
             catch (Exception ex)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Core.Entities;
 
@@ -13,7 +8,7 @@ namespace Business.Mapper
     {
         public static CoursePrerequisites ToCoursePrequist(this CoursePrerequisiteRequest request, int prequistID = -1)
         {
-            return new CoursePrerequisites(prequistID, new Course(request.CourseID, null , 0), new Course(request.PreRequestCourseID, null, 0));
+            return new CoursePrerequisites(prequistID, new Course(request.CourseID, null, 0), new Course(request.PreRequestCourseID, null, 0));
         }
 
         public static void UpdateCourse(this CoursePrerequisites coursePrequist, CoursePrerequisiteRequest request)

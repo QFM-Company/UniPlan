@@ -1,9 +1,9 @@
 ﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using DataAccess.Mapping;
 
 namespace DataAccess.Repositories
 {

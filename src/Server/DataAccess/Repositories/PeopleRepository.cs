@@ -22,7 +22,7 @@ namespace DataAccess.Repositories
             try
             {
                 using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_People_Insert",connection))
+                using (SqlCommand command = new SqlCommand("SP_People_Insert", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -46,7 +46,7 @@ namespace DataAccess.Repositories
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
                 throw;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Entities;
+﻿using Core.Entities;
 using DataAccess.Extensions;
 using Microsoft.Data.SqlClient;
 
@@ -15,12 +10,12 @@ namespace DataAccess.Mapping
         {
             reader.ReadInt("EnrollmentID", out int enrolmentID, -1);
             reader.ReadInt("StudentID", out int studentID, -1);
-      
+
             Course course = reader.ToCourse();
 
             reader.ReadBool("IsPassed", out bool isPassed);
 
-            var studentCourse = new StudentCourse(enrolmentID , isPassed , studentID , course);
+            var studentCourse = new StudentCourse(enrolmentID, isPassed, studentID, course);
             return studentCourse;
         }
     }

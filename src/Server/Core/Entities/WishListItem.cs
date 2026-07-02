@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class WishListItem
     {
@@ -15,7 +9,7 @@ namespace Core.Entities
         public Course? Course { get; set; }
 
 
-        public WishListItem() 
+        public WishListItem()
         {
             ItemID = -1;
             WishList = null;

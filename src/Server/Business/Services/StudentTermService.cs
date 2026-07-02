@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
-using Business.DTOs.Requests.Create;
-using Business.DTOs.Requests.Update;
+﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
@@ -20,7 +13,7 @@ namespace Business.Services
         private IStudentTermRepository _studentTermRepository;
         private IValidationService _ValidationService;
 
-        public StudentTermService(IStudentTermRepository studentTermRepository , IValidationService validationService)
+        public StudentTermService(IStudentTermRepository studentTermRepository, IValidationService validationService)
         {
             _studentTermRepository = studentTermRepository;
             _ValidationService = validationService;

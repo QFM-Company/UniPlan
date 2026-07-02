@@ -45,7 +45,7 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to add Hall.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add Hall.");
             }
-            catch(SqlException sqlException) when(sqlException.Number > 50000) 
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }

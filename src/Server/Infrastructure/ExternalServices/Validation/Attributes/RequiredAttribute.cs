@@ -1,7 +1,7 @@
 ﻿namespace Infrastructure.ExternalServices.Validation.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class RequiredAttribute<T> : ValidationAttribute 
+    public class RequiredAttribute<T> : ValidationAttribute
     {
         public RequiredAttribute(string errorMeesage) : base(errorMeesage)
         {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.DTOs.Requests;
-using Business.DTOs.Requests.Create;
+﻿using Business.DTOs.Requests.Create;
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
@@ -12,7 +6,6 @@ using Business.Mapper;
 using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
-using Microsoft.VisualBasic;
 
 namespace Business.Services
 {
@@ -21,7 +14,7 @@ namespace Business.Services
         private ICourseSessionRepository _courseSessionRepository;
         private IValidationService _ValidationService;
 
-        public CourseSessionService(ICourseSessionRepository courseSessionRepository , IValidationService validationService)
+        public CourseSessionService(ICourseSessionRepository courseSessionRepository, IValidationService validationService)
         {
             _courseSessionRepository = courseSessionRepository;
             _ValidationService = validationService;
