@@ -7,30 +7,17 @@ namespace Infrastructure.ExternalServices
     {
         private string _GetCustomSqlExceptionMessage(SqlException ex)
         {
-            string entityName = ((ex.Number / 100) * 100) switch
-            {
-                50100 => "People",
-                50200 => "Admin",
-                50300 => "Student",
-                50400 => "Account",
-                50500 => "Major",
-                50600 => "Periods",
-                50700 => "TimeSlots",
-                50800 => "Halls",
-                _ => "Unknown Entity"
-            };
-
             string exceptionMessage = (ex.Number % 100) switch
             {
-                1 => $"Validation error occurred for '{entityName}'. Please check the inputs.",
-                2 => $"This '{entityName}' already exists. Please enter unique data.",
-                3 => $"The requested '{entityName}' does not exist.",
-                4 => $"This '{entityName}' is related to other data and cannot be modified or deleted.",
-                5 => $"Permission denied for this '{entityName}' operation.",
-                _ => $"An error occurred in '{entityName}'."
+                1 => "حدث خطأ في التحقق من البيانات. يرجى مراجعة المدخلات",
+                2 => "البيانات المدخلة موجودة مسبقاً. يرجى إدخال بيانات جديدة",
+                3 => "العنصر المطلوب غير موجود",
+                4 => "لا يمكن حذف أو تعديل هذا العنصر لأنه مرتبط بعناصر أخرى",
+                5 => "عملية غير مصرح بها. يرجى التحقق من الصلاحيات",
+                _ => "حدث خطأ في قاعدة البيانات. يرجى المحاولة مرة أخرى"
             };
 
-            return $"{exceptionMessage}\n(Error code: {ex.Number})";
+            return $"{exceptionMessage}\n(رمز الخطأ: {ex.Number})";
         }
 
         private string _GetSqlExceptionMessage(SqlException ex)
@@ -40,38 +27,39 @@ namespace Infrastructure.ExternalServices
 
             switch (ex.Number)
             {
-                case 2601: // Duplicated key row error
-                    return $"A record with the same value already exists. Please enter unique data.\n(Error code: {ex.Number})";
+                case 2601: // Duplicated key row error (SQL Server)
+                case 2627: // Duplicated key constraint violation
+                    return $"البيانات المدخلة موجودة مسبقاً. يرجى إدخال بيانات جديدة.\n(رمز الخطأ: {ex.Number})";
 
                 case 547: // Foreign key violation
-                    return $"This record is linked to other data and cannot be deleted or modified.\n(Error code: {ex.Number})";
+                    return $"لا يمكن حذف أو تعديل هذا العنصر لأنه مرتبط بعناصر أخرى.\n(رمز الخطأ: {ex.Number})";
 
                 case 4060: // Invalid Database
-                    return $"The database requested is not available.\n(Error code: {ex.Number})";
+                    return $"قاعدة البيانات غير متوفرة حالياً.\n(رمز الخطأ: {ex.Number})";
 
                 case 18456: // Login failed
-                    return $"Database login failed. Please check your username and password.\n(Error code: {ex.Number})";
+                    return $"فشل الاتصال بقاعدة البيانات. يرجى التحقق من بيانات الدخول.\n(رمز الخطأ: {ex.Number})";
 
-                case 208: // Invalid object name (table/view not found)
-                    return $"A required database object was not found. Please contact the system administrator.\n(Error code: {ex.Number})";
+                case 208: // Invalid object name
+                    return $"حدث خطأ في قاعدة البيانات. يرجى المحاولة مرة أخرى.\n(رمز الخطأ: {ex.Number})";
 
                 case 207: // Invalid column name
-                    return $"An invalid column name was referenced in the query.\n(Error code: {ex.Number})";
+                    return $"حدث خطأ في قاعدة البيانات. يرجى المحاولة مرة أخرى.\n(رمز الخطأ: {ex.Number})";
 
                 case 8152: // String or binary data would be truncated
-                    return $"One of the fields contains too much text. Please shorten your input.\n(Error code: {ex.Number})";
+                    return $"أحد الحقول يحتوي على نص طويل جداً. يرجى تقصير النص المدخل.\n(رمز الخطأ: {ex.Number})";
 
                 case 53: // Cannot connect to server
-                    return $"Cannot connect to the database server. Please check your network connection.\n(Error code: {ex.Number})";
+                    return $"لا يمكن الاتصال بقاعدة البيانات. يرجى التحقق من الاتصال بالشبكة.\n(رمز الخطأ: {ex.Number})";
 
                 case -2: // Timeout expired
-                    return $"The database operation took too long and timed out. Please try again.\n(Error code: {ex.Number})";
+                    return $"انتهت مهلة عملية قاعدة البيانات. يرجى المحاولة مرة أخرى.\n(رمز الخطأ: {ex.Number})";
 
                 case 1205: // Deadlock
-                    return $"A database conflict occurred. Please try the operation again.\n(Error code: {ex.Number})";
+                    return $"حدث تعارض في قاعدة البيانات. يرجى إعادة المحاولة.\n(رمز الخطأ: {ex.Number})";
+
                 default:
-                    // Generic fallback message
-                    return $"{ex.Message}\n(Error code: {ex.Number})";
+                    return $"حدث خطأ في قاعدة البيانات. يرجى المحاولة مرة أخرى.\n(رمز الخطأ: {ex.Number})";
             }
         }
 
@@ -81,28 +69,28 @@ namespace Infrastructure.ExternalServices
             {
                 case SqlException sqlEx:
                     return _GetSqlExceptionMessage(sqlEx);
-                case FormatException formatException:
-                    return $"The entered value has an invalid format. Please check your input and try again.";
 
-                case FileNotFoundException fileNotFoundException:
-                    return "The required file could not be found. Please make sure the file exists.";
+                case FormatException:
+                    return "التنسيق المدخل غير صحيح. يرجى التحقق من القيمة المدخلة";
 
-                case IOException iOException:
-                    return "A file operation failed. Please check that the file is not in use or locked.";
+                case FileNotFoundException:
+                    return "الملف المطلوب غير موجود. يرجى التأكد من وجود الملف";
 
-                case ArgumentNullException argumentNullException:
-                    return "Some required information is missing. Please fill all required fields.";
+                case IOException:
+                    return "حدث خطأ في عملية الملف. يرجى التأكد من أن الملف غير مستخدم أو مقفل";
 
-                case InvalidOperationException invalidOperationException:
-                    return "The requested operation is not valid in the current state.";
+                case ArgumentNullException:
+                    return "بعض المعلومات المطلوبة غير موجودة. يرجى تعبئة جميع الحقول";
 
-                case ArgumentException argument:
-                    return "An invalid argument or value was provided.";
+                case InvalidOperationException:
+                    return "العملية المطلوبة غير صالحة في الحالة الحالية";
+
+                case ArgumentException:
+                    return "تم تقديم قيمة غير صالحة. يرجى التحقق من المدخلات";
 
                 default:
-                    return $"{ex.Message}";
+                    return "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى";
             }
         }
-
     }
 }

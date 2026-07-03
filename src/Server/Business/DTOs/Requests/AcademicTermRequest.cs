@@ -1,23 +1,23 @@
-﻿using Core.Enums;
-using Infrastructure.ExternalServices.Validation.Attributes;
+﻿using Infrastructure.ExternalServices.Validation.Attributes;
 
 namespace Business.DTOs.Requests
 {
     public class AcademicTermRequest
     {
-        public TermType TermType { get; set; }
+        [AllowedValues("يجب أن تكون قيمة الفصل الأكاديمي 1 (الأول) أو 2 (الثاني) أو 3 (الصيفي) فقط", new object[] { 1, 2, 3 })]
+        public int TermType { get; set; }
 
         [Required<int>("السنة الأكاديمية مطلوبة")]
-        [Range<int>("يجب أن تكون السنة بين 2000 و 2100", 2000, 2100)]
+        [Range<int>("يجب أن تكون السنة بين 2025 و 2100", 2025, 2100)]
         public int TermYear { get; set; }
 
         public AcademicTermRequest()
         {
-            TermType = TermType.First;
+            TermType = default;
             TermYear = default;
         }
 
-        public AcademicTermRequest(TermType termType, int termYear)
+        public AcademicTermRequest(int termType, int termYear)
         {
             TermType = termType;
             TermYear = termYear;

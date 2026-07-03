@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.ExternalServices.Validation.Attributes
+﻿using System.Collections;
+
+namespace Infrastructure.ExternalServices.Validation.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class RequiredAttribute<T> : ValidationAttribute
@@ -14,6 +16,11 @@
 
             if (obj is string str && string.IsNullOrWhiteSpace(str))
                 return false;
+
+            if (obj is ICollection col && col != null)
+            {
+                return col.Count != 0;
+            }
 
             if (obj is T value)
             {

@@ -8,7 +8,7 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
 
         public T MinNumber { get; set; }
 
-        public RangeAttribute(string errorMeesage, T maxNumber, T minNumber) : base(errorMeesage)
+        public RangeAttribute(string errorMeesage, T minNumber, T maxNumber) : base(errorMeesage)
         {
             MaxNumber = maxNumber;
             MinNumber = minNumber;
