@@ -27,20 +27,18 @@ namespace Business.Services
         public async Task<AdministratorResponse?> AddAdministratorAsync(CreateAdministratorRequest request)
         {
             _ValidationService.Validate(request);
-            _admin = request?.ToAdministrator() ?? null;
-            if (_admin != null && _admin.Account != null)
+
+            _admin = request.ToAdministrator();
+
+            var result = await _AdminRepository.AddAdminAsync(_admin);
+
+            if (result)
             {
-                var result = await _AdminRepository.AddAdminAsync(_admin);
                 _admin = await _AdminRepository.GetAdminByIDAsync(_admin.AdminID);
-                if (result && _admin?.Account != null && _admin?.Person != null)
+
+                if (_admin!.AdminID > 0 && _admin.Account!.AccountID > 0)
                 {
-                    _admin.AdminID = _admin.AdminID;
-                    _admin.Account.AccountID = _admin.Account.AccountID;
-                    _admin.Person = _admin.Person;
-                    if (_admin.AdminID > 0 && _admin.Account.AccountID > 0)
-                    {
-                        return _admin.ToResponse();
-                    }
+                    return _admin.ToResponse();
                 }
             }
 

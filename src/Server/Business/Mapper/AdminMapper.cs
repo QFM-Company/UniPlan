@@ -12,13 +12,13 @@ namespace Business.Mapper
         public static Administrator ToAdministrator(this CreateAdministratorRequest request, int adminID = -1)
         {
             Person person = new Person(request.PersonID);
-            Account? account = request.Account?.ToAccount() ?? null;
+            Account? account = request.Account!.ToAccount();
             return new Administrator(adminID, person, account, true);
         }
 
         public static void UpdateAdmin(this Administrator admin, UpdateAdministratorRequest request)
         {
-            admin.Account?.UpdateAccount(request.Account);
+            admin.Account!.UpdateAccount(request.Account);
             admin.Person!.PersonID = request.PersonID;
         }
 
