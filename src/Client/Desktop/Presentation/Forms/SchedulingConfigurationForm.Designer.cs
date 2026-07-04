@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             dgvHalls = new DataGridView();
             col1 = new DataGridViewTextBoxColumn();
             col2 = new DataGridViewTextBoxColumn();
@@ -43,6 +43,7 @@
             txtBuildingName = new TextBox();
             cmbHallName = new ComboBox();
             header1 = new Controls.UserControls.Header();
+            searchControl1 = new Controls.UserControls.SearchControl();
             ((System.ComponentModel.ISupportInitialize)dgvHalls).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -53,14 +54,14 @@
             dgvHalls.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvHalls.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvHalls.BackgroundColor = Color.FromArgb(244, 247, 249);
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(52, 84, 99);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10.5F);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvHalls.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(52, 84, 99);
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 10.5F);
+            dataGridViewCellStyle4.ForeColor = Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dgvHalls.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dgvHalls.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvHalls.Columns.AddRange(new DataGridViewColumn[] { col1, col2, col3, col4, col6, col5 });
             dgvHalls.EnableHeadersVisualStyles = false;
@@ -110,14 +111,15 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(244, 247, 249);
+            panel1.Controls.Add(searchControl1);
             panel1.Controls.Add(TineSloteBtn);
             panel1.Controls.Add(textBox1);
             panel1.Controls.Add(txtFloorNumber);
             panel1.Controls.Add(txtBuildingName);
             panel1.Controls.Add(cmbHallName);
-            panel1.Location = new Point(110, 132);
+            panel1.Location = new Point(97, 132);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1170, 91);
+            panel1.Size = new Size(1206, 91);
             panel1.TabIndex = 3;
             // 
             // TineSloteBtn
@@ -139,36 +141,37 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(279, 25);
+            textBox1.Location = new Point(443, 28);
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "Day";
-            textBox1.Size = new Size(188, 35);
+            textBox1.Size = new Size(146, 35);
             textBox1.TabIndex = 5;
             // 
             // txtFloorNumber
             // 
-            txtFloorNumber.Location = new Point(742, 25);
+            txtFloorNumber.Location = new Point(800, 28);
             txtFloorNumber.Name = "txtFloorNumber";
             txtFloorNumber.PlaceholderText = "End Time";
-            txtFloorNumber.Size = new Size(215, 35);
+            txtFloorNumber.Size = new Size(147, 35);
             txtFloorNumber.TabIndex = 2;
             // 
             // txtBuildingName
             // 
-            txtBuildingName.Location = new Point(505, 25);
+            txtBuildingName.Location = new Point(620, 28);
             txtBuildingName.Name = "txtBuildingName";
             txtBuildingName.PlaceholderText = "Start Time";
-            txtBuildingName.Size = new Size(213, 35);
+            txtBuildingName.Size = new Size(147, 35);
             txtBuildingName.TabIndex = 1;
             // 
             // cmbHallName
             // 
             cmbHallName.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbHallName.FormattingEnabled = true;
-            cmbHallName.Location = new Point(21, 22);
+            cmbHallName.Location = new Point(258, 30);
             cmbHallName.Name = "cmbHallName";
-            cmbHallName.Size = new Size(240, 38);
+            cmbHallName.Size = new Size(167, 38);
             cmbHallName.TabIndex = 0;
+            cmbHallName.SelectedIndexChanged += cmbHallName_SelectedIndexChanged;
             // 
             // header1
             // 
@@ -178,6 +181,15 @@
             header1.Size = new Size(2100, 105);
             header1.TabIndex = 5;
             header1.Title = "UniPlan";
+            // 
+            // searchControl1
+            // 
+            searchControl1.BackColor = Color.White;
+            searchControl1.Location = new Point(14, 30);
+            searchControl1.Margin = new Padding(0);
+            searchControl1.Name = "searchControl1";
+            searchControl1.Size = new Size(229, 36);
+            searchControl1.TabIndex = 7;
             // 
             // SchedulingConfigurationForm
             // 
@@ -211,5 +223,6 @@
         private TextBox textBox1;
         private UniPlan.Controls.CustomButtons.UniPlanButton TineSloteBtn;
         private Controls.UserControls.Header header1;
+        private Controls.UserControls.SearchControl searchControl1;
     }
 }

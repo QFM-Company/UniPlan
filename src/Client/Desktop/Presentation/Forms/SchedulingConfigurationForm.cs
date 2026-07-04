@@ -26,5 +26,10 @@ namespace Presentation.Forms
         {
 
         }
+
+        private void cmbHallName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
