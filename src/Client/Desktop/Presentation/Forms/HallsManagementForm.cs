@@ -86,5 +86,10 @@ namespace Presentation.Forms
                 MessageBox.Show($"{ex.Message}", "UniPlan", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void dynamicDataGrid1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
