@@ -9,7 +9,8 @@ CREATE OR ALTER PROCEDURE SP_CourseSessions_Insert
     @HallID INT, 
     @CreatedByAdminID INT = NULL, 
     @StartTime TIME, 
-    @EndTime TIME, 
+    @EndTime TIME,
+    @DayNum INT,
     @SessionID INT OUT 
 AS 
 BEGIN 
@@ -30,16 +31,6 @@ BEGIN
         ;THROW 50805, 'Hall not found.', 1; 
     END; 
 
-    IF EXISTS ( SELECT 1 FROM dbo.CourseSessions WHERE HallID = @HallID ) 
-    BEGIN 
-        ;THROW 50802, 'This hall is already assigned to the selected time slot.', 1; 
-    END; 
-
-    IF EXISTS ( SELECT 1 FROM dbo.CourseSessions WHERE OfferingID = @OfferingID ) 
-    BEGIN 
-        ;THROW 51202, 'This course offering is already assigned to the selected time slot.', 1; 
-    END; 
-
     BEGIN TRY 
         BEGIN TRANSACTION; 
 
@@ -50,7 +41,8 @@ BEGIN
         SELECT @SessionID, T.SlotID 
         FROM TimeSlots T 
         INNER JOIN dbo.Periods P ON P.PeriodID = T.PeriodID 
-        WHERE P.StartTime >= @StartTime AND P.EndTime <= @EndTime; 
+        WHERE (P.StartTime = @StartTime OR P.EndTime = @EndTime)
+        AND T.DayNum = @DayNum; 
 
         COMMIT TRANSACTION; 
     END TRY 
@@ -67,6 +59,7 @@ CREATE OR ALTER PROCEDURE SP_CourseSessions_Update
     @HallID INT, 
     @StartTime TIME, 
     @EndTime TIME, 
+    @DayNum INT,
     @Result BIT OUT 
 AS 
 BEGIN 
@@ -92,16 +85,6 @@ BEGIN
         ;THROW 50803, 'Hall not found.', 1; 
     END; 
 
-    IF EXISTS ( SELECT 1 FROM dbo.CourseSessions WHERE HallID = @HallID AND SessionID <> @SessionID ) 
-    BEGIN 
-        ;THROW 50802, 'This hall is already assigned to the selected time slot.', 1; 
-    END; 
-
-    IF EXISTS ( SELECT 1 FROM dbo.CourseSessions WHERE OfferingID = @OfferingID AND SessionID <> @SessionID ) 
-    BEGIN 
-        ;THROW 51202, 'This course offering is already assigned to the selected time slot.', 1; 
-    END; 
-
     BEGIN TRY 
         BEGIN TRANSACTION;
 
@@ -114,7 +97,7 @@ BEGIN
                 FROM dbo.SessionTimeSlots STS
                 INNER JOIN dbo.TimeSlots T ON T.SlotID = STS.SlotID
                 INNER JOIN dbo.Periods P ON P.PeriodID = T.PeriodID
-                WHERE STS.SessionID = @SessionID
+                WHERE STS.SessionID = @SessionID AND T.DayNum = @DayNum
                 HAVING MIN(P.StartTime) = @StartTime AND MAX(P.EndTime) = @EndTime
             )
             BEGIN
@@ -125,7 +108,8 @@ BEGIN
                 SELECT @SessionID, T.SlotID 
                 FROM TimeSlots T 
                 INNER JOIN dbo.Periods P ON P.PeriodID = T.PeriodID 
-                WHERE P.StartTime >= @StartTime AND P.EndTime <= @EndTime; 
+                WHERE (P.StartTime = @StartTime OR P.EndTime = @EndTime)
+                AND T.DayNum = @DayNum;   
             END
 
             SET @Result = 1; 
@@ -205,6 +189,7 @@ SELECT DISTINCT
         H.Building,
         H.Floor,
         CS.CreatedByAdminID,
+        TS.DayNum,
         StartTime = MIN(P.StartTime) OVER(PARTITION BY CS.SessionID),
         EndTime = MAX(P.EndTime) OVER(PARTITION BY CS.SessionID)
     FROM dbo.CourseSessions CS

@@ -14,7 +14,9 @@
 
         public int? CreatedByAdminID { get; set; }
 
-        public CourseSessionResponse(int sessionID, CourseOfferingResponse courseOffering, HallResponse hall, TimeSpan startTime, TimeSpan endTime, int? createdByAdminID)
+        public DayOfWeek Day { get; set; }
+
+        public CourseSessionResponse(int sessionID, CourseOfferingResponse courseOffering, HallResponse hall, TimeSpan startTime, TimeSpan endTime, int? createdByAdminID, DayOfWeek day)
         {
             SessionID = sessionID;
             CourseOffering = courseOffering;
@@ -22,6 +24,7 @@
             StartTime = startTime;
             EndTime = endTime;
             CreatedByAdminID = createdByAdminID;
+            Day = day;
         }
     }
 }

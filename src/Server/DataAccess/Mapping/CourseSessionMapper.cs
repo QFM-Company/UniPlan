@@ -16,8 +16,9 @@ namespace DataAccess.Mapping
             reader.ReadTimeSpan("EndTime", out TimeSpan endTime);
             reader.ReadInt("AdminID", out int adminID, -1);
             reader.ReadInt("SessionID", out int courseSessionID, -1);
+            reader.ReadInt("DayNum", out int day, -1);
 
-            return new CourseSession(courseSessionID, courseOffering, hall, startTime, endTime, adminID);
+            return new CourseSession(courseSessionID, courseOffering, hall, startTime, endTime, adminID, (DayOfWeek)day);
         }
     }
 }

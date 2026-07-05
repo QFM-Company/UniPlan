@@ -16,11 +16,15 @@ namespace Business.DTOs.Requests.Update
         [Required<PersonRequest>("بيانات الفترة الزمنية مطلوبة")]
         public PeriodRequest PeriodData { get; set; }
 
-        public UpdateCourseSessionRequest(int courseOfferingID, int hallID, PeriodRequest periodData)
+        [Required<DayOfWeek>("تحديد اليوم مطلوب")]
+        public DayOfWeek Day { get; set; }
+
+        public UpdateCourseSessionRequest(int courseOfferingID, int hallID, PeriodRequest periodData, DayOfWeek day)
         {
             CourseOfferingID = courseOfferingID;
             HallID = hallID;
             PeriodData = periodData;
+            Day = day;
         }
     }
 }

@@ -20,7 +20,8 @@ namespace Business.Mapper
                 hall,
                 request.PeriodData.StartTime,
                 request.PeriodData.EndTime,
-                adminID
+                adminID,
+                request.Day
             );
         }
 
@@ -32,6 +33,7 @@ namespace Business.Mapper
             courseSession.CourseOffering.OfferingID = request.CourseOfferingID;
             courseSession.StartTime = request.PeriodData.StartTime;
             courseSession.EndTime = request.PeriodData.EndTime;
+            courseSession.Day = request.Day;
         }
 
         public static CourseSessionResponse ToResponse(this CourseSession courseSession)
@@ -42,7 +44,8 @@ namespace Business.Mapper
                  courseSession.Hall!.ToResponse(),
                  courseSession.StartTime,
                  courseSession.EndTime,
-                 courseSession.CreatedByAdminID
+                 courseSession.CreatedByAdminID,
+                 courseSession.Day
             );
         }
 

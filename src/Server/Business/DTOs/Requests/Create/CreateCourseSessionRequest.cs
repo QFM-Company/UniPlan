@@ -5,6 +5,7 @@ namespace Business.DTOs.Requests.Create
     public class CreateCourseSessionRequest
     {
 
+
         [Required<int>("معرف الكورس مطلوب")]
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int CourseOfferingID { get; set; }
@@ -21,16 +22,16 @@ namespace Business.DTOs.Requests.Create
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int CreatedByAdminID { get; set; }
 
-        public CreateCourseSessionRequest(int courseOfferingID, int hallID, PeriodRequest periodRequest, int createdByAdminID)
+        [Required<DayOfWeek>("تحديد اليوم مطلوب")]
+        public DayOfWeek Day { get; set; }
+
+        public CreateCourseSessionRequest(int courseOfferingID, int hallID, PeriodRequest periodData, int createdByAdminID, DayOfWeek day)
         {
             CourseOfferingID = courseOfferingID;
             HallID = hallID;
-            PeriodData = periodRequest;
+            PeriodData = periodData;
             CreatedByAdminID = createdByAdminID;
-        }
-
-        public CreateCourseSessionRequest()
-        {
+            Day = day;
         }
     }
 }

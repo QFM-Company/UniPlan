@@ -71,6 +71,12 @@ namespace DataAccess.Repositories
                     courseSession.CreatedByAdminID
                 );
 
+                command.Parameters.AddWithValue
+                (
+                    "@DayNum",
+                    courseSession.Day
+                );
+
                 await connection.OpenAsync();
                 await command.ExecuteNonQueryAsync();
 
@@ -142,6 +148,12 @@ namespace DataAccess.Repositories
                 (
                     "@CreatedByAdminID",
                     courseSession.CreatedByAdminID
+                );
+
+                command.Parameters.AddWithValue
+                (
+                    "@DayNum",
+                    courseSession.Day
                 );
 
                 await connection.OpenAsync();
