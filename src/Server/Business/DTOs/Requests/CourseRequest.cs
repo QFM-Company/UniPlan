@@ -12,10 +12,13 @@ namespace Business.DTOs.Requests
         [Range<int>("يجب ان يكون عدد الساعات اكبر تماما من 0", 1, int.MaxValue)]
         public int CreditHours { get; set; }
 
-        public CourseRequest(string? courseName, int creditHours)
+        public string? CourseCode { get; set; }
+
+        public CourseRequest(string? courseName, int creditHours, string? courseCode)
         {
             CourseName = courseName;
             CreditHours = creditHours;
+            CourseCode = courseCode;
         }
     }
 }

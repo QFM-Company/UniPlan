@@ -6,11 +6,14 @@
         public string? CourseName { get; set; }
         public int CreditHours { get; set; }
 
-        public Course(int courseID, string? courseName, int creditHours)
+        public string? CourseCode { get; set; }
+
+        public Course(int courseID, string? courseName, int creditHours, string? courseCode)
         {
             CourseID = courseID;
             CourseName = courseName;
             CreditHours = creditHours;
+            CourseCode = courseCode;
         }
 
         public Course(int courseID)

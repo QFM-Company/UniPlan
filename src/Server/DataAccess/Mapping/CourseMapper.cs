@@ -11,8 +11,9 @@ namespace DataAccess.Mapping
             reader.ReadInt("CourseID", out int courseID, -1);
             reader.ReadString("CourseName", out string courseName, string.Empty);
             reader.ReadInt("CreditHours", out int creditHours, -1);
+            reader.ReadString("CourseCode", out string courseCode, string.Empty);
 
-            return new Course(courseID, courseName, creditHours);
+            return new Course(courseID, courseName, creditHours , courseCode);
         }
     }
 }

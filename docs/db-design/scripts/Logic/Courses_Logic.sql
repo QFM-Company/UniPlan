@@ -1,10 +1,11 @@
-USE [UniPlan];
+﻿USE [UniPlan];
 GO
 
 CREATE OR ALTER PROCEDURE SP_Courses_Insert
     @CourseName NVARCHAR(100),
     @CreditHours INT,
-    @CourseID INT OUT
+    @CourseID INT OUT,
+	@CourseCode nvarchar(8)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -15,16 +16,23 @@ BEGIN
         ;THROW 50901, 'Course validation failed', 1;
     END
 
+	 IF NULLIF(LTRIM(RTRIM(@CourseCode)), '') IS NULL
+	 Begin
+	     set @CourseCode = null;
+     End
+
     BEGIN TRY
         INSERT INTO [dbo].[Courses]
         (
             [CourseName],
-            [CreditHours]
+            [CreditHours],
+			[CourseCode]
         )
         VALUES
         (
             @CourseName,
-            @CreditHours
+            @CreditHours,
+			@CourseCode
         );
 
         SET @CourseID = CONVERT(INT, SCOPE_IDENTITY());
@@ -39,6 +47,7 @@ GO
 CREATE OR ALTER PROCEDURE SP_Courses_Update
     @CourseID INT,
     @CourseName NVARCHAR(100),
+	@CourseCode NVARCHAR(8),
     @CreditHours INT,
     @Result BIT OUT
 AS
@@ -56,7 +65,8 @@ BEGIN
         UPDATE [dbo].[Courses]
         SET
             [CourseName] = @CourseName,
-            [CreditHours] = @CreditHours
+            [CreditHours] = @CreditHours,
+			[CourseCode] = @CourseCode
         WHERE [CourseID] = @CourseID;
 
         IF @@ROWCOUNT > 0

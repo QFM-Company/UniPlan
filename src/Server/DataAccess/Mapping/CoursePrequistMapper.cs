@@ -13,10 +13,11 @@ namespace DataAccess.Mapping
             reader.ReadInt("CourseID2", out int PreCourseID2, -1);
             reader.ReadString("CourseName2", out string courseName2, string.Empty);
             reader.ReadInt("CreditHours2", out int creditHours2, -1);
+            reader.ReadString("CourseCode2", out string courseCode2, string.Empty);
 
             reader.ReadInt("PrerequisiteID", out int prerequisiteID, -1);
 
-            Course preCourse = new Course(PreCourseID2, courseName2, creditHours2);
+            Course preCourse = new Course(PreCourseID2, courseName2, creditHours2 , courseCode2);
 
             return new CoursePrerequisites(
                  prerequisiteID,
