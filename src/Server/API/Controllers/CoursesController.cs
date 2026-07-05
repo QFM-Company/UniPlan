@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         [HttpPut("update/{courseID}", Name = "UpdateCourseAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CourseResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<CourseResponse>> UpdateCourseAsync(int courseID, CourseRequest request)
@@ -96,7 +96,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete/{courseID}", Name = "DeleteCourseAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeleteCourseAsync(int courseID)
@@ -110,7 +110,7 @@ namespace API.Controllers
                     if (result)
                     {
                         await _logService.LogAsync($"Course with ID {courseID} deleted successfully.", ExternalServicesEnums.LogType.Info);
-                        return Ok(result);
+                        return Ok();
                     }
                 }
                 await _logService.LogAsync($"Failed to delete Course with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
@@ -174,7 +174,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync($"No courses found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No courses found on page {pageNumber}.");
+                return Ok(new List<CourseResponse>());
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {

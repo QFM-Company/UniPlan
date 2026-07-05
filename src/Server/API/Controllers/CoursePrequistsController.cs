@@ -2,6 +2,7 @@
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -24,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddCoursePrequistAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CoursePrerequisiteResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<CoursePrerequisiteResponse>> AddCoursePrequistAsync(CoursePrerequisiteRequest request)
@@ -45,6 +46,11 @@ namespace API.Controllers
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
