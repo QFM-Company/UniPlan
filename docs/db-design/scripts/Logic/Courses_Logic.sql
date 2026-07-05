@@ -1,6 +1,39 @@
 ﻿USE [UniPlan];
 GO
 
+
+
+
+
+Create Or Alter Function CheckUniqeCourseName(@CourseName nvarchar(100))
+returns int
+As
+Begin
+     if(Exists(select 1 from Courses where CourseName = @CourseName))
+	     return 0;
+
+     return 1;
+End
+go
+
+
+
+
+Create Or Alter Function CheckUniqeCourseCode(@CourseCode nvarchar(8))
+returns int
+As
+Begin
+     
+	 if @CourseCode is null return 1;
+
+     if(Exists(select 1 from Courses where CourseCode = @CourseCode))
+	     return 0;
+
+     return 1;
+End
+go
+
+
 CREATE OR ALTER PROCEDURE SP_Courses_Insert
     @CourseName NVARCHAR(100),
     @CreditHours INT,
@@ -16,10 +49,22 @@ BEGIN
         ;THROW 50901, 'Course validation failed', 1;
     END
 
+	
 	 IF NULLIF(LTRIM(RTRIM(@CourseCode)), '') IS NULL
 	 Begin
 	     set @CourseCode = null;
      End
+
+	IF (dbo.CheckUniqeCourseName(@CourseName) = 0)
+	Begin
+	    ;THROW 50902, 'Course Name Already Exist', 1;
+	END
+	
+	IF (dbo.CheckUniqeCourseCode(@CourseCode) = 0)
+	Begin
+	    ;THROW 50902, 'Course Code Already Exist', 1;
+	END
+
 
     BEGIN TRY
         INSERT INTO [dbo].[Courses]
@@ -60,6 +105,23 @@ BEGIN
     BEGIN
         ;THROW 50901, 'Course validation failed', 1;
     END
+
+	
+	 IF NULLIF(LTRIM(RTRIM(@CourseCode)), '') IS NULL
+	 Begin
+	     set @CourseCode = null;
+     End
+
+	IF (dbo.CheckUniqeCourseName(@CourseName) = 0 And @CourseName <> (select Courses.CourseName from Courses where CourseID = @CourseID))
+	Begin
+	    ;THROW 50902, 'Course Name Already Exist', 1;
+	END
+
+	IF (dbo.CheckUniqeCourseCode(@CourseCode) = 0 And @CourseCode <> (select Courses.CourseCode from Courses where CourseID = @CourseID))
+	Begin
+	    ;THROW 50902, 'Course Code Already Exist', 1;
+	END
+
 
     BEGIN TRY
         UPDATE [dbo].[Courses]

@@ -2,6 +2,7 @@
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -42,9 +43,15 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to add Course.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add Course.");
             }
+
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -60,20 +67,27 @@ namespace API.Controllers
         {
             try
             {
-                var result = await _coursesService.UpdateCourseAsync(courseID, request);
-
-                if (result != null)
+                if (courseID > 0)
                 {
-                    await _logService.LogAsync($"Course with ID {courseID} updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(result);
-                }
+                    var result = await _coursesService.UpdateCourseAsync(courseID, request);
 
+                    if (result != null)
+                    {
+                        await _logService.LogAsync($"Course with ID {courseID} updated successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(result);
+                    }
+                }
                 await _logService.LogAsync($"Failed to update Course with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest($"Failed to update Course with ID {courseID}.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -89,14 +103,16 @@ namespace API.Controllers
         {
             try
             {
-                bool result = await _coursesService.DeleteCourseAsync(courseID);
-
-                if (result)
+                if (courseID > 0)
                 {
-                    await _logService.LogAsync($"Course with ID {courseID} deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(result);
-                }
+                    bool result = await _coursesService.DeleteCourseAsync(courseID);
 
+                    if (result)
+                    {
+                        await _logService.LogAsync($"Course with ID {courseID} deleted successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(result);
+                    }
+                }
                 await _logService.LogAsync($"Failed to delete Course with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest($"Failed to delete Course with ID {courseID}.");
             }
@@ -118,14 +134,16 @@ namespace API.Controllers
         {
             try
             {
-                CourseResponse? response = await _coursesService.GetCourseByIdAsync(courseID);
-
-                if (response != null)
+                if (courseID > 0)
                 {
-                    await _logService.LogAsync($"Course with ID {courseID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
-                }
+                    CourseResponse? response = await _coursesService.GetCourseByIdAsync(courseID);
 
+                    if (response != null)
+                    {
+                        await _logService.LogAsync($"Course with ID {courseID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
+                }
                 await _logService.LogAsync($"Course with ID {courseID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Course with ID {courseID} was not found.");
             }
