@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddCourseAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CourseResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<CourseResponse>> AddCourseAsync(CourseRequest request)
@@ -37,7 +37,7 @@ namespace API.Controllers
                 if (result != null)
                 {
                     await _logService.LogAsync("Course added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(result);
+                    return CreatedAtAction(nameof(GetCourseByIdAsync), new { id = result.CourseID }, result);
                 }
 
                 await _logService.LogAsync("Failed to add Course.", ExternalServicesEnums.LogType.Warning);
