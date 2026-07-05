@@ -1,119 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Data;
 
 namespace Controls.UserControls
 {
     public partial class DynamicDataGrid : UserControl
     {
+        public delegate Task<DataView> LoadDataDelegate(int pageNumber, int pageSize);
+
+        public event LoadDataDelegate? OnLoadData;
+        private int _currentPage;
+
         public DynamicDataGrid()
         {
             InitializeComponent();
+            _currentPage = 1;
+
+            DV_halls.DataSource = _GetMessageView("Load...");
         }
 
-
-        private int _columnCount = 0;
-        public int ColumnCount
+        private DataView _GetMessageView(string message)
         {
-            get { return _columnCount; }
-            set
+            DataTable table = new DataTable();
+
+            table.Columns.Add("Message");
+            table.Rows.Add(message);
+
+            return table.DefaultView;
+        }
+
+        public async Task TriggerLoadData(int pageNumber, int pageSize)
+        {
+            try
             {
-                _columnCount = value;
-                CreateColumns();
+                if (OnLoadData != null)
+                    DV_halls.DataSource = await OnLoadData.Invoke(pageNumber, pageSize);
+            }
+            catch (Exception ex)
+            {
+                DV_halls.DataSource = _GetMessageView(ex.Message);
             }
         }
 
-        private string _columnNames = "";
-        public string ColumnNames
+        private async void PageNavigation_Click(object sender, EventArgs e)
         {
-            get { return _columnNames; }
-            set
+            Button button = (Button)sender;
+
+            if (button?.Tag?.ToString() == "+")
             {
-                _columnNames = value;
-                CreateColumns();
+                _currentPage++;
             }
-        }
-
-        private void CreateColumns()
-        {
-            if (dataGridView1 == null) return;
-
-            dataGridView1.Columns.Clear();
-
-            if (_columnCount <= 0 || string.IsNullOrEmpty(_columnNames))
-                return;
-
-            string[] namesArray = _columnNames.Split(',');
-            int actualColumnCount = Math.Min(_columnCount, namesArray.Length);
-
-            for (int i = 0; i < actualColumnCount; i++)
+            else
             {
-                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
-                col.Name = namesArray[i].Trim();
-                col.HeaderText = namesArray[i].Trim();
-                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dataGridView1.Columns.Add(col);
-            }
-        }
-
-        public void LoadData(DataTable dt)
-        {
-            if (dt == null || dataGridView1 == null) return;
-
-            _columnCount = dt.Columns.Count;
-            _columnNames = string.Join(",", dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
-            CreateColumns();
-
-            dataGridView1.DataSource = dt;
-        }
-
-        public void LoadData<T>(List<T> list)
-        {
-            if (list == null || list.Count == 0)
-                return;
-
-            var dt = new DataTable();
-            var properties = typeof(T).GetProperties();
-
-            foreach (var prop in properties)
-            {
-                dt.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                _currentPage--;
             }
 
-            foreach (var item in list)
+            await TriggerLoadData(_currentPage, 10);
+        }
+
+        private async void DynamicDataGrid_Load(object sender, EventArgs e)
+        {
+            await TriggerLoadData(_currentPage, 10);
+        }
+
+        private void DV_halls_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (_currentPage > 1)
             {
-                var row = dt.NewRow();
-                foreach (var prop in properties)
-                {
-                    row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
-                }
-                dt.Rows.Add(row);
+                btnPervious.Visible = true;
+            }
+            else
+            {
+                btnPervious.Visible = false;
             }
 
-            LoadData(dt);
-        }
-
-        public bool AllowAddRows
-        {
-            get { return dataGridView1.AllowUserToAddRows; }
-            set { dataGridView1.AllowUserToAddRows = value; }
-        }
-
-        public bool AllowEdit
-        {
-            get { return dataGridView1.ReadOnly; }
-            set { dataGridView1.ReadOnly = value; }
-        }
-
-        public DataGridView GridView
-        {
-            get { return dataGridView1; }
+            if (DV_halls.Rows.Count < 10)
+            {
+                btnNext.Visible = false;
+            }
+            else
+            {
+                btnNext.Visible = true;
+            }
         }
     }
 }

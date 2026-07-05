@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddAcademicTermAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AcademicTermResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AcademicTermResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AcademicTermResponse?>> AddAcademicTermAsync(AcademicTermRequest request)
@@ -37,7 +37,7 @@ namespace API.Controllers
                 if (response != null)
                 {
                     await _logService.LogAsync("AcademicTerm added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return Created("GetAcademicTermByIDAsync", response);
                 }
 
                 await _logService.LogAsync("Failed to add AcademicTerm.", ExternalServicesEnums.LogType.Warning);
@@ -60,7 +60,7 @@ namespace API.Controllers
 
         [HttpDelete("delete/{listID}", Name = "DeleteAcademicTermAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeleteAcademicTermAsync(int listID)
         {
@@ -75,7 +75,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to delete AcademicTerm.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete AcademicTerm.");
+                return NotFound("Failed to delete AcademicTerm.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {

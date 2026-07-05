@@ -29,55 +29,54 @@
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            uniPlanButton1 = new UniPlan.Controls.CustomButtons.UniPlanButton();
-            uniPlanButton2 = new UniPlan.Controls.CustomButtons.UniPlanButton();
-            searchControl1 = new SearchControl();
+            btnPervious = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            btnNext = new UniPlan.Controls.CustomButtons.UniPlanButton();
             DV_halls = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)DV_halls).BeginInit();
             SuspendLayout();
             // 
-            // uniPlanButton1
+            // btnPervious
             // 
-            uniPlanButton1.BackColor = Color.FromArgb(23, 147, 177);
-            uniPlanButton1.BorderRadius = 15;
-            uniPlanButton1.FlatAppearance.BorderSize = 0;
-            uniPlanButton1.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton1.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton1.FlatStyle = FlatStyle.Flat;
-            uniPlanButton1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton1.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton1.Location = new Point(19, 544);
-            uniPlanButton1.Name = "uniPlanButton1";
-            uniPlanButton1.Size = new Size(126, 46);
-            uniPlanButton1.TabIndex = 1;
-            uniPlanButton1.Text = "◀";
-            uniPlanButton1.UseVisualStyleBackColor = false;
+            btnPervious.BackColor = Color.FromArgb(23, 147, 177);
+            btnPervious.BorderRadius = 15;
+            btnPervious.FlatAppearance.BorderSize = 0;
+            btnPervious.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            btnPervious.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            btnPervious.FlatStyle = FlatStyle.Flat;
+            btnPervious.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnPervious.ForeColor = Color.FromArgb(255, 255, 255);
+            btnPervious.Location = new Point(13, 363);
+            btnPervious.Margin = new Padding(2);
+            btnPervious.Name = "btnPervious";
+            btnPervious.Size = new Size(84, 31);
+            btnPervious.TabIndex = 1;
+            btnPervious.Tag = "-";
+            btnPervious.Text = "◀";
+            btnPervious.UseVisualStyleBackColor = false;
+            btnPervious.Visible = false;
+            btnPervious.Click += PageNavigation_Click;
             // 
-            // uniPlanButton2
+            // btnNext
             // 
-            uniPlanButton2.BackColor = Color.FromArgb(23, 147, 177);
-            uniPlanButton2.BorderRadius = 15;
-            uniPlanButton2.FlatAppearance.BorderSize = 0;
-            uniPlanButton2.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton2.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton2.FlatStyle = FlatStyle.Flat;
-            uniPlanButton2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton2.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton2.Location = new Point(643, 544);
-            uniPlanButton2.Name = "uniPlanButton2";
-            uniPlanButton2.Size = new Size(126, 46);
-            uniPlanButton2.TabIndex = 2;
-            uniPlanButton2.Text = "▶";
-            uniPlanButton2.UseVisualStyleBackColor = false;
-            // 
-            // searchControl1
-            // 
-            searchControl1.BackColor = Color.White;
-            searchControl1.Location = new Point(19, 23);
-            searchControl1.Margin = new Padding(0);
-            searchControl1.Name = "searchControl1";
-            searchControl1.Size = new Size(225, 36);
-            searchControl1.TabIndex = 3;
+            btnNext.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnNext.BackColor = Color.FromArgb(23, 147, 177);
+            btnNext.BorderRadius = 15;
+            btnNext.FlatAppearance.BorderSize = 0;
+            btnNext.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            btnNext.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            btnNext.FlatStyle = FlatStyle.Flat;
+            btnNext.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnNext.ForeColor = Color.FromArgb(255, 255, 255);
+            btnNext.Location = new Point(429, 363);
+            btnNext.Margin = new Padding(2);
+            btnNext.Name = "btnNext";
+            btnNext.Size = new Size(84, 31);
+            btnNext.TabIndex = 2;
+            btnNext.Tag = "+";
+            btnNext.Text = "▶";
+            btnNext.UseVisualStyleBackColor = false;
+            btnNext.Visible = false;
+            btnNext.Click += PageNavigation_Click;
             // 
             // DV_halls
             // 
@@ -96,29 +95,32 @@
             DV_halls.ColumnHeadersHeight = 35;
             DV_halls.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             DV_halls.EnableHeadersVisualStyles = false;
-            DV_halls.Location = new Point(19, 73);
+            DV_halls.Location = new Point(13, 49);
+            DV_halls.Margin = new Padding(2);
             DV_halls.Name = "DV_halls";
             DV_halls.RowHeadersWidth = 62;
-            DV_halls.Size = new Size(750, 465);
+            DV_halls.Size = new Size(500, 310);
             DV_halls.TabIndex = 5;
+            DV_halls.DataSourceChanged += DV_halls_DataSourceChanged;
             // 
             // DynamicDataGrid
             // 
-            AutoScaleDimensions = new SizeF(12F, 30F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(DV_halls);
-            Controls.Add(searchControl1);
-            Controls.Add(uniPlanButton2);
-            Controls.Add(uniPlanButton1);
+            Controls.Add(btnNext);
+            Controls.Add(btnPervious);
+            Margin = new Padding(2);
             Name = "DynamicDataGrid";
-            Size = new Size(800, 600);
+            Size = new Size(533, 400);
+            Load += DynamicDataGrid_Load;
             ((System.ComponentModel.ISupportInitialize)DV_halls).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton1;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton2;
+        private UniPlan.Controls.CustomButtons.UniPlanButton btnPervious;
+        private UniPlan.Controls.CustomButtons.UniPlanButton btnNext;
         private SearchControl searchControl1;
         private DataGridView DV_halls;
     }
