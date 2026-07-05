@@ -96,7 +96,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete/{courseID}", Name = "DeleteCourseAsync")]
-        [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeleteCourseAsync(int courseID)
