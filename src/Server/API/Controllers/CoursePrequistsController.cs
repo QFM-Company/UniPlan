@@ -1,6 +1,7 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
+using Core.Entities;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
@@ -25,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddCoursePrequistAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CoursePrerequisiteResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CoursePrerequisiteResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<CoursePrerequisiteResponse>> AddCoursePrequistAsync(CoursePrerequisiteRequest request)
@@ -37,7 +38,7 @@ namespace API.Controllers
                 if (result != null)
                 {
                     await _logService.LogAsync("Course Prequist added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(result);
+                    return CreatedAtAction(nameof(GetCoursePrequistByIdAsync), new { id = result.PreRequestID }, result);
                 }
 
                 await _logService.LogAsync("Failed to add Course Prequist.", ExternalServicesEnums.LogType.Warning);
@@ -59,21 +60,23 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete/{coursePrequistID}", Name = "DeleteCoursePrequistAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeleteCoursePrequistAsync(int coursePrequistID)
         {
             try
             {
-                bool result = await _coursePrequistsService.DeleteCoursePrequistAsync(coursePrequistID);
-
-                if (result)
+                if (coursePrequistID > 0)
                 {
-                    await _logService.LogAsync($"Course prequist with ID {coursePrequistID} deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(result);
-                }
+                    bool result = await _coursePrequistsService.DeleteCoursePrequistAsync(coursePrequistID);
 
+                    if (result)
+                    {
+                        await _logService.LogAsync($"Course prequist with ID {coursePrequistID} deleted successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok();
+                    }
+                }
                 await _logService.LogAsync($"Failed to delete Course Prequist with ID {coursePrequistID}.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest($"Failed to delete Course prequist with ID {coursePrequistID}.");
             }
@@ -95,14 +98,16 @@ namespace API.Controllers
         {
             try
             {
-                CoursePrerequisiteResponse? response = await _coursePrequistsService.GetCoursePrequistByIDAsync(coursePrequistID);
-
-                if (response != null)
+                if (coursePrequistID > 0)
                 {
-                    await _logService.LogAsync($"Course Prequist with ID {coursePrequistID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
-                }
+                    CoursePrerequisiteResponse? response = await _coursePrequistsService.GetCoursePrequistByIDAsync(coursePrequistID);
 
+                    if (response != null)
+                    {
+                        await _logService.LogAsync($"Course Prequist with ID {coursePrequistID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
+                }
                 await _logService.LogAsync($"Course Prequist with ID {coursePrequistID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Course Prequist with ID {coursePrequistID} was not found.");
             }
@@ -133,7 +138,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync($"No courses Prequists found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No courses Prequists found on page {pageNumber}.");
+                return Ok(new List<CoursePrerequisiteResponse>());
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
