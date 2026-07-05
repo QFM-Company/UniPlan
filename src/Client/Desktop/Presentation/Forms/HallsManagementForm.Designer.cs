@@ -30,19 +30,16 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             panel1 = new Panel();
-            HallsBtn = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            searchControl1 = new Controls.UserControls.SearchControl();
             txtFloorNumber = new TextBox();
             txtBuildingName = new TextBox();
-            cmbHallName = new ComboBox();
-            DV_halls = new DataGridView();
-            col1 = new DataGridViewTextBoxColumn();
-            col2 = new DataGridViewTextBoxColumn();
-            col3 = new DataGridViewTextBoxColumn();
-            col4 = new DataGridViewTextBoxColumn();
-            col5 = new DataGridViewButtonColumn();
             header1 = new Controls.UserControls.Header();
-            uniPlanButton1 = new UniPlan.Controls.CustomButtons.UniPlanButton();
-            uniPlanButton2 = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            DV_halls = new DataGridView();
+            Column1 = new DataGridViewTextBoxColumn();
+            Column2 = new DataGridViewTextBoxColumn();
+            Column3 = new DataGridViewTextBoxColumn();
+            Column4 = new DataGridViewTextBoxColumn();
+            Column5 = new DataGridViewTextBoxColumn();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DV_halls).BeginInit();
             SuspendLayout();
@@ -50,62 +47,49 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(244, 247, 249);
-            panel1.Controls.Add(HallsBtn);
+            panel1.Controls.Add(searchControl1);
             panel1.Controls.Add(txtFloorNumber);
             panel1.Controls.Add(txtBuildingName);
-            panel1.Controls.Add(cmbHallName);
-            panel1.Location = new Point(70, 82);
-            panel1.Margin = new Padding(2);
+            panel1.Location = new Point(105, 123);
             panel1.Name = "panel1";
-            panel1.Size = new Size(780, 61);
+            panel1.Size = new Size(1170, 92);
             panel1.TabIndex = 1;
             // 
-            // HallsBtn
+            // searchControl1
             // 
-            HallsBtn.BackColor = Color.FromArgb(23, 147, 177);
-            HallsBtn.BorderRadius = 15;
-            HallsBtn.FlatAppearance.BorderSize = 0;
-            HallsBtn.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            HallsBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            HallsBtn.FlatStyle = FlatStyle.Flat;
-            HallsBtn.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            HallsBtn.ForeColor = Color.FromArgb(255, 255, 255);
-            HallsBtn.Location = new Point(647, 5);
-            HallsBtn.Margin = new Padding(2);
-            HallsBtn.Name = "HallsBtn";
-            HallsBtn.Size = new Size(120, 45);
-            HallsBtn.TabIndex = 3;
-            HallsBtn.Text = "SAVE";
-            HallsBtn.UseVisualStyleBackColor = false;
+            searchControl1.BackColor = Color.White;
+            searchControl1.Location = new Point(94, 26);
+            searchControl1.Margin = new Padding(0);
+            searchControl1.Name = "searchControl1";
+            searchControl1.Size = new Size(250, 36);
+            searchControl1.TabIndex = 3;
             // 
             // txtFloorNumber
             // 
-            txtFloorNumber.Location = new Point(469, 15);
-            txtFloorNumber.Margin = new Padding(2);
+            txtFloorNumber.ForeColor = Color.SteelBlue;
+            txtFloorNumber.Location = new Point(704, 22);
             txtFloorNumber.Name = "txtFloorNumber";
             txtFloorNumber.PlaceholderText = "Floor Number";
-            txtFloorNumber.Size = new Size(161, 27);
+            txtFloorNumber.Size = new Size(240, 35);
             txtFloorNumber.TabIndex = 2;
             // 
             // txtBuildingName
             // 
-            txtBuildingName.Location = new Point(267, 17);
-            txtBuildingName.Margin = new Padding(2);
+            txtBuildingName.ForeColor = Color.SteelBlue;
+            txtBuildingName.Location = new Point(400, 26);
             txtBuildingName.Name = "txtBuildingName";
             txtBuildingName.PlaceholderText = "Building Name";
-            txtBuildingName.Size = new Size(161, 27);
+            txtBuildingName.Size = new Size(240, 35);
             txtBuildingName.TabIndex = 1;
             // 
-            // cmbHallName
+            // header1
             // 
-            cmbHallName.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbHallName.FormattingEnabled = true;
-            cmbHallName.Location = new Point(44, 15);
-            cmbHallName.Margin = new Padding(2);
-            cmbHallName.Name = "cmbHallName";
-            cmbHallName.Size = new Size(161, 28);
-            cmbHallName.TabIndex = 0;
-            cmbHallName.SelectedIndexChanged += cmbHallName_SelectedIndexChanged;
+            header1.BackColor = Color.White;
+            header1.Location = new Point(-1, 1);
+            header1.Name = "header1";
+            header1.Size = new Size(1377, 98);
+            header1.TabIndex = 3;
+            header1.Title = "UniPlan";
             // 
             // DV_halls
             // 
@@ -121,110 +105,55 @@
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             DV_halls.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            DV_halls.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DV_halls.Columns.AddRange(new DataGridViewColumn[] { col1, col2, col3, col4, col5 });
+            DV_halls.ColumnHeadersHeight = 35;
+            DV_halls.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            DV_halls.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5 });
             DV_halls.EnableHeadersVisualStyles = false;
-            DV_halls.Location = new Point(70, 156);
-            DV_halls.Margin = new Padding(2);
+            DV_halls.Location = new Point(105, 248);
             DV_halls.Name = "DV_halls";
             DV_halls.RowHeadersWidth = 62;
-            DV_halls.Size = new Size(780, 361);
-            DV_halls.TabIndex = 2;
+            DV_halls.Size = new Size(1170, 565);
+            DV_halls.TabIndex = 4;
             // 
-            // col1
+            // Column1
             // 
-            col1.HeaderText = "Hall ID";
-            col1.MinimumWidth = 8;
-            col1.Name = "col1";
+            Column1.HeaderText = "Hall ID";
+            Column1.MinimumWidth = 8;
+            Column1.Name = "Column1";
             // 
-            // col2
+            // Column2
             // 
-            col2.HeaderText = "Hall Name";
-            col2.MinimumWidth = 8;
-            col2.Name = "col2";
+            Column2.HeaderText = "Hall Name";
+            Column2.MinimumWidth = 8;
+            Column2.Name = "Column2";
             // 
-            // col3
+            // Column3
             // 
-            col3.HeaderText = "Building";
-            col3.MinimumWidth = 8;
-            col3.Name = "col3";
+            Column3.HeaderText = "Building";
+            Column3.MinimumWidth = 8;
+            Column3.Name = "Column3";
             // 
-            // col4
+            // Column4
             // 
-            col4.HeaderText = "Floor";
-            col4.MinimumWidth = 8;
-            col4.Name = "col4";
+            Column4.HeaderText = "Floor";
+            Column4.MinimumWidth = 8;
+            Column4.Name = "Column4";
             // 
-            // col5
+            // Column5
             // 
-            col5.HeaderText = "Action";
-            col5.MinimumWidth = 8;
-            col5.Name = "col5";
-            // 
-            // header1
-            // 
-            header1.BackColor = Color.White;
-            header1.Location = new Point(1, 0);
-            header1.Margin = new Padding(1);
-            header1.Name = "header1";
-            header1.Size = new Size(1400, 68);
-            header1.TabIndex = 3;
-            header1.Title = "UniPlan";
-            // 
-            // uniPlanButton1
-            // 
-            uniPlanButton1.BackColor = Color.FromArgb(23, 147, 177);
-            uniPlanButton1.BorderRadius = 15;
-            uniPlanButton1.FlatAppearance.BorderSize = 0;
-            uniPlanButton1.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton1.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton1.FlatStyle = FlatStyle.Flat;
-            uniPlanButton1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton1.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton1.Location = new Point(176, 521);
-            uniPlanButton1.Margin = new Padding(2);
-            uniPlanButton1.Name = "uniPlanButton1";
-            uniPlanButton1.Size = new Size(99, 36);
-            uniPlanButton1.TabIndex = 4;
-            uniPlanButton1.Tag = "+";
-            uniPlanButton1.Text = "->";
-            uniPlanButton1.UseVisualStyleBackColor = false;
-            uniPlanButton1.Visible = false;
-            uniPlanButton1.Click += PageNavigation_Click;
-            // 
-            // uniPlanButton2
-            // 
-            uniPlanButton2.BackColor = Color.FromArgb(23, 147, 177);
-            uniPlanButton2.BorderRadius = 15;
-            uniPlanButton2.FlatAppearance.BorderSize = 0;
-            uniPlanButton2.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton2.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton2.FlatStyle = FlatStyle.Flat;
-            uniPlanButton2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton2.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton2.Location = new Point(70, 521);
-            uniPlanButton2.Margin = new Padding(2);
-            uniPlanButton2.Name = "uniPlanButton2";
-            uniPlanButton2.Size = new Size(99, 36);
-            uniPlanButton2.TabIndex = 5;
-            uniPlanButton2.Tag = "-";
-            uniPlanButton2.Text = "<-";
-            uniPlanButton2.UseVisualStyleBackColor = false;
-            uniPlanButton2.Visible = false;
-            uniPlanButton2.Click += PageNavigation_Click;
+            Column5.HeaderText = "Action";
+            Column5.MinimumWidth = 8;
+            Column5.Name = "Column5";
             // 
             // HallsManagement
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
-            ClientSize = new Size(919, 563);
-            Controls.Add(uniPlanButton2);
-            Controls.Add(uniPlanButton1);
-            Controls.Add(header1);
+            ClientSize = new Size(1378, 844);
             Controls.Add(DV_halls);
+            Controls.Add(header1);
             Controls.Add(panel1);
-            Margin = new Padding(2);
             Name = "HallsManagement";
             StartPosition = FormStartPosition.CenterScreen;
             Load += HallsManagement_Load;
@@ -236,18 +165,18 @@
 
         #endregion
         private Panel panel1;
-        private ComboBox cmbHallName;
         private TextBox txtFloorNumber;
         private TextBox txtBuildingName;
-        private DataGridView DV_halls;
-        private DataGridViewTextBoxColumn col1;
-        private DataGridViewTextBoxColumn col2;
-        private DataGridViewTextBoxColumn col3;
-        private DataGridViewTextBoxColumn col4;
-        private DataGridViewButtonColumn col5;
         private UniPlan.Controls.CustomButtons.UniPlanButton HallsBtn;
         private Controls.UserControls.Header header1;
         private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton1;
         private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton2;
+        private Controls.UserControls.SearchControl searchControl1;
+        private DataGridView DV_halls;
+        private DataGridViewTextBoxColumn Column1;
+        private DataGridViewTextBoxColumn Column2;
+        private DataGridViewTextBoxColumn Column3;
+        private DataGridViewTextBoxColumn Column4;
+        private DataGridViewTextBoxColumn Column5;
     }
 }
