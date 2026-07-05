@@ -55,8 +55,14 @@ namespace DataAccess.Repositories
 
                 command.Parameters.AddWithValue
                 (
-                    "@SlotID",
-                    courseSession.TimeSlot?.SlotID
+                    "@StartTime",
+                    courseSession.StartTime
+                );
+
+                command.Parameters.AddWithValue
+                (
+                    "@EndTime",
+                    courseSession.EndTime
                 );
 
                 command.Parameters.AddWithValue
@@ -122,8 +128,14 @@ namespace DataAccess.Repositories
 
                 command.Parameters.AddWithValue
                 (
-                    "@SlotID",
-                    courseSession.TimeSlot?.SlotID
+                    "@StartTime", 
+                    courseSession.StartTime
+                );
+
+                command.Parameters.AddWithValue
+                (
+                    "@EndTime", 
+                    courseSession.EndTime
                 );
 
                 command.Parameters.AddWithValue

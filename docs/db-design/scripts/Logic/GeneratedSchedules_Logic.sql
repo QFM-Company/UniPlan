@@ -1,4 +1,16 @@
-USE [UniPlan];
+﻿USE [UniPlan];
+GO
+
+IF OBJECT_ID('dbo.SP_GeneratedSchedules_Insert', 'P') IS NOT NULL
+BEGIN
+    DROP PROCEDURE dbo.SP_GeneratedSchedules_Insert;
+END
+GO
+
+IF OBJECT_ID('dbo.SP_CourseSessions_Insert', 'P') IS NOT NULL
+BEGIN
+    DROP PROCEDURE dbo.SP_CourseSessions_Insert;
+END
 GO
 
 IF EXISTS (SELECT * FROM sys.types WHERE name = 'IdListType')
@@ -9,7 +21,7 @@ GO
 
 CREATE TYPE IdListType AS TABLE
 (
-    OfferingID INT
+    ID INT
 )
 GO
 
@@ -31,7 +43,7 @@ BEGIN
             SET @ScheduleID = CONVERT(int, SCOPE_IDENTITY());
 
             INSERT INTO [dbo].[ScheduleDetails] ([ScheduleID] ,[OfferingID])
-            SELECT DISTINCT @ScheduleID, OfferingID FROM @OfferingIDs;
+            SELECT DISTINCT @ScheduleID, ID FROM @OfferingIDs;
             
         COMMIT;
         SET @Result = 1;     

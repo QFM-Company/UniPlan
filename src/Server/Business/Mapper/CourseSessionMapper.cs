@@ -7,22 +7,19 @@ namespace Business.Mapper
 {
     public static class CourseSessionMapper
     {
-        public static CourseSession ToCourseSession(this CreateCourseSessionRequest request, int courseSessionID = 0)
+        public static CourseSession ToCourseSession(this CreateCourseSessionRequest request)
         {
-            TimeSlot timeSlot = new TimeSlot();
-            timeSlot.SlotID = request.TimeSlotID;
-            CourseOffering courseOffering = new CourseOffering();
-            courseOffering.OfferingID = request.CourseOfferingID;
-            Hall hall = new Hall();
-            hall.HallID = request.HallID;
+            CourseOffering courseOffering = new CourseOffering(request.CourseOfferingID);
+            Hall hall = new Hall(request.HallID);
 
             int adminID = request.CreatedByAdminID;
 
             return new CourseSession(
-                courseSessionID,
+                -1,
                 courseOffering,
                 hall,
-                timeSlot,
+                request.PeriodData.StartTime,
+                request.PeriodData.EndTime,
                 adminID
             );
         }
@@ -33,8 +30,8 @@ namespace Business.Mapper
             courseSession.Hall.HallID = request.HallID;
             courseSession.CourseOffering = new CourseOffering();
             courseSession.CourseOffering.OfferingID = request.CourseOfferingID;
-            courseSession.TimeSlot = new TimeSlot();
-            courseSession.TimeSlot.SlotID = request.TimeSlotID;
+            courseSession.StartTime = request.PeriodData.StartTime;
+            courseSession.EndTime = request.PeriodData.EndTime;
         }
 
         public static CourseSessionResponse ToResponse(this CourseSession courseSession)
@@ -43,7 +40,8 @@ namespace Business.Mapper
                  courseSession.SessionID,
                  courseSession.CourseOffering!.ToResponse(),
                  courseSession.Hall!.ToResponse(),
-                 courseSession.TimeSlot!.ToResponse(),
+                 courseSession.StartTime,
+                 courseSession.EndTime,
                  courseSession.CreatedByAdminID
             );
         }

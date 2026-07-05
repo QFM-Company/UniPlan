@@ -8,16 +8,19 @@
 
         public HallResponse Hall { get; set; }
 
-        public TimeSlotResponse? TimeSlot { get; set; }
+        public TimeSpan StartTime { get; set; }
+
+        public TimeSpan EndTime { get; set; }
 
         public int? CreatedByAdminID { get; set; }
 
-        public CourseSessionResponse(int sessionID, CourseOfferingResponse courseOffering, HallResponse hall, TimeSlotResponse? timeSlot, int createdByAdminID)
+        public CourseSessionResponse(int sessionID, CourseOfferingResponse courseOffering, HallResponse hall, TimeSpan startTime, TimeSpan endTime, int? createdByAdminID)
         {
             SessionID = sessionID;
             CourseOffering = courseOffering;
             Hall = hall;
-            TimeSlot = timeSlot;
+            StartTime = startTime;
+            EndTime = endTime;
             CreatedByAdminID = createdByAdminID;
         }
     }

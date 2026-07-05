@@ -1,4 +1,4 @@
-USE UniPlan;
+﻿USE UniPlan;
 GO
 
 CREATE OR ALTER PROCEDURE SP_Lectures_Insert
@@ -87,7 +87,7 @@ GO
 
 CREATE OR ALTER VIEW Lectures_view
 AS
-SELECT C.CourseID, C.CourseName, C.CreditHours, C.MajorID 
+SELECT C.*
 ,L.LectureID, L.DurationValue, L.LectureType
 FROM Lectures L
 INNER JOIN Courses C ON L.CourseID = C.CourseID

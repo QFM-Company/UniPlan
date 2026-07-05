@@ -14,20 +14,18 @@ namespace Business.DTOs.Requests.Create
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int HallID { get; set; }
 
-
-        [Required<int>("معرف الفترة الزمنية مطلوب")]
-        [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
-        public int TimeSlotID { get; set; }
+        [Required<PersonRequest>("بيانات الفترة الزمنية مطلوبة")]
+        public PeriodRequest PeriodData { get; set; }
 
         [Required<int>("معرف الادمن مطلوب")]
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int CreatedByAdminID { get; set; }
 
-        public CreateCourseSessionRequest(int courseOfferingID, int hallID, int timeSlotID, int createdByAdminID)
+        public CreateCourseSessionRequest(int courseOfferingID, int hallID, PeriodRequest periodRequest, int createdByAdminID)
         {
             CourseOfferingID = courseOfferingID;
             HallID = hallID;
-            TimeSlotID = timeSlotID;
+            PeriodData = periodRequest;
             CreatedByAdminID = createdByAdminID;
         }
 

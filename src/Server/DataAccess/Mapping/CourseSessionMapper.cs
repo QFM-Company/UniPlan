@@ -12,12 +12,12 @@ namespace DataAccess.Mapping
 
             CourseOffering courseOffering = reader.ToCourseOffering();
 
-            TimeSlot timeSlot = reader.ToTimeSlot();
-
+            reader.ReadTimeSpan("StartTime", out TimeSpan startTime);
+            reader.ReadTimeSpan("EndTime", out TimeSpan endTime);
             reader.ReadInt("AdminID", out int adminID, -1);
             reader.ReadInt("SessionID", out int courseSessionID, -1);
 
-            return new CourseSession(courseSessionID, courseOffering, hall, timeSlot, adminID);
+            return new CourseSession(courseSessionID, courseOffering, hall, startTime, endTime, adminID);
         }
     }
 }
