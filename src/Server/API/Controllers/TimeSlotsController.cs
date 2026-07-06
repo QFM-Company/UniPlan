@@ -2,8 +2,10 @@
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
@@ -23,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddTimeSlotAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TimeSlotResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<TimeSlotResponse>> AddTimeSlotAsync(TimeSlotRequest request)
@@ -35,11 +37,20 @@ namespace API.Controllers
                 if (res != null)
                 {
                     await _logService.LogAsync("time slot added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    return CreatedAtRoute("GetTimeSlotByIDAsync", new { timeSlotID = res.SlotID} , res);
                 }
 
                 await _logService.LogAsync("Failed to add time slot.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add time slot.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -57,16 +68,27 @@ namespace API.Controllers
         {
             try
             {
-                var response = await _timeSlotsSevice.UpdateTimeSlotAsync(timeSlotID, request);
-
-                if (response != null)
+                if (timeSlotID > 0)
                 {
-                    await _logService.LogAsync("time slot updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
-                }
+                    var response = await _timeSlotsSevice.UpdateTimeSlotAsync(timeSlotID, request);
 
+                    if (response != null)
+                    {
+                        await _logService.LogAsync("time slot updated successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
+                }
                 await _logService.LogAsync("Failed to update time slot.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to update time slot.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -77,23 +99,29 @@ namespace API.Controllers
 
 
         [HttpDelete("delete/{timeSlotID}", Name = "DeleteTimeSlotAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeleteTimeSlotAsync(int timeSlotID)
         {
             try
             {
-                bool res = await _timeSlotsSevice.DeleteTimeSlotAsync(timeSlotID);
-
-                if (res)
+                if (timeSlotID > 0)
                 {
-                    await _logService.LogAsync("time slot deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
-                }
+                    bool res = await _timeSlotsSevice.DeleteTimeSlotAsync(timeSlotID);
 
+                    if (res)
+                    {
+                        await _logService.LogAsync("time slot deleted successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(res);
+                    }
+                }
                 await _logService.LogAsync("Failed to delete time slot.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete time slot.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -111,28 +139,36 @@ namespace API.Controllers
         {
             try
             {
-                TimeSlotResponse? response = await _timeSlotsSevice.GetTimeSlotByIdAsync(timeSlotID);
-
-                if (response != null)
+                if (timeSlotID > 0)
                 {
-                    await _logService.LogAsync($"time slot with ID {timeSlotID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    TimeSlotResponse? response = await _timeSlotsSevice.GetTimeSlotByIdAsync(timeSlotID);
+
+                    if (response != null)
+                    {
+                        await _logService.LogAsync($"time slot with ID {timeSlotID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
                 }
+                else return BadRequest("Id Should be more than 0");
 
                 await _logService.LogAsync($"time slot with ID {timeSlotID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"time slot with ID {timeSlotID} was not found.");
+            }        
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
+
         }
 
 
         [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedTimeSlotsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TimeSlotResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<IEnumerable<TimeSlotResponse>?>> GetPagedTimeSlotsAsync(int pageNumber, int pageSize)
         {
@@ -147,7 +183,11 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync($"No time slots found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No time slots found on page {pageNumber}.");
+                return Ok(new List<TimeSlotResponse>());
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
