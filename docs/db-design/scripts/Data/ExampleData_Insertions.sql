@@ -1,195 +1,217 @@
-﻿-- Add Data For Trying
-
-use [UniPlan];
+﻿use [UniPlan];
 go
 
-
-
--- اضافة الفصل العام للبرنامج
-if not Exists(select 1 from AcademicTerms where TermType = 2 And TermYear = '2026')
+-- إضافة الفصل العام للبرنامج (إن لم يكن موجوداً)
+if not exists (select 1 from AcademicTerms where TermType = 2 and TermYear = '2026')
 begin
-insert into AcademicTerms(TermType , TermYear)
-values (2 , '2026');
-End
+    insert into AcademicTerms (TermType, TermYear)
+    values (2, '2026');
+end
+go
 
--- مادة قواعد 2
--- اولا يجب اضافة الشعب و الفئات
+-- ==================== قواعد معطيات (2) ====================
+-- نظري - شعبة 1
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    1,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 1 and CourseID = (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')),
+    (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 3'));
 
-insert into CourseOfferings(SectionNumber , TermID , LectureID , CourseID)
-Values 
-(
-1 , 
-(select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
-(select LectureID from Lectures where LectureType = 1 And CourseID = (select CourseID from Courses where CourseName = 'قواعد معطيات (2)')),
-(select CourseID from Courses where CourseName = 'قواعد معطيات (2)')
-)
-,
-(
-2 , 
-(select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
-(select LectureID from Lectures where LectureType = 1 And CourseID = (select CourseID from Courses where CourseName = 'قواعد معطيات (2)')),
-(select CourseID from Courses where CourseName = 'قواعد معطيات (2)')
-)
-,
-(
-1 , 
-(select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
-(select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'قواعد معطيات (2)')),
-(select CourseID from Courses where CourseName = 'قواعد معطيات (2)')
-)
-,
-(
-2 , 
-(select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
-(select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'قواعد معطيات (2)')),
-(select CourseID from Courses where CourseName = 'قواعد معطيات (2)')
-)
-,
-(
-3 , 
-(select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
-(select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'قواعد معطيات (2)')),
-(select CourseID from Courses where CourseName = 'قواعد معطيات (2)')
-)
-,
-(
-4 , 
-(select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
-(select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'قواعد معطيات (2)')),
-(select CourseID from Courses where CourseName = 'قواعد معطيات (2)')
-)
+-- نظري - شعبة 2
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    2,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 1 and CourseID = (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')),
+    (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(),  (select HallID from Halls where HallName = 'القاعة 1'));
+
+-- عملي - شعبة 1
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    1,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')),
+    (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(),  (select HallID from Halls where HallName = 'القاعة 15'));
+
+-- عملي - شعبة 2
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    2,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')),
+    (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'مخبر 2'));
+
+-- عملي - شعبة 3
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    3,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')),
+    (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(),  (select HallID from Halls where HallName = 'القاعة 15'));
+
+-- عملي - شعبة 4
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    4,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')),
+    (select CourseID from Courses where CourseName = N'قواعد معطيات (2)')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(),  (select HallID from Halls where HallName = 'مخبر 2'));
+go
 
 
+-- ==================== نظم التشغيل ====================
+-- نظري - شعبة 1
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    1,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 1 and CourseID = (select CourseID from Courses where CourseName = N'نظم التشغيل')),
+    (select CourseID from Courses where CourseName = N'نظم التشغيل')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(),  (select HallID from Halls where HallName = 'القاعة 401'));
 
+-- عملي - شعبة 1
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    1,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم التشغيل')),
+    (select CourseID from Courses where CourseName = N'نظم التشغيل')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(),  (select HallID from Halls where HallName = 'القاعة 10'));
+
+-- عملي - شعبة 2
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    2,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم التشغيل')),
+    (select CourseID from Courses where CourseName = N'نظم التشغيل')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 10'));
+
+-- عملي - شعبة 3
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    3,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم التشغيل')),
+    (select CourseID from Courses where CourseName = N'نظم التشغيل')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 10'));
+
+-- عملي - شعبة 4
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    4,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم التشغيل')),
+    (select CourseID from Courses where CourseName = N'نظم التشغيل')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 10'));
+go
+
+
+-- ==================== نظم المعلومات الإدارية ====================
+-- نظري - شعبة 1
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    1,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 1 and CourseID = (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')),
+    (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 402'));
+
+-- نظري - شعبة 2
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    2,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 1 and CourseID = (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')),
+    (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 18'));
+
+-- عملي - شعبة 1
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    1,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')),
+    (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'مخبر 4'));
+
+-- عملي - شعبة 2
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    2,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')),
+    (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'مخبر 2'));
+
+-- عملي - شعبة 3
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    3,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')),
+    (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'مخبر 2'));
+
+-- عملي - شعبة 4
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    4,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 2 and CourseID = (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')),
+    (select CourseID from Courses where CourseName = N'نظم المعلومات الإدارية')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'مخبر 2'));
+go
+
+
+-- ==================== نظرية الحوسبة ====================
+-- نظري - شعبة 1
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    1,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 1 and CourseID = (select CourseID from Courses where CourseName = N'نظرية الحوسبة')),
+    (select CourseID from Courses where CourseName = N'نظرية الحوسبة')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 2'));
+
+-- نظري - شعبة 2
+insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
+values (
+    2,
+    (select TermID from AcademicTerms where TermYear = 2026 and TermType = 2),
+    (select LectureID from Lectures where LectureType = 1 and CourseID = (select CourseID from Courses where CourseName = N'نظرية الحوسبة')),
+    (select CourseID from Courses where CourseName = N'نظرية الحوسبة')
+);
+insert into CourseSessions (OfferingID, HallID) values (SCOPE_IDENTITY(), (select HallID from Halls where HallName = 'القاعة 2'));
 go
 
 
 
 
-
--- مادة نظم التشغيل
--- الشعب و الفئات اولا
-
-insert into CourseOfferings(SectionNumber , TermID , LectureID , CourseID)
-Values 
-(
- 1,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 1 And CourseID = (select CourseID from Courses where CourseName = 'نظم التشغيل')),
- (select CourseID from Courses where CourseName = 'نظم التشغيل')
-)
-,
-(
- 1,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم التشغيل')),
- (select CourseID from Courses where CourseName = 'نظم التشغيل')
-)
-,
-(
- 2,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم التشغيل')),
- (select CourseID from Courses where CourseName = 'نظم التشغيل')
-)
-
-,
-(
- 3,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم التشغيل')),
- (select CourseID from Courses where CourseName = 'نظم التشغيل')
-)
-,
-(
- 4,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم التشغيل')),
- (select CourseID from Courses where CourseName = 'نظم التشغيل')
-)
-
-
-
-go
-
-
-
-
-
--- مادة نظم ادارية
--- الشعب و الفئات اولا
-
-insert into CourseOfferings(SectionNumber , TermID , LectureID , CourseID)
-Values 
-(
- 1,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 1 And CourseID = (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')),
- (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')
-)
-,
-(
- 2,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 1 And CourseID = (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')),
- (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')
-)
-,
-(
- 1,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')),
- (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')
-)
-,
-(
- 2,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')),
- (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')
-)
-,
-(
- 3,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')),
- (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')
-)
-,
-(
- 4,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 2 And CourseID = (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')),
- (select CourseID from Courses where CourseName = 'نظم المعلومات الإدارية')
-)
-
-go
-
-
-
-
-
--- مادة نظرية الحوسبة
--- الشعب و اولا
-
-insert into CourseOfferings(SectionNumber , TermID , LectureID , CourseID)
-Values 
-(
- 1,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 1 And CourseID = (select CourseID from Courses where CourseName = 'نظرية الحوسبة')),
- (select CourseID from Courses where CourseName = 'نظرية الحوسبة')
-)
-,
-(
- 2,
- (select TermID from AcademicTerms where TermYear = 2026 And TermType = 2),
- (select LectureID from Lectures where LectureType = 1 And CourseID = (select CourseID from Courses where CourseName = 'نظرية الحوسبة')),
- (select CourseID from Courses where CourseName = 'نظرية الحوسبة')
-)
-
-
-
-GO
-
-select * from CourseOfferings
+select * from CourseOfferings;
+select * from CourseSessions;
