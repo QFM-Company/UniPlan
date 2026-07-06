@@ -1,9 +1,11 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
@@ -23,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddPeriodAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PeriodResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<PeriodResponse>> AddPeriodAsync(PeriodRequest request)
@@ -35,11 +37,20 @@ namespace API.Controllers
                 if (res != null)
                 {
                     await _logService.LogAsync("Period added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    return CreatedAtRoute("GetPeriodByIDAsync", new { periodID = res.PeriodID} , res);
                 }
 
                 await _logService.LogAsync("Failed to add period.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add period.");
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -50,21 +61,23 @@ namespace API.Controllers
 
 
         [HttpDelete("delete/{periodID}", Name = "DeletePeriodAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeletePeriodAsync(int periodID)
         {
             try
             {
-                bool res = await _periodService.DeletePeriodAsync(periodID);
-
-                if (res)
+                if (periodID > 0)
                 {
-                    await _logService.LogAsync("period deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
-                }
+                    bool res = await _periodService.DeletePeriodAsync(periodID);
 
+                    if (res)
+                    {
+                        await _logService.LogAsync("period deleted successfully.", ExternalServicesEnums.LogType.Info);
+                        return NoContent();
+                    }
+                }
                 await _logService.LogAsync("Failed to delete period.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete period.");
             }
@@ -84,14 +97,16 @@ namespace API.Controllers
         {
             try
             {
-                PeriodResponse? response = await _periodService.GetPeriodByIdAsync(periodID);
-
-                if (response != null)
+                if (periodID > 0)
                 {
-                    await _logService.LogAsync($"period with ID {periodID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
-                }
+                    PeriodResponse? response = await _periodService.GetPeriodByIdAsync(periodID);
 
+                    if (response != null)
+                    {
+                        await _logService.LogAsync($"period with ID {periodID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
+                }
                 await _logService.LogAsync($"period with ID {periodID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"period with ID {periodID} was not found.");
             }
