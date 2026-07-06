@@ -21,6 +21,18 @@ BEGIN
         ;THROW 51001, 'Course prerequisite validation failed', 1;
     END
 
+	If not (Exists(select 1 from Courses where CourseID = @CourseID) And Exists(select 1 from Courses where CourseID = @PrerequisiteCourseID))
+	Begin
+	    ;THROW 50903, 'Course Dose not Exist', 1;
+	End
+
+	If(Exists(select 1 from CoursePrerequisites where 
+	(CourseID = @CourseID And PrerequisiteCourseID = @PrerequisiteCourseID) or
+	 CourseID = @PrerequisiteCourseID And PrerequisiteCourseID = @CourseID))
+	Begin
+	    ;THROW 51002, 'Course Prequist Already Exists', 1;
+	End
+
     BEGIN TRY
         INSERT INTO [dbo].[CoursePrerequisites]
         (
@@ -56,6 +68,17 @@ CREATE OR ALTER PROCEDURE SP_CoursePrerequisites_Delete
 AS
 BEGIN
     SET NOCOUNT ON;
+
+	IF @PrerequisiteID <= 0
+    BEGIN
+        ;THROW 51001, 'Course prerequisite validation failed', 1;
+    END
+
+	IF not EXISTS(select 1 from CoursePrerequisites where PrerequisiteID = @PrerequisiteID)
+    BEGIN
+        ;THROW 51003, 'Course prerequisite Not Found', 1;
+    END
+
 
     BEGIN TRY
         DELETE FROM [dbo].[CoursePrerequisites]
@@ -138,6 +161,17 @@ CREATE OR ALTER PROCEDURE SP_CoursePrerequisites_GetById
 AS
 BEGIN
     SET NOCOUNT ON;
+
+	IF @PrerequisiteID <= 0
+    BEGIN
+        ;THROW 51001, 'Course prerequisite validation failed', 1;
+    END
+
+	IF not EXISTS(select 1 from CoursePrerequisites where PrerequisiteID = @PrerequisiteID)
+    BEGIN
+        ;THROW 51003, 'Course prerequisite Not Found', 1;
+    END
+
 
     BEGIN TRY
         SELECT * from VW_PrequistCourses

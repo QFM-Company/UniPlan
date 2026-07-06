@@ -37,7 +37,7 @@ namespace API.Controllers
                 if (result != null)
                 {
                     await _logService.LogAsync("Course added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtAction(nameof(GetCourseByIdAsync), new { id = result.CourseID }, result);
+                    return CreatedAtRoute("GetCourseByIdAsync", new { courseID = result.CourseID }, result);
                 }
 
                 await _logService.LogAsync("Failed to add Course.", ExternalServicesEnums.LogType.Warning);
@@ -110,7 +110,7 @@ namespace API.Controllers
                     if (result)
                     {
                         await _logService.LogAsync($"Course with ID {courseID} deleted successfully.", ExternalServicesEnums.LogType.Info);
-                        return Ok();
+                        return NoContent();
                     }
                 }
                 await _logService.LogAsync($"Failed to delete Course with ID {courseID}.", ExternalServicesEnums.LogType.Warning);

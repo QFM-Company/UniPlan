@@ -38,7 +38,7 @@ namespace API.Controllers
                 if (result != null)
                 {
                     await _logService.LogAsync("Course Prequist added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtAction(nameof(GetCoursePrequistByIdAsync), new { id = result.PreRequestID }, result);
+                    return CreatedAtRoute("GetCoursePrequistByIdAsync", new { coursePrequistID = result.PreRequestID }, result);
                 }
 
                 await _logService.LogAsync("Failed to add Course Prequist.", ExternalServicesEnums.LogType.Warning);
@@ -74,7 +74,7 @@ namespace API.Controllers
                     if (result)
                     {
                         await _logService.LogAsync($"Course prequist with ID {coursePrequistID} deleted successfully.", ExternalServicesEnums.LogType.Info);
-                        return Ok();
+                        return NoContent();
                     }
                 }
                 await _logService.LogAsync($"Failed to delete Course Prequist with ID {coursePrequistID}.", ExternalServicesEnums.LogType.Warning);
