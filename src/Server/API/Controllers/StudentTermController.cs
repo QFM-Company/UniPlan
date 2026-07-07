@@ -2,7 +2,9 @@
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -24,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddStudentTermAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentTermResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(StudentTermResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<StudentTermResponse?>> AddStudentTermAsync(StudentTermRequest request)
@@ -36,7 +38,7 @@ namespace API.Controllers
                 if (response != null)
                 {
                     await _logService.LogAsync("Student Term added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return CreatedAtRoute("GetStudentTermByIDAsync", new { studentTermID = response.RegistrationID}, response);
                 }
 
                 await _logService.LogAsync("Failed to add Student Term.", ExternalServicesEnums.LogType.Warning);
@@ -45,6 +47,11 @@ namespace API.Controllers
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -56,17 +63,23 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentTermResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<ActionResult<StudentTermResponse>> GetStudentTermByIDAsync(int studentTermID)
         {
             try
             {
-                StudentTermResponse? response = await _studentTermService.GetStudentTermByIDAsync(studentTermID);
-
-                if (response != null)
+                if (studentTermID > 0)
                 {
-                    await _logService.LogAsync($"Student Term with ID {studentTermID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    StudentTermResponse? response = await _studentTermService.GetStudentTermByIDAsync(studentTermID);
+
+                    if (response != null)
+                    {
+                        await _logService.LogAsync($"Student Term with ID {studentTermID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
                 }
+                else return BadRequest("Id Should be more than 0");
+
 
                 await _logService.LogAsync($"Student Term with ID {studentTermID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Student Term with ID {studentTermID} was not found.");
@@ -81,24 +94,28 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{StudentID}/", Name = "GetStudentTermsByStudenIDAsync")]
+        [HttpGet("student/{studentID}/", Name = "GetStudentTermsByStudenIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentTermResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<ActionResult<IEnumerable<StudentTermResponse>?>> GetStudentTermsByStudenIDAsync(int studentID)
         {
             try
             {
-                IEnumerable<StudentTermResponse>? responses = await _studentTermService.GetStudentTermsByStudentIDAsync(studentID);
-
-                if (responses != null && responses.Any())
+                if (studentID > 0)
                 {
-                    await _logService.LogAsync($"Student Terms fetched successfully for studentID {studentID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    IEnumerable<StudentTermResponse>? responses = await _studentTermService.GetStudentTermsByStudentIDAsync(studentID);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"Student Terms fetched successfully for studentID {studentID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
                 }
+                else return BadRequest("Id Should be more than 0");
 
                 await _logService.LogAsync($"No student Terms found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No student Terms found on page.");
+                return Ok(new List<StudentTermResponse>());
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
