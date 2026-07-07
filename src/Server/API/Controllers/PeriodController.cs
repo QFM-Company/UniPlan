@@ -107,6 +107,8 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
+                else return BadRequest("Id Should be more than 0");
+
                 await _logService.LogAsync($"period with ID {periodID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"period with ID {periodID} was not found.");
             }

@@ -108,6 +108,8 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
+                else return BadRequest("Id Should be more than 0");
+
                 await _logService.LogAsync($"Course Prequist with ID {coursePrequistID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Course Prequist with ID {coursePrequistID} was not found.");
             }

@@ -144,6 +144,8 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
+                else return BadRequest("Id Should be more than 0");
+
                 await _logService.LogAsync($"Course with ID {courseID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Course with ID {courseID} was not found.");
             }

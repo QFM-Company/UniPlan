@@ -17,9 +17,9 @@ namespace Business.DTOs.Requests.Create
         public int StudentID { get; set; }
 
 
-        public CreateStudentCourseRequest(int enrolmentID, bool isPassed, int studentID)
+        public CreateStudentCourseRequest(int courseID, bool isPassed, int studentID)
         {
-            CourseID = enrolmentID;
+            CourseID = courseID;
             IsPassed = isPassed;
             StudentID = studentID;
         }
