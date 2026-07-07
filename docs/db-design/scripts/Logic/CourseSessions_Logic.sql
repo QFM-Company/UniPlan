@@ -1,6 +1,43 @@
 ﻿USE [UniPlan];
 GO
 
+
+DROP PROCEDURE IF EXISTS SP_CourseSessions_GetByWishListID;
+GO
+
+DROP TYPE IF EXISTS DaysListType;
+GO
+
+CREATE TYPE DaysListType AS TABLE
+(
+    Day INT
+)
+GO
+
+CREATE OR ALTER PROCEDURE SP_CourseSessions_GetByWishListID
+    @Days DaysListType READONLY,
+    @WishListId int
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+
+        SELECT S.* FROM WishListItems I
+        JOIN CourseOfferings O ON O.CourseID = I.CourseID
+        JOIN CourseSessions_view S ON S.OfferingID = O.OfferingID
+        WHERE I.WishListID = @WishListId AND S.DayNum IN (SELECT Day FROM @Days); 
+        
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+
+        -- CHANGED: THROW keeps the original error details.
+        THROW;
+    END CATCH
+END;
+GO
+
 /*=========================================================
 INSERT
 =========================================================*/
