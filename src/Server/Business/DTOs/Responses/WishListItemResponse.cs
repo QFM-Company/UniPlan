@@ -4,7 +4,7 @@
     {
         public int ItemID { get; set; }
 
-        public WishListResponse? WishList { get; set; }
+        public int WishListID { get; set; }
 
         public CourseResponse? Course { get; set; }
 
@@ -12,14 +12,14 @@
         public WishListItemResponse()
         {
             ItemID = -1;
-            WishList = null;
+            WishListID = -1;
             Course = null;
         }
 
-        public WishListItemResponse(int itemID, WishListResponse? wishList, CourseResponse? course)
+        public WishListItemResponse(int itemID, int wishListID, CourseResponse? course)
         {
             ItemID = itemID;
-            WishList = wishList;
+            WishListID = wishListID;
             Course = course;
         }
 
