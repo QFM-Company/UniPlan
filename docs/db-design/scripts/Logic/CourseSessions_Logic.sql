@@ -218,9 +218,27 @@ VIEWS
 CREATE OR ALTER VIEW CourseSessions_view
 AS
 SELECT DISTINCT 
-        Cs.*,
-        CO.*,
-        H.*,
+        Cs.SessionID,
+		Cs.CreatedByAdminID As SCreatedByAdminID,
+        CO.CourseCode,
+		CO.CourseID,
+		CO.CourseName,
+		CO.CreatedByAdminID As CCreatedByAdminID,
+		CO.CreditHours,
+		CO.DurationValue,
+		CO.LectureID,
+		CO.OfferingID,
+		CO.LectureType,
+		CO.SectionNumber,
+		CO.TermID,
+		CO.TermType,
+		CO.TermYear,
+        TS.DayNum,
+		H.Floor,
+		H.HallID,
+		H.HallName,
+        H.Building,
+		H.CreatedByAdminID As HCreatedByAdminID,
         StartTime = MIN(P.StartTime) OVER(PARTITION BY CS.SessionID),
         EndTime = MAX(P.EndTime) OVER(PARTITION BY CS.SessionID)
     FROM dbo.CourseSessions CS
@@ -254,14 +272,10 @@ BEGIN
 
     BEGIN TRY
 
-        SELECT COUNT(*) AS TotalRows
-        FROM dbo.CourseSessions;
-
         SELECT * FROM CourseSessions_view
         ORDER BY SessionID
         OFFSET (@PageNumber - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY;
-
     END TRY
     BEGIN CATCH
         THROW;

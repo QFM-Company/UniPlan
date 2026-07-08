@@ -223,28 +223,27 @@ namespace DataAccess.Repositories
 
             try
             {
-                using SqlConnection connection =
-                    new SqlConnection(_dBHelpers.ConnectionString);
-
-                using SqlCommand command =
-                    new SqlCommand("SP_CourseSessions_GetById", connection);
-
-                command.CommandType = CommandType.StoredProcedure;
-
-                command.Parameters.AddWithValue
-                (
-                    "@SessionID",
-                    sessionID
-                );
-
-                await connection.OpenAsync();
-
-                using SqlDataReader reader =
-                    await command.ExecuteReaderAsync();
-
-                if (reader != null && await reader.ReadAsync())
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
+                using (SqlCommand command = new SqlCommand("SP_CourseSessions_GetById", connection))
                 {
-                    courseSession = reader.ToCourseSession();
+
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue
+                    (
+                        "@SessionID",
+                        sessionID
+                    );
+
+                    await connection.OpenAsync();
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (reader != null && await reader.ReadAsync())
+                        {
+                            courseSession = reader.ToCourseSession();
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -255,6 +254,7 @@ namespace DataAccess.Repositories
 
             return courseSession;
         }
+
 
         public async Task<IEnumerable<CourseSession?>?>
             GetCourseSessionsPagedAsync
@@ -267,44 +267,35 @@ namespace DataAccess.Repositories
 
             try
             {
-                using SqlConnection connection =
-                    new SqlConnection(_dBHelpers.ConnectionString);
-
-                using SqlCommand command =
-                    new SqlCommand("SP_CourseSessions_GetAll", connection);
-
-                command.CommandType = CommandType.StoredProcedure;
-
-                command.Parameters.AddWithValue
-                (
-                    "@PageNumber",
-                    pageNumber
-                );
-
-                command.Parameters.AddWithValue
-                (
-                    "@PageSize",
-                    pageSize
-                );
-
-                await connection.OpenAsync();
-
-                using SqlDataReader reader =
-                    await command.ExecuteReaderAsync();
-
-                if (reader.HasRows)
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
+                using (SqlCommand command = new SqlCommand("SP_CourseSessions_GetAll", connection))
                 {
-                    await reader.ReadAsync();
-                }
 
-                await reader.NextResultAsync();
 
-                while (await reader.ReadAsync())
-                {
-                    courseSessions.Add
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue
                     (
-                        reader.ToCourseSession()
+                        "@PageNumber",
+                        pageNumber
                     );
+
+                    command.Parameters.AddWithValue
+                    (
+                        "@PageSize",
+                        pageSize
+                    );
+
+                    await connection.OpenAsync();
+
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            courseSessions.Add(reader.ToCourseSession());
+                        }
+                    }
                 }
             }
             catch (Exception ex)

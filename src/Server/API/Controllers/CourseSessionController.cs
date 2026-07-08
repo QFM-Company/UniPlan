@@ -132,24 +132,24 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<ActionResult<CourseSessionResponse>> GetCourseSessionByIdAsync(int courseID)
+        public async Task<ActionResult<CourseSessionResponse>> GetCourseSessionByIdAsync(int courseSessionID)
         {
             try
             {
-                if (courseID > 0)
+                if (courseSessionID > 0)
                 {
-                    CourseSessionResponse? response = await _courseSessionService.GetCourseSessionByIDAsync(courseID);
+                    CourseSessionResponse? response = await _courseSessionService.GetCourseSessionByIDAsync(courseSessionID);
 
                     if (response != null)
                     {
-                        await _logService.LogAsync($"Course Session with ID {courseID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        await _logService.LogAsync($"Course Session with ID {courseSessionID} fetched successfully.", ExternalServicesEnums.LogType.Info);
                         return Ok(response);
                     }
                 }
                 else return BadRequest("Id Should be more than 0");
 
-                await _logService.LogAsync($"Course Session with ID {courseID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Course Session with ID {courseID} was not found.");
+                await _logService.LogAsync($"Course Session with ID {courseSessionID} was not found.", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"Course Session with ID {courseSessionID} was not found.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
