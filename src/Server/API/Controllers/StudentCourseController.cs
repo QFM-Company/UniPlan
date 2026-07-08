@@ -3,6 +3,7 @@ using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -25,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddStudentCourseAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentCourseResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(StudentCourseResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<StudentCourseResponse?>> AddStudentCourseAsync(CreateStudentCourseRequest request)
@@ -37,7 +38,7 @@ namespace API.Controllers
                 if (response != null)
                 {
                     await _logService.LogAsync("Student Course added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return CreatedAtRoute("GetStudentCourseByIDAsync", new { studentCourseID = response.EnrolmentID} , response);
                 }
 
                 await _logService.LogAsync("Failed to add Student Course.", ExternalServicesEnums.LogType.Warning);
@@ -46,6 +47,11 @@ namespace API.Controllers
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -61,20 +67,27 @@ namespace API.Controllers
         {
             try
             {
-                bool res = await _studentCourseService.UpdateStudentCourseAsync(request, studentCourseID);
-
-                if (res)
+                if (studentCourseID > 0)
                 {
-                    await _logService.LogAsync("Student Course updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
-                }
+                    bool res = await _studentCourseService.UpdateStudentCourseAsync(request, studentCourseID);
 
+                    if (res)
+                    {
+                        await _logService.LogAsync("Student Course updated successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(res);
+                    }
+                }
                 await _logService.LogAsync("Failed to update Student Course.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to update Student Course.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -83,21 +96,23 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete/{studentCourseID}", Name = "DeleteStudentCourseAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeleteStudentCourseAsync(int studentCourseID)
         {
             try
             {
-                bool res = await _studentCourseService.DeleteStudentCourseAsync(studentCourseID);
-
-                if (res)
+                if (studentCourseID > 0)
                 {
-                    await _logService.LogAsync("Student Course deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
-                }
+                    bool res = await _studentCourseService.DeleteStudentCourseAsync(studentCourseID);
 
+                    if (res)
+                    {
+                        await _logService.LogAsync("Student Course deleted successfully.", ExternalServicesEnums.LogType.Info);
+                        return NoContent();
+                    }
+                }
                 await _logService.LogAsync("Failed to delete Student Course.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete Student Course.");
             }
@@ -119,13 +134,17 @@ namespace API.Controllers
         {
             try
             {
-                StudentCourseResponse? response = await _studentCourseService.GetStudentCourseByIDAsync(studentCourseID);
-
-                if (response != null)
+                if (studentCourseID > 0)
                 {
-                    await _logService.LogAsync($"Student Course with ID {studentCourseID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    StudentCourseResponse? response = await _studentCourseService.GetStudentCourseByIDAsync(studentCourseID);
+
+                    if (response != null)
+                    {
+                        await _logService.LogAsync($"Student Course with ID {studentCourseID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
                 }
+                else return BadRequest("Id Should be more than 0");
 
                 await _logService.LogAsync($"Student Course with ID {studentCourseID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Student Course with ID {studentCourseID} was not found.");
@@ -140,24 +159,29 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{StudentID}/", Name = "GetStudentCoursesByStudenIDAsync")]
+        [HttpGet("student/{studentID}/", Name = "GetStudentCoursesByStudenIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentCourseResponse>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<ActionResult<IEnumerable<StudentCourseResponse>?>> GetStudentCoursesByStudenIDAsync(int studentID)
         {
             try
             {
-                IEnumerable<StudentCourseResponse>? responses = await _studentCourseService.GetStudentCoursesByStudentIDAsync(studentID);
-
-                if (responses != null && responses.Any())
+                if (studentID > 0)
                 {
-                    await _logService.LogAsync($"Student Courses fetched successfully for studentID {studentID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    IEnumerable<StudentCourseResponse>? responses = await _studentCourseService.GetStudentCoursesByStudentIDAsync(studentID);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"Student Courses fetched successfully for studentID {studentID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
                 }
+                else return BadRequest("Id Should be more than 0");
 
                 await _logService.LogAsync($"No student Courses found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No student Courses found on page.");
+                return Ok(new List<StudentCourseResponse>());
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {

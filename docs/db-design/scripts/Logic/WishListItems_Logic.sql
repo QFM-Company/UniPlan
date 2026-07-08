@@ -1,4 +1,4 @@
-USE [UniPlan];
+﻿USE [UniPlan];
 GO
 
 
@@ -69,7 +69,9 @@ SELECT
     WLI.WishListID,
     WLI.CourseID,
     C.CourseName,
-    C.CreditHours
+    C.CreditHours,
+	C.CourseCode
+	
 FROM dbo.WishListItems WLI
 INNER JOIN dbo.WishLists WL
     ON WLI.WishListID = WL.WishListID

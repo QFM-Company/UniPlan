@@ -1,4 +1,4 @@
-USE [UniPlan];
+﻿USE [UniPlan];
 GO
 
 CREATE OR ALTER PROCEDURE SP_StudentCourses_Insert
@@ -103,6 +103,7 @@ SELECT
 	SC.IsPassed ,
     C.CourseName,
     C.CreditHours,
+	C.CourseCode,
 	SC.EnrollmentID ,
 	SC.StudentID
 FROM dbo.StudentCourses SC

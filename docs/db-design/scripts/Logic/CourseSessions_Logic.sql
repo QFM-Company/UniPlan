@@ -218,19 +218,13 @@ VIEWS
 CREATE OR ALTER VIEW CourseSessions_view
 AS
 SELECT DISTINCT 
-        CS.SessionID,
-        CS.OfferingID,
-        CO.SectionNumber,
-        H.HallID,
-        H.HallName,
-        H.Building,
-        H.Floor,
-        CS.CreatedByAdminID,
-        TS.DayNum,
+        Cs.*,
+        CO.*,
+        H.*,
         StartTime = MIN(P.StartTime) OVER(PARTITION BY CS.SessionID),
         EndTime = MAX(P.EndTime) OVER(PARTITION BY CS.SessionID)
     FROM dbo.CourseSessions CS
-    INNER JOIN dbo.CourseOfferings CO
+    INNER JOIN dbo.CourseOfferings_view CO
         ON CS.OfferingID = CO.OfferingID
     INNER JOIN dbo.Halls H
         ON CS.HallID = H.HallID 

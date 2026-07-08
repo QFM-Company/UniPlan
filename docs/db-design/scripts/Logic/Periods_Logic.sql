@@ -1,4 +1,4 @@
-
+﻿
 USE [UniPlan];
 GO
 
@@ -41,8 +41,9 @@ BEGIN
         WHERE StartTime = @StartTime
           AND EndTime = @EndTime
     )
-        THROW 50602, 'Period already exists', 1;
-
+	begin
+        ;THROW 50602, 'Period already exists', 1;
+	end
     BEGIN TRY
         INSERT INTO Periods(StartTime, EndTime)
         VALUES (@StartTime, @EndTime);

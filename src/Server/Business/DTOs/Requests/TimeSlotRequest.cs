@@ -6,6 +6,7 @@ namespace Business.DTOs.Requests
     public class TimeSlotRequest
     {
         [Required<DayOfWeek>("تحديد اليوم مطلوب")]
+        [Range<int>("اليوم يجب ان يكون من 1 الى 7" ,1, 7)]
         public DayOfWeek Day { get; set; }
 
         [Required<int>("معرف الفترة مطلوب")]

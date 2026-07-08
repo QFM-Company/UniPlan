@@ -15,7 +15,7 @@ namespace Business.Mapper
         {
             Course course = wishListItem.Course!;
             WishList wishList = wishListItem.WishList!;
-            return new WishListItemResponse(wishListItem.ItemID, wishList.ToResponse(), course.ToResponse());
+            return new WishListItemResponse(wishListItem.ItemID, wishList.WishListID, course.ToResponse());
         }
     }
 }

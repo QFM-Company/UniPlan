@@ -108,6 +108,8 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
+                else return BadRequest("Id Should be more than 0");
+
                 await _logService.LogAsync($"Course Prequist with ID {coursePrequistID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Course Prequist with ID {coursePrequistID} was not found.");
             }
@@ -129,13 +131,18 @@ namespace API.Controllers
         {
             try
             {
-                IEnumerable<CoursePrerequisiteResponse?>? responses = await _coursePrequistsService.GetPagedCoursePrequistsAsync(pageNumber, pageSize);
-
-                if (responses != null && responses.Any())
+                if (pageNumber > 0 && pageSize > 0)
                 {
-                    await _logService.LogAsync($"Courses Prequists fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    IEnumerable<CoursePrerequisiteResponse?>? responses = await _coursePrequistsService.GetPagedCoursePrequistsAsync(pageNumber, pageSize);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"Courses Prequists fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
                 }
+                else return BadRequest("Page Number And Page Size Should be more than 0");
+
 
                 await _logService.LogAsync($"No courses Prequists found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<CoursePrerequisiteResponse>());
