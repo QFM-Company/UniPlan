@@ -1,4 +1,4 @@
-namespace Business.DTOs.Responses
+﻿namespace Business.DTOs.Responses
 {
     public class CourseOfferingResponse
     {

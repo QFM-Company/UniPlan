@@ -174,13 +174,17 @@ namespace API.Controllers
         {
             try
             {
-                IEnumerable<TimeSlotResponse>? responses = await _timeSlotsSevice.GetPageTimeSlotsAsync(pageNumber, pageSize);
-
-                if (responses != null && responses.Any())
+                if (pageNumber > 0 && pageSize > 0)
                 {
-                    await _logService.LogAsync($"time slots fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    IEnumerable<TimeSlotResponse>? responses = await _timeSlotsSevice.GetPageTimeSlotsAsync(pageNumber, pageSize);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"time slots fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
                 }
+                else return BadRequest("Page Number And Page Size Should be more than 0");
 
                 await _logService.LogAsync($"No time slots found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<TimeSlotResponse>());

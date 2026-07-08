@@ -167,13 +167,17 @@ namespace API.Controllers
         {
             try
             {
-                IEnumerable<CourseResponse> responses = await _coursesService.GetPageCoursesAsync(pageNumber, pageSize);
-
-                if (responses != null && responses.Any())
+                if (pageNumber > 0 && pageSize > 0)
                 {
-                    await _logService.LogAsync($"Courses fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    IEnumerable<CourseResponse> responses = await _coursesService.GetPageCoursesAsync(pageNumber, pageSize);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"Courses fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
                 }
+                else return BadRequest("Page Number And Page Size Should be more than 0");
 
                 await _logService.LogAsync($"No courses found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<CourseResponse>());

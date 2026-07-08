@@ -122,22 +122,26 @@ namespace API.Controllers
 
         [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedPeriodsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PeriodResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<IEnumerable<PeriodResponse>?>> GetPagedPeriodsAsync(int pageNumber, int pageSize)
         {
             try
             {
-                IEnumerable<PeriodResponse>? responses = await _periodService.GetPagePeriodsAsync(pageNumber, pageSize);
-
-                if (responses != null && responses.Any())
+                if (pageNumber > 0 && pageSize > 0)
                 {
-                    await _logService.LogAsync($"periods fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    IEnumerable<PeriodResponse>? responses = await _periodService.GetPagePeriodsAsync(pageNumber, pageSize);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"periods fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
                 }
+                else return BadRequest("Page Number And Page Size Should be more than 0");
 
                 await _logService.LogAsync($"No periods found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No periods found on page {pageNumber}.");
+                return Ok(new List<PeriodResponse>());
             }
             catch (Exception ex)
             {
