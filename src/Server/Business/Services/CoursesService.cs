@@ -50,14 +50,13 @@ namespace Business.Services
             return course.ToResponse();
         }
 
-        public async Task<CourseResponse?> UpdateCourseAsync(int courseID, CourseRequest request)
+        public async Task<bool> UpdateCourseAsync(int courseID, CourseRequest request)
         {
             _ValidationService.Validate(request);
-            if (request == null) return null;
+            if (request == null) return false;
 
             Course course = request.ToCourse(courseID);
-            if (await _courseRepository.UpdateCourseAsync(course)) { return course.ToResponse(); }
-            return null;
+            return await _courseRepository.UpdateCourseAsync(course);
         }
 
         public async Task<bool> DeleteCourseAsync(int courseID)
