@@ -2,8 +2,11 @@
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace API.Controllers
 {
@@ -23,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add", Name = "AddAdminAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AdministratorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AdministratorResponse>> AddAdminAsync(CreateAdministratorRequest request)
@@ -35,11 +38,20 @@ namespace API.Controllers
                 if (res != null)
                 {
                     await _logService.LogAsync("admin added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    return CreatedAtRoute("GetAdminByIDAsync", new { adminID = res.AdminID } , res);
                 }
 
                 await _logService.LogAsync("Failed to add admin.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to add admin.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
             }
             catch (Exception ex)
             {
@@ -68,6 +80,15 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to update admin.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to update admin.");
             }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (ValidationException valException)
+            {
+                await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
+                return BadRequest(valException.Message);
+            }
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
@@ -77,23 +98,30 @@ namespace API.Controllers
 
 
         [HttpDelete("delete/{adminID}", Name = "DeleteAdminAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> DeleteAdminAsync(int adminID)
         {
             try
             {
-                bool res = await _adminSevice.DeleteAdministratorAsync(adminID);
-
-                if (res)
+                if (adminID > 0)
                 {
-                    await _logService.LogAsync("admin deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    bool res = await _adminSevice.DeleteAdministratorAsync(adminID);
+
+                    if (res)
+                    {
+                        await _logService.LogAsync("admin deleted successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(res);
+                    }
                 }
 
                 await _logService.LogAsync("Failed to delete admin.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete admin.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -106,21 +134,30 @@ namespace API.Controllers
         [HttpGet("get/{adminID}", Name = "GetAdminByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AdministratorResponse>> GetAdminByIDAsync(int adminID)
         {
             try
             {
-                AdministratorResponse? response = await _adminSevice.GetAdministratorByIdAsync(adminID);
-
-                if (response != null)
+                if (adminID > 0)
                 {
-                    await _logService.LogAsync($"admin with ID {adminID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    AdministratorResponse? response = await _adminSevice.GetAdministratorByIdAsync(adminID);
+
+                    if (response != null)
+                    {
+                        await _logService.LogAsync($"admin with ID {adminID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                        return Ok(response);
+                    }
                 }
+                else return BadRequest("Id Should be more than 0");
 
                 await _logService.LogAsync($"admin with ID {adminID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"admin with ID {adminID} was not found.");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -132,22 +169,30 @@ namespace API.Controllers
 
         [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedAdminsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AdministratorResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<IEnumerable<AdministratorResponse>?>> GetPagedAdminsAsync(int pageNumber, int pageSize)
         {
             try
             {
-                IEnumerable<AdministratorResponse>? responses = await _adminSevice.GetPageAdministratorsAsync(pageNumber, pageSize);
-
-                if (responses != null && responses.Any())
+                if (pageNumber > 0 && pageSize > 0)
                 {
-                    await _logService.LogAsync($"admins fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    IEnumerable<AdministratorResponse>? responses = await _adminSevice.GetPageAdministratorsAsync(pageNumber, pageSize);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"admins fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
                 }
+                else return BadRequest("Page Number And Page Size Should be more than 0");
 
                 await _logService.LogAsync($"No admins found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No admins found on page {pageNumber}.");
+                return Ok(new List<AdministratorResponse>());
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
