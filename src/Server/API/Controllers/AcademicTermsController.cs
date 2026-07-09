@@ -13,44 +13,46 @@ namespace API.Controllers
     [ApiController]
     public class AcademicTermsController : ControllerBase
     {
-        private readonly IAcademicTermService _listService;
+        private readonly IAcademicTermService _termService;
         private readonly ILogService _logService;
         private readonly IExceptionService _exceptionService;
 
-        public AcademicTermsController(IAcademicTermService listService, ILogService logService, IExceptionService exceptionService)
+        public AcademicTermsController(IAcademicTermService termService, ILogService logService, IExceptionService exceptionService)
         {
-            _listService = listService;
+            _termService = termService;
             _logService = logService;
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddAcademicTermAsync")]
+        [HttpPost(Name = "AddAcademicTermAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AcademicTermResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AcademicTermResponse?>> AddAcademicTermAsync(AcademicTermRequest request)
         {
             try
             {
-                AcademicTermResponse? response = await _listService.AddAcademicTermAsync(request);
+                AcademicTermResponse? response = await _termService.AddAcademicTermAsync(request);
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("AcademicTerm added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Created("GetAcademicTermByIDAsync", response);
+                    await _logService.LogAsync("تم إضافة الفصل الدراسي بنجاح", ExternalServicesEnums.LogType.Info);
+                    return CreatedAtRoute("GetAcademicTermByIDAsync", new { termID = response.TermID }, response);
                 }
 
-                await _logService.LogAsync("Failed to add AcademicTerm.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add AcademicTerm.");
+                await _logService.LogAsync("فشل إضافة الفصل الدراسي بسبب خطأ في الخادم", ExternalServicesEnums.LogType.Warning);
+                return StatusCode(StatusCodes.Status500InternalServerError, "فشل إضافة الفصل الدراسي");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -58,28 +60,24 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{listID}", Name = "DeleteAcademicTermAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [HttpDelete("{termID}", Name = "DeleteAcademicTermAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteAcademicTermAsync(int listID)
+        public async Task<ActionResult> DeleteAcademicTermAsync(int termID)
         {
             try
             {
-                bool res = await _listService.DeleteAcademicTermAsync(listID);
+                bool res = await _termService.DeleteAcademicTermAsync(termID);
 
                 if (res)
                 {
-                    await _logService.LogAsync("AcademicTerm deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    await _logService.LogAsync("تم حذف الفصل الدراسي بنجاح", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync("Failed to delete AcademicTerm.", ExternalServicesEnums.LogType.Warning);
-                return NotFound("Failed to delete AcademicTerm.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"فشل الحذف لم يتم العثور على الفصل الدراسي بالمعرف {termID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على الفصل الدراسي بالمعرف {termID}");
             }
             catch (Exception ex)
             {
@@ -87,28 +85,24 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{listID}", Name = "GetAcademicTermByIDAsync")]
+        [HttpGet("{termID}", Name = "GetAcademicTermByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AcademicTermResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<AcademicTermResponse>> GetAcademicTermByIDAsync(int listID)
+        public async Task<ActionResult<AcademicTermResponse>> GetAcademicTermByIDAsync(int termID)
         {
             try
             {
-                AcademicTermResponse? response = await _listService.GetAcademicTermByIDAsync(listID);
+                AcademicTermResponse? response = await _termService.GetAcademicTermByIDAsync(termID);
 
                 if (response != null)
                 {
-                    await _logService.LogAsync($"AcademicTerm with ID {listID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync($"تم جلب الفصل الدراسي بالمعرف {termID} بنجاح", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync($"AcademicTerm with ID {listID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"AcademicTerm with ID {listID} was not found.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على الفصل الدراسي بالمعرف {termID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على الفصل الدراسي بالمعرف {termID}");
             }
             catch (Exception ex)
             {
@@ -116,28 +110,28 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedAcademicTermsAsync")]
+        [HttpGet("{pageNumber}/{pageSize}", Name = "GetPagedAcademicTermsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AcademicTermResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<AcademicTermResponse>?>> GetPagedAcademicTermsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<AcademicTermResponse>>> GetPagedAcademicTermsAsync(int pageNumber, int pageSize)
         {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
+            }
+
             try
             {
-                IEnumerable<AcademicTermResponse>? responses = await _listService.GetPagedAcademicTermsAsync(pageNumber, pageSize);
+                IEnumerable<AcademicTermResponse>? responses = await _termService.GetPagedAcademicTermsAsync(pageNumber, pageSize);
 
-                if (responses != null && responses.Any())
+                if (responses == null)
                 {
-                    await _logService.LogAsync($"AcademicTerms fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    responses = Enumerable.Empty<AcademicTermResponse>();
                 }
 
-                await _logService.LogAsync($"No lists found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No lists found on page {pageNumber}.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"تم جلب الفصول الدراسية للصفحة {pageNumber} بحجم {pageSize} بنجاح", ExternalServicesEnums.LogType.Info);
+                return Ok(responses);
             }
             catch (Exception ex)
             {

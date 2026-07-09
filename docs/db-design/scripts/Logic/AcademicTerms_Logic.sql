@@ -1,4 +1,34 @@
-USE UniPlan;
+﻿USE UniPlan;
+GO
+
+CREATE OR ALTER PROCEDURE SP_Terms_Validate
+    @TermType int,
+    @TermYear int
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @TermType NOT IN (1, 2, 3)
+    BEGIN
+        RETURN 51101;
+    END
+
+    ELSE IF @TermYear < 2026 OR @TermYear > 2100
+    BEGIN
+        RETURN 51101;
+    END
+
+    ELSE IF EXISTS (
+        SELECT 1
+        FROM [dbo].[AcademicTerms]
+        WHERE TermType = @TermType AND TermYear = @TermYear
+    )
+    BEGIN
+        RETURN 51102;
+    END
+
+    RETURN 0;
+END;
 GO
 
 CREATE OR ALTER PROCEDURE SP_AcademicTerms_Insert
@@ -8,6 +38,12 @@ CREATE OR ALTER PROCEDURE SP_AcademicTerms_Insert
 AS
 BEGIN
     SET NOCOUNT ON;
+        
+    DECLARE @ErrCode INT;
+    EXEC  @ErrCode =  SP_Terms_Validate  @TermType, @TermYear
+
+    IF @ErrCode != 0
+        THROW @ErrCode, '', 1;
 
     BEGIN TRY
         INSERT INTO [dbo].[AcademicTerms] ([TermType],[TermYear])

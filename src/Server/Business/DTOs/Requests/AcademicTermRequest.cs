@@ -8,7 +8,7 @@ namespace Business.DTOs.Requests
         public int TermType { get; set; }
 
         [Required<int>("السنة الأكاديمية مطلوبة")]
-        [Range<int>("يجب أن تكون السنة بين 2025 و 2100", 2025, 2100)]
+        [Range<int>("يجب أن تكون السنة بين 2026 و 2100", 2026, 2100)]
         public int TermYear { get; set; }
 
         public AcademicTermRequest()

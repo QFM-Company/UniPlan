@@ -11,12 +11,10 @@ namespace Business.DTOs.Requests.Create
         [Length("يجب ألا يتجاوز اسم المبنى 50 حرفًا", 50, 0)]
         public string Building { get; set; } = string.Empty;
 
-        [Required<int>("رقم الطابق مطلوب")]
-        [Range<int>("يجب أن يكون رقم الطابق أكبر من أو يساوي 1", 1, int.MaxValue)]
+        [Range<int>("يجب أن يكون رقم الطابق بين الصفر و 10", 0, 10)]
         public int Floor { get; set; }
 
-        [Required<int>("معرف الأدمن المنشئ مطلوب")]
-        [Range<int>("يجب أن يكون المعرف أكبر من 0", 1, int.MaxValue)]
+        [Range<int>("يجب أن يكون المعرف أكبر من 0", 0, int.MaxValue)]
         public int CreatedByAdminID { get; set; }
 
         public CreateHallRequest(string hallName, string building, int floor, int createdByAdminID)

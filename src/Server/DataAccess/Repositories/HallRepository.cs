@@ -40,7 +40,7 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@HallName", hall.HallName);
                     command.Parameters.AddWithValue("@Building", hall.Building ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Floor", hall.Floor != 0 ? hall.Floor : DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedByAdminID", hall.CreatedByAdminID != -1 ? hall.CreatedByAdminID : DBNull.Value);
+                    command.Parameters.AddWithValue("@CreatedByAdminID", hall.CreatedByAdminID != 0 ? hall.CreatedByAdminID : DBNull.Value);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

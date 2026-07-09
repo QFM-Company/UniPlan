@@ -8,7 +8,6 @@ using Core.Interfaces.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
-
 namespace API.Controllers
 {
     [Route("api/halls")]
@@ -26,9 +25,10 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddHallAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HallResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost(Name = "AddHallAsync")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(HallResponse))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<HallResponse?>> AddHallAsync(CreateHallRequest request)
         {
@@ -38,21 +38,21 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("Hall added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    await _logService.LogAsync("تم إضافة القاعة بنجاح", ExternalServicesEnums.LogType.Info);
+                    return CreatedAtRoute("GetHallByIDAsync", new { hallID = response.HallID }, response);
                 }
 
-                await _logService.LogAsync("Failed to add Hall.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add Hall.");
+                await _logService.LogAsync("فشل إضافة القاعة بسبب خطأ في الخادم", ExternalServicesEnums.LogType.Warning);
+                return StatusCode(StatusCodes.Status500InternalServerError, "فشل إضافة القاعة");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -60,11 +60,13 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("update/{hallID}", Name = "UpdateHallAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("{hallID}", Name = "UpdateHallAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> UpdateHallHallAsync(UpdateHallRequest request, int hallID)
+        public async Task<ActionResult> UpdateHallHallAsync(int hallID, UpdateHallRequest request)
         {
             try
             {
@@ -72,21 +74,21 @@ namespace API.Controllers
 
                 if (res)
                 {
-                    await _logService.LogAsync("Hall updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    await _logService.LogAsync("تم تحديث القاعة بنجاح", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync("Failed to update Hall.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to update Hall.");
+                await _logService.LogAsync($"لم يتم العثور على القاعة بالمعرف {hallID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على القاعة بالمعرف {hallID}");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -94,11 +96,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{hallID}", Name = "DeleteHallAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpDelete("{hallID}", Name = "DeleteHallAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteHallAsync(int hallID)
+        public async Task<ActionResult> DeleteHallAsync(int hallID)
         {
             try
             {
@@ -106,16 +108,12 @@ namespace API.Controllers
 
                 if (res)
                 {
-                    await _logService.LogAsync("Hall deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    await _logService.LogAsync("تم حذف القاعة بنجاح", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync("Failed to delete Hall.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete Hall.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على القاعة بالمعرف {hallID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على القاعة بالمعرف {hallID}");
             }
             catch (Exception ex)
             {
@@ -123,7 +121,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{hallID}", Name = "GetHallByIDAsync")]
+        [HttpGet("{hallID}", Name = "GetHallByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HallResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -135,16 +133,12 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync($"Hall with ID {hallID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync($"تم جلب القاعة بالمعرف {hallID} بنجاح", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync($"Hall with ID {hallID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Hall with ID {hallID} was not found.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على القاعة بالمعرف {hallID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على القاعة بالمعرف {hallID}");
             }
             catch (Exception ex)
             {
@@ -152,28 +146,28 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedHallsAsync")]
+        [HttpGet("{pageNumber}/{pageSize}", Name = "GetPagedHallsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<HallResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<HallResponse>?>> GetPagedHallsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<HallResponse>>> GetPagedHallsAsync(int pageNumber, int pageSize)
         {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
+            }
+
             try
             {
                 IEnumerable<HallResponse>? responses = await _hallService.GetPagedHallsAsync(pageNumber, pageSize);
 
-                if (responses != null && responses.Any())
+                if (responses == null)
                 {
-                    await _logService.LogAsync($"Halls fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    responses = Enumerable.Empty<HallResponse>();
                 }
 
-                await _logService.LogAsync($"No halls found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No halls found on page {pageNumber}.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"تم جلب القاعات للصفحة {pageNumber} بحجم {pageSize} بنجاح", ExternalServicesEnums.LogType.Info);
+                return Ok(responses);
             }
             catch (Exception ex)
             {

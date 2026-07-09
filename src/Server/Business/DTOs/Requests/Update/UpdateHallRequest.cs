@@ -15,8 +15,7 @@ namespace Business.DTOs.Requests.Update
         [Length("يجب ألا يتجاوز اسم المبنى 50 حرفًا", 50, 0)]
         public string Building { get; set; } = string.Empty;
 
-        [Required<int>("رقم الطابق مطلوب")]
-        [Range<int>("يجب أن يكون رقم الطابق أكبر من أو يساوي 0", 0, int.MaxValue)]
+        [Range<int>("يجب أن يكون رقم الطابق بين الصفر و 10", 0, 10)]
         public int Floor { get; set; }
 
         public UpdateHallRequest()

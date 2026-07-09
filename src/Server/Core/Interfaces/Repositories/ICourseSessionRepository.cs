@@ -12,6 +12,8 @@ namespace Core.Interfaces.Repositories
 
         Task<CourseSession?> GetCourseSessionByIDAsync(int sessionID);
 
+      //  Task<CourseSession?> GetCourseSessionsByWishListIDAsync(int listID);
+
         Task<IEnumerable<CourseSession?>?> GetCourseSessionsPagedAsync(int pageNumber, int pageSize);
 
     }

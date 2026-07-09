@@ -27,7 +27,7 @@ namespace API.Controllers
 
         [HttpPost("login", Name = "LoginAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))] 
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AccountResponse?>> LoginAsync(LoginRequest request)
         {
@@ -42,7 +42,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to login Account.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to login Account");
+                return Unauthorized("Failed to login Account"); 
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -61,7 +61,7 @@ namespace API.Controllers
 
         [HttpPut("updatePassword/{accountID}", Name = "UpdatePasswordAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))] 
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> UpdatePasswordAsync(ChangePasswordRequest request, int accountID)
         {
@@ -76,7 +76,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to update Account.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to update Account.");
+                return NotFound("Failed to update Account.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
