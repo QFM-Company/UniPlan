@@ -55,19 +55,17 @@ namespace Business.Services
             return _timeSlot?.ToResponse() ?? null;
         }
 
-        public async Task<TimeSlotResponse?> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest request)
+        public async Task<bool> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest request)
         {
             _ValidationService.Validate(request);
 
             _timeSlot = request?.ToTimeSlot(timeSlotID) ?? null;
+
             if (_timeSlot != null)
             {
-                if (await _TimeSlotsRepository.UpdateTimeSlotAsync(_timeSlot))
-                {
-                    return _timeSlot.ToResponse();
-                }
+                return await _TimeSlotsRepository.UpdateTimeSlotAsync(_timeSlot);
             }
-            return null;
+            return false;
         }
 
         public async Task<IEnumerable<TimeSlotResponse>> GetPageTimeSlotsAsync(int pageNumber = 1, int pageSize = 10)

@@ -28,6 +28,8 @@ namespace API.Controllers
         [HttpPost("add", Name = "AddStudentTermAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(StudentTermResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<StudentTermResponse?>> AddStudentTermAsync(StudentTermRequest request)
         {
@@ -46,12 +48,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -84,10 +86,6 @@ namespace API.Controllers
                 await _logService.LogAsync($"Student Term with ID {studentTermID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Student Term with ID {studentTermID} was not found.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -116,10 +114,6 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No student Terms found.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<StudentTermResponse>());
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {

@@ -27,6 +27,8 @@ namespace API.Controllers
         [HttpPost("add", Name = "AddTimeSlotAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TimeSlotResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<TimeSlotResponse>> AddTimeSlotAsync(TimeSlotRequest request)
         {
@@ -45,12 +47,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -61,10 +63,12 @@ namespace API.Controllers
 
 
         [HttpPut("update/{timeSlotID}", Name = "UpdateTimeSlotAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TimeSlotResponse))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<TimeSlotResponse?>> UpdateTimeSlotAsync(TimeSlotRequest request, int timeSlotID)
+        public async Task<ActionResult> UpdateTimeSlotAsync(TimeSlotRequest request, int timeSlotID)
         {
             try
             {
@@ -72,10 +76,10 @@ namespace API.Controllers
                 {
                     var response = await _timeSlotsSevice.UpdateTimeSlotAsync(timeSlotID, request);
 
-                    if (response != null)
+                    if (response)
                     {
                         await _logService.LogAsync("time slot updated successfully.", ExternalServicesEnums.LogType.Info);
-                        return Ok(response);
+                        return NoContent();
                     }
                 }
                 await _logService.LogAsync("Failed to update time slot.", ExternalServicesEnums.LogType.Warning);
@@ -83,12 +87,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -102,7 +106,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteTimeSlotAsync(int timeSlotID)
+        public async Task<ActionResult> DeleteTimeSlotAsync(int timeSlotID)
         {
             try
             {
@@ -119,10 +123,6 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to delete time slot.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete time slot.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
@@ -134,6 +134,7 @@ namespace API.Controllers
         [HttpGet("get/{timeSlotID}", Name = "GetTimeSlotByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TimeSlotResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<TimeSlotResponse>> GetPeriodByIDAsync(int timeSlotID)
         {
@@ -154,10 +155,6 @@ namespace API.Controllers
                 await _logService.LogAsync($"time slot with ID {timeSlotID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"time slot with ID {timeSlotID} was not found.");
             }        
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
@@ -169,6 +166,7 @@ namespace API.Controllers
 
         [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedTimeSlotsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TimeSlotResponse>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<IEnumerable<TimeSlotResponse>?>> GetPagedTimeSlotsAsync(int pageNumber, int pageSize)
         {
@@ -188,10 +186,6 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No time slots found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<TimeSlotResponse>());
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {

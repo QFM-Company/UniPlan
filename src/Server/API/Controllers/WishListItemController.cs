@@ -28,6 +28,8 @@ namespace API.Controllers
         [HttpPost("add", Name = "AddWishListItemAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(WishListItemResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<WishListItemResponse?>> AddWishListItemAsync(WishListItemRequest request)
         {
@@ -46,12 +48,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -62,7 +64,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteWishListItemAsync(int wishListItemID)
+        public async Task<ActionResult> DeleteWishListItemAsync(int wishListItemID)
         {
             try
             {
@@ -79,10 +81,6 @@ namespace API.Controllers
 
                 await _logService.LogAsync("Failed to delete WishList Item.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete WishList Item.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -114,10 +112,6 @@ namespace API.Controllers
                 await _logService.LogAsync($"WishList Item with ID {wishListItemID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"WishList Item with ID {wishListItemID} was not found.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
@@ -147,10 +141,6 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No student Courses found.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<WishListItemResponse>());
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
