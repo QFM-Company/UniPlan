@@ -118,35 +118,5 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("wishList/{wishListID}/", Name = "GetWishListItemsByWishListIDAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<WishListItemResponse>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<WishListItemResponse>?>> GetWishListItemsByWishListIDAsync(int wishListID)
-        {
-            try
-            {
-                if (wishListID > 0)
-                {
-                    IEnumerable<WishListItemResponse>? responses = await _wishListItemService.GetWishListItemsByStudentIDAsync(wishListID);
-
-                    if (responses != null && responses.Any())
-                    {
-                        await _logService.LogAsync($"WishList Items fetched successfully for studentID {wishListID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
-                        return Ok(responses);
-                    }
-                }
-                else return BadRequest("Id Should be more than 0");
-
-
-                await _logService.LogAsync($"No student Courses found.", ExternalServicesEnums.LogType.Warning);
-                return Ok(new List<WishListItemResponse>());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
-            }
-        }
-
     }
 }

@@ -91,35 +91,5 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
-
-        [HttpGet("student/{studentID}/", Name = "GetStudentTermsByStudenIDAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentTermResponse>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<StudentTermResponse>?>> GetStudentTermsByStudenIDAsync(int studentID)
-        {
-            try
-            {
-                if (studentID > 0)
-                {
-                    IEnumerable<StudentTermResponse>? responses = await _studentTermService.GetStudentTermsByStudentIDAsync(studentID);
-
-                    if (responses != null && responses.Any())
-                    {
-                        await _logService.LogAsync($"Student Terms fetched successfully for studentID {studentID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
-                        return Ok(responses);
-                    }
-                }
-                else return BadRequest("Id Should be more than 0");
-
-                await _logService.LogAsync($"No student Terms found.", ExternalServicesEnums.LogType.Warning);
-                return Ok(new List<StudentTermResponse>());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
-            }
-        }
-
     }
 }
