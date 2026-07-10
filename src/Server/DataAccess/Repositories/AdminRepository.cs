@@ -81,6 +81,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _LogService.LogAsync(ex);
+                throw;
             }
 
             return false;
@@ -107,7 +108,6 @@ namespace DataAccess.Repositories
                     command.Parameters.AddWithValue("@AdministratorID", admin.AdminID);
                     if (admin.Account == null) throw new ArgumentNullException(nameof(admin.Account), "Account is Null");
                     command.Parameters.AddWithValue("@AccountName", admin.Account.AccountName);
-                    command.Parameters.AddWithValue("@Password", admin.Account.Password);
                     command.Parameters.AddWithValue("@Email", admin.Account.Email);
                     if (admin.Person == null) throw new ArgumentNullException(nameof(admin.Person), "Person is Null");
                     command.Parameters.AddWithValue("@FirstName", admin.Person.FirstName);
@@ -126,6 +126,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _LogService.LogAsync(ex);
+                throw;
             }
 
             return false;
@@ -160,6 +161,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _LogService.LogAsync(ex);
+                throw;
             }
             return false;
         }
@@ -192,6 +194,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _LogService.LogAsync(ex);
+                throw;
             }
 
             return admin;
@@ -229,6 +232,7 @@ namespace DataAccess.Repositories
             catch (Exception ex)
             {
                 await _LogService.LogAsync(ex);
+                throw;
             }
 
             return admins;

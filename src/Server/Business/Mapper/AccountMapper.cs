@@ -13,6 +13,11 @@ namespace Business.Mapper
             return new Account(request.AccountName, request.Password, request.Email);
         }
 
+        public static Account ToAccount(this UpdateAccountRequest request)
+        {
+            return new Account(request.AccountName,"" , request.Email);
+        }
+
         public static Account ToAccount(this LoginRequest request)
         {
             return new Account(request.AccountName, request.Password);

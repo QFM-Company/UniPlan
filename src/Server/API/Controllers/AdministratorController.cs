@@ -1,4 +1,5 @@
 ﻿using Business.DTOs.Requests.Create;
+using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Core.Enums;
@@ -28,6 +29,8 @@ namespace API.Controllers
         [HttpPost("add", Name = "AddAdminAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AdministratorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AdministratorResponse>> AddAdminAsync(CreateAdministratorRequest request)
         {
@@ -46,12 +49,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -62,19 +65,21 @@ namespace API.Controllers
 
 
         [HttpPut("update/{adminID}", Name = "UpdateAdminAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorResponse))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<AdministratorResponse?>> UpdateAdminAsync(CreateAdministratorRequest request, int adminID)
+        public async Task<ActionResult> UpdateAdminAsync(UpdateAdministratorRequest request, int adminID)
         {
             try
             {
                 var response = await _adminSevice.UpdateAdministratorAsync(adminID, request);
 
-                if (response != null)
+                if (response)
                 {
                     await _logService.LogAsync("admin updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    return NoContent();
                 }
 
                 await _logService.LogAsync("Failed to update admin.", ExternalServicesEnums.LogType.Warning);
@@ -82,12 +87,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -101,7 +106,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteAdminAsync(int adminID)
+        public async Task<ActionResult> DeleteAdminAsync(int adminID)
         {
             try
             {
@@ -112,16 +117,12 @@ namespace API.Controllers
                     if (res)
                     {
                         await _logService.LogAsync("admin deleted successfully.", ExternalServicesEnums.LogType.Info);
-                        return Ok(res);
+                        return NoContent();
                     }
                 }
 
                 await _logService.LogAsync("Failed to delete admin.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete admin.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -155,10 +156,6 @@ namespace API.Controllers
                 await _logService.LogAsync($"admin with ID {adminID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"admin with ID {adminID} was not found.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
@@ -189,10 +186,6 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No admins found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<AdministratorResponse>());
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {

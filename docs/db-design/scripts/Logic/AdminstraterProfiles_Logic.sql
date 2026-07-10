@@ -1,4 +1,4 @@
-USE [UniPlan];
+﻿USE [UniPlan];
 GO
 
 CREATE OR ALTER FUNCTION ValidatPerson
@@ -41,18 +41,6 @@ BEGIN
         RETURN 0;
     END
 
-    -- CHANGED: This now checks duplicate AccountName too, not only Email.
-    IF EXISTS
-    (
-        SELECT 1
-        FROM Accounts
-        WHERE Email = @Email
-           OR AccountName = @AccountName
-    )
-    BEGIN
-        RETURN 0;
-    END
-
     RETURN 1;
 END;
 GO
@@ -61,47 +49,15 @@ GO
 CREATE OR ALTER FUNCTION ValidatAccountInfo
 (
     @AccountName nvarchar(50),
-    @Password nvarchar(255),
-    @Email nvarchar(255),
-    @AccountID int -- CHANGED: Replaced @OldEmail with @AccountID.
+    @Email nvarchar(255)
 )
 RETURNS bit
 AS
 BEGIN
-    -- CHANGED: Validate that the account id is usable.
-    IF @AccountID IS NULL OR @AccountID <= 0
-    BEGIN
-        RETURN 0;
-    END
 
     -- CHANGED: Empty strings are now invalid, not only NULL values.
     IF NULLIF(LTRIM(RTRIM(@AccountName)), '') IS NULL
         OR NULLIF(LTRIM(RTRIM(@Email)), '') IS NULL
-        OR NULLIF(LTRIM(RTRIM(@Password)), '') IS NULL
-    BEGIN
-        RETURN 0;
-    END
-
-    -- CHANGED: Make sure the account being updated actually exists.
-    IF NOT EXISTS
-    (
-        SELECT 1
-        FROM Accounts
-        WHERE AccountID = @AccountID
-    )
-    BEGIN
-        RETURN 0;
-    END
-
-    -- CHANGED: Duplicate check now excludes the current account by AccountID.
-    -- This is safer than comparing @Email with @OldEmail.
-    IF EXISTS
-    (
-        SELECT 1
-        FROM Accounts
-        WHERE AccountID <> @AccountID
-          AND (Email = @Email OR AccountName = @AccountName)
-    )
     BEGIN
         RETURN 0;
     END
@@ -161,6 +117,17 @@ BEGIN
     IF dbo.Validat_New_AccountInfo(@AccountName, @Password, @Email) = 0
         THROW 50401, 'Account validation failed', 1;
 
+    IF EXISTS
+    (
+        SELECT 1
+        FROM Accounts
+        WHERE Email = @Email
+           OR AccountName = @AccountName
+    )
+    BEGIN
+        ;THROW 50402, 'Account Name Or Email Already Exists', 1;
+    END
+
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatAdministratorInfo(@PersonID) = 0
         THROW 50201, 'Administrator validation failed', 1;
@@ -213,7 +180,6 @@ CREATE OR ALTER PROCEDURE SP_AdminProfile_Update
     @AdministratorID int,
 
     @AccountName nvarchar(50),
-    @Password nvarchar(255),
     @Email nvarchar(255),
     
 
@@ -245,8 +211,22 @@ BEGIN
     -- The validation function now receives @AccountID instead.
 
     -- CHANGED: Uses @AccountID to detect duplicate email/account name correctly.
-    IF dbo.ValidatAccountInfo(@AccountName, @Password, @Email, @AccountID) = 0
+    IF dbo.ValidatAccountInfo(@AccountName, @Email) = 0
         THROW 50401, 'Account validation failed', 1;
+
+	
+    -- CHANGED: Duplicate check now excludes the current account by AccountID.
+    -- This is safer than comparing @Email with @OldEmail.
+    IF EXISTS
+    (
+        SELECT 1
+        FROM Accounts
+        WHERE AccountID <> @AccountID
+          AND (Email = @Email OR AccountName = @AccountName)
+    )
+    BEGIN
+         ;THROW 50402, 'Account validation failed', 1;
+    END
 
     -- CHANGED: THROW stops execution immediately.
     IF dbo.ValidatAdministratorInfo(@PersonID) = 0
@@ -272,8 +252,7 @@ BEGIN
 
         UPDATE Accounts
         SET AccountName = @AccountName,
-            Email = @Email,
-            Password = @Password
+            Email = @Email
         WHERE AccountID = @AccountID;
 
 		 IF @@ROWCOUNT > 0
@@ -433,3 +412,4 @@ where AdminID = @AdminID;
 End
 
 go
+
