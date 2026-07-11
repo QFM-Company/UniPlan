@@ -26,5 +26,17 @@
             CreatedByAdminID = createdByAdminID;
             Day = day;
         }
+
+        public bool OverlapsWith(CourseSession other)
+        {
+            return Day == other.Day && StartTime < other.EndTime && other.StartTime < EndTime;
+        }
+
+
+        public bool ContainsTime(DayOfWeek day, TimeSpan time)
+        {
+            return Day == day && time >= StartTime && time < EndTime;
+        }
+
     }
 }

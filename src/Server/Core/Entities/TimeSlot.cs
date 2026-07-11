@@ -1,4 +1,4 @@
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class TimeSlot
     {
@@ -34,22 +34,6 @@ namespace Core.Entities
             return Day == other.Day;
         }
 
-        public bool OverlapsWith(TimeSlot other)
-        {
-            if (other == null || !IsValid() || !other.IsValid())
-                return false;
-
-            return Day == other.Day &&
-                   Period!.OverlapsWith(other.Period!);
-        }
-
-        public bool Contains(DayOfWeek day, TimeSpan time)
-        {
-            if (!IsValid())
-                return false;
-
-            return Day == day && Period!.Contains(time);
-        }
 
         /// <summary>
         ///  if you Need The Minuts just call this method and then .Minutes re(int) on the result 
