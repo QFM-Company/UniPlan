@@ -1,4 +1,5 @@
 ﻿using Infrastructure.ExternalServices.Validation.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Business.DTOs.Requests
 {
@@ -9,15 +10,11 @@ namespace Business.DTOs.Requests
         public int WishListID { get; set; }
 
         [Required<object>("يجب تحديد أيام الأسبوع")]
-        public List<DayOfWeek> Days { get; set; }
+        [Range<int>("يجب أن تكون قيمة اليوم بين 0 للأحد و 6 للسبت", 0, 6)]
+        public List<int> Days { get; set; }
 
-        public GeneratedScheduleRequest()
-        {
-            WishListID = default;
-            Days = new List<DayOfWeek>();
-        }
 
-        public GeneratedScheduleRequest(int wishListID, List<DayOfWeek> days)
+        public GeneratedScheduleRequest(int wishListID, List<int> days)
         {
             WishListID = wishListID;
             Days = days;

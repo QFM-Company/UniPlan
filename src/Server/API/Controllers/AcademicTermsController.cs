@@ -26,7 +26,6 @@ namespace API.Controllers
 
         [HttpPost(Name = "AddAcademicTermAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AcademicTermResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -110,11 +109,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}", Name = "GetPagedAcademicTermsAsync")]
+        [HttpGet(Name = "GetPagedAcademicTermsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AcademicTermResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<AcademicTermResponse>>> GetPagedAcademicTermsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<AcademicTermResponse>>> GetPagedAcademicTermsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             if (pageNumber <= 0 || pageSize <= 0)
             {

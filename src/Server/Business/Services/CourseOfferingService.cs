@@ -22,7 +22,7 @@ namespace Business.Services
 
         public async Task<bool> DeleteCourseOfferingAsync(int offeringID)
         {
-            return await _offeringRepository.DeleteCourseOfferingAsync(offeringID);
+            return offeringID > 0 && await _offeringRepository.DeleteCourseOfferingAsync(offeringID);
         }
 
 
@@ -62,6 +62,9 @@ namespace Business.Services
 
         public async Task<CourseOfferingResponse?> GetCourseOfferingByIDAsync(int offeringID)
         {
+            if (offeringID <= 0)
+                return null;
+
             CourseOffering? _offering = await _offeringRepository.GetCourseOfferingByIDAsync(offeringID);
             return _offering != null ? _offering.ToResponse() : null;
         }

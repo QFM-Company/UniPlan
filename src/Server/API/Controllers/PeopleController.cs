@@ -24,9 +24,10 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddPersonAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PersonResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost(Name = "AddPersonAsync")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PersonResponse))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<PersonResponse?>> AddPersonAsync(PersonRequest request)
         {
@@ -36,21 +37,21 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("Person added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    await _logService.LogAsync("تم إضافة الشخص بنجاح", ExternalServicesEnums.LogType.Info);
+                    return CreatedAtRoute("GetPersonByIDAsync", new { personID = response.PersonID }, response);
                 }
 
-                await _logService.LogAsync("Failed to add person.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add person.");
+                await _logService.LogAsync("فشل إضافة الشخص بسبب خطأ في الخادم", ExternalServicesEnums.LogType.Warning);
+                return StatusCode(StatusCodes.Status500InternalServerError, "فشل إضافة الشخص");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {

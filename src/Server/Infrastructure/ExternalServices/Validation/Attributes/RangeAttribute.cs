@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Collections;
+using System.Numerics;
+using System.Linq;
 
 namespace Infrastructure.ExternalServices.Validation.Attributes
 {
@@ -18,6 +20,14 @@ namespace Infrastructure.ExternalServices.Validation.Attributes
         {
             if (obj == null)
                 return false;
+
+            if (obj is ICollection<T> col)
+            {
+                T? min = col.Min();
+                T? max = col.Max();
+
+                return ( min == null || max == null ) || ( min >= MinNumber && max <= MaxNumber );
+            }
 
             T value = (T)obj;
             return value >= MinNumber && value <= MaxNumber;

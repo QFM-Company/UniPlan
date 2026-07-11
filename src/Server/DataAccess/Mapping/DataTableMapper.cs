@@ -18,7 +18,7 @@ namespace DataAccess.Mapping
             return dataTable;
         }
 
-        public static DataTable ToDataTable(this List<DayOfWeek> days)
+        public static DataTable ToDataTable(this List<int> days)
         {
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Day", typeof(int));

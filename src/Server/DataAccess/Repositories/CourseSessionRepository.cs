@@ -304,7 +304,7 @@ namespace DataAccess.Repositories
             return courseSessions;
         }
 
-        public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<DayOfWeek> days)
+        public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<int> days)
         {
             Dictionary<int, Dictionary<int, List<CourseSession>>> courseSessions = new();
 

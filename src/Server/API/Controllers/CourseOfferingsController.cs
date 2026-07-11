@@ -25,9 +25,10 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddCourseOfferingAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CourseOfferingResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost(Name = "AddCourseOfferingAsync")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CourseOfferingResponse))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<CourseOfferingResponse?>> AddCourseOfferingAsync(CreateCourseOfferingRequest request)
         {
@@ -37,21 +38,21 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("CourseOffering added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    await _logService.LogAsync("تم إضافة عرض المقرر بنجاح", ExternalServicesEnums.LogType.Info);
+                    return CreatedAtRoute("GetCourseOfferingByIDAsync", new { offeringID = response.OfferingID }, response);
                 }
 
-                await _logService.LogAsync("Failed to add CourseOffering.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add CourseOffering.");
+                await _logService.LogAsync("فشل إضافة عرض المقرر بسبب خطأ في الخادم", ExternalServicesEnums.LogType.Warning);
+                return StatusCode(StatusCodes.Status500InternalServerError, "فشل إضافة عرض المقرر");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -59,11 +60,13 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("update/{offeringID}", Name = "UpdateCourseOfferingAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("{offeringID}", Name = "UpdateCourseOfferingAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> UpdateCourseOfferingCourseOfferingAsync(UpdateCourseOfferingRequest request, int offeringID)
+        public async Task<ActionResult> UpdateCourseOfferingAsync(int offeringID, UpdateCourseOfferingRequest request)
         {
             try
             {
@@ -71,21 +74,21 @@ namespace API.Controllers
 
                 if (res)
                 {
-                    await _logService.LogAsync("CourseOffering updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    await _logService.LogAsync("تم تحديث عرض المقرر بنجاح", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync("Failed to update CourseOffering.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to update CourseOffering.");
+                await _logService.LogAsync($"لم يتم العثور على عرض المقرر بالمعرف {offeringID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على عرض المقرر بالمعرف {offeringID}");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -93,11 +96,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{offeringID}", Name = "DeleteCourseOfferingAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpDelete("{offeringID}", Name = "DeleteCourseOfferingAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteCourseOfferingAsync(int offeringID)
+        public async Task<ActionResult> DeleteCourseOfferingAsync(int offeringID)
         {
             try
             {
@@ -105,16 +108,12 @@ namespace API.Controllers
 
                 if (res)
                 {
-                    await _logService.LogAsync("CourseOffering deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    await _logService.LogAsync("تم حذف عرض المقرر بنجاح", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync("Failed to delete CourseOffering.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete CourseOffering.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على عرض المقرر بالمعرف {offeringID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على عرض المقرر بالمعرف {offeringID}");
             }
             catch (Exception ex)
             {
@@ -122,7 +121,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{offeringID}", Name = "GetCourseOfferingByIDAsync")]
+        [HttpGet("{offeringID}", Name = "GetCourseOfferingByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CourseOfferingResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -134,16 +133,12 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync($"CourseOffering with ID {offeringID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync($"تم جلب عرض المقرر بالمعرف {offeringID} بنجاح", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync($"CourseOffering with ID {offeringID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"CourseOffering with ID {offeringID} was not found.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على عرض المقرر بالمعرف {offeringID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على عرض المقرر بالمعرف {offeringID}");
             }
             catch (Exception ex)
             {
@@ -151,28 +146,28 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedCourseOfferingsAsync")]
+        [HttpGet(Name = "GetPagedCourseOfferingsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CourseOfferingResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<CourseOfferingResponse>?>> GetPagedCourseOfferingsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<CourseOfferingResponse>>> GetPagedCourseOfferingsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
+            }
+
             try
             {
                 IEnumerable<CourseOfferingResponse>? responses = await _offeringService.GetPagedCourseOfferingsAsync(pageNumber, pageSize);
 
-                if (responses != null && responses.Any())
+                if (responses == null)
                 {
-                    await _logService.LogAsync($"CourseOfferings fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    responses = Enumerable.Empty<CourseOfferingResponse>();
                 }
 
-                await _logService.LogAsync($"No offerings found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No offerings found on page {pageNumber}.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"تم جلب عروض المقررات للصفحة {pageNumber} بحجم {pageSize} بنجاح", ExternalServicesEnums.LogType.Info);
+                return Ok(responses);
             }
             catch (Exception ex)
             {

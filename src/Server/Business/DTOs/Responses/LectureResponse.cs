@@ -1,23 +1,24 @@
-using Core.Enums;
-
-namespace Business.DTOs.Responses
+﻿namespace Business.DTOs.Responses
 {
     public class LectureResponse
     {
         public int LectureID { get; set; }
-        public LectureType LectureType { get; set; }
+
+        public string LectureType { get; set; }
+
         public int DurationValue { get; set; }
+
         public CourseResponse? CourseInfo { get; set; }
 
         public LectureResponse()
         {
             LectureID = default;
-            LectureType = LectureType.Practical;
+            LectureType = string.Empty;
             DurationValue = default;
             CourseInfo = null;
         }
 
-        public LectureResponse(int lectureID, LectureType lectureType, int durationValue, CourseResponse courseInfo)
+        public LectureResponse(int lectureID, string lectureType, int durationValue, CourseResponse courseInfo)
         {
             LectureID = lectureID;
             LectureType = lectureType;

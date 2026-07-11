@@ -22,7 +22,7 @@ namespace Business.Services
 
         public async Task<bool> DeleteHallAsync(int hallID)
         {
-            return await _hallRepository.DeleteHallAsync(hallID);
+            return hallID > 0 && await _hallRepository.DeleteHallAsync(hallID);
         }
 
         public async Task<HallResponse?> AddHallAsync(CreateHallRequest request)
@@ -61,6 +61,9 @@ namespace Business.Services
 
         public async Task<HallResponse?> GetHallByIDAsync(int hallID)
         {
+            if (hallID <= 0)
+                return null;
+
             Hall? hall = await _hallRepository.GetHallByIDAsync(hallID);
             return hall != null ? hall.ToResponse() : null;
         }

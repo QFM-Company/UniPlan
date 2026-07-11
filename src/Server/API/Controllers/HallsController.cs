@@ -146,11 +146,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("{pageNumber}/{pageSize}", Name = "GetPagedHallsAsync")]
+        [HttpGet(Name = "GetPagedHallsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<HallResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<HallResponse>>> GetPagedHallsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<HallResponse>>> GetPagedHallsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             if (pageNumber <= 0 || pageSize <= 0)
             {

@@ -20,7 +20,7 @@ namespace Business.Services
 
         public async Task<bool> DeleteMajorAsync(int majorID)
         {
-            return await _majorRepository.DeleteMajorAsync(majorID);
+            return majorID > 0 && await _majorRepository.DeleteMajorAsync(majorID);
         }
 
         public async Task<MajorResponse?> AddMajorAsync(MajorRequest request)
@@ -59,6 +59,9 @@ namespace Business.Services
 
         public async Task<MajorResponse?> GetMajorByIDAsync(int majorID)
         {
+            if (majorID <= 0)
+                return null;
+
             Major? major = await _majorRepository.GetMajorByIDAsync(majorID);
             return major != null ? major.ToResponse() : null;
         }

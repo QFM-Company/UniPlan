@@ -68,7 +68,7 @@ namespace Business.Services
             return courseSession != null ? courseSession.ToResponse() : null;
         }
 
-        public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<DayOfWeek> days)
+        public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<int> days)
         {
             return await _courseSessionRepository.GetWishListSessionsByDaysAsync(listID, days);
         }

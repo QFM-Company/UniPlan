@@ -34,7 +34,7 @@ namespace Business.Services
             return null;
         }
 
-        private async Task<bool> _GeneratedSchedule(GeneratedSchedule schedule, List<DayOfWeek> days)
+        private async Task<bool> _GeneratedSchedule(GeneratedSchedule schedule, List<int> days)
         {
             var sessions = await _courseSessionService.GetWishListSessionsByDaysAsync(schedule.WishList.WishListID, days);
 
@@ -60,6 +60,9 @@ namespace Business.Services
 
         public async Task<GeneratedScheduleResponse?> GetGeneratedScheduleByWishListIDAsync(int listID)
         {
+            if (listID <= 0)
+                return null;
+
             GeneratedSchedule? schedule = await _scheduleRepository.GetGeneratedScheduleByWishListIDAsync(listID);
             return schedule != null ? schedule.ToResponse() : null;
         }

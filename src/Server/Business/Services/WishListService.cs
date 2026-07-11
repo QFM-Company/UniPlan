@@ -18,9 +18,9 @@ namespace Business.Services
             _listRepository = listRepository;
         }
 
-        public async Task<bool> DeleteWishListAsync(int WishListID)
+        public async Task<bool> DeleteWishListAsync(int listID)
         {
-            return await _listRepository.DeleteWishListAsync(WishListID);
+            return listID > 0 && await _listRepository.DeleteWishListAsync(listID);
         }
 
         public async Task<WishListResponse?> AddWishListAsync(WishListRequest request)
@@ -45,6 +45,9 @@ namespace Business.Services
 
         public async Task<WishListResponse?> GetWishListByIDAsync(int listID)
         {
+            if (listID <= 0)
+                return null;
+
             WishList? list = await _listRepository.GetWishListByIDAsync(listID);
             return list != null ? list.ToResponse() : null;
         }

@@ -24,7 +24,7 @@ namespace Business.Services
 
         public async Task<bool> DeleteStudentAsync(int studentID)
         {
-            return await _studentRepository.DeleteStudentAsync(studentID);
+            return studentID > 0 && await _studentRepository.DeleteStudentAsync(studentID);
         }
 
         public async Task<StudentResponse?> AddStudentAsync(CreateStudentRequest request)
@@ -64,6 +64,9 @@ namespace Business.Services
 
         public async Task<StudentResponse?> GetStudentByIDAsync(int studentID)
         {
+            if (studentID <= 0)
+                return null;
+
             Student? student = await _studentRepository.GetStudentByIDAsync(studentID);
             return student != null ? student.ToResponse() : null;
         }

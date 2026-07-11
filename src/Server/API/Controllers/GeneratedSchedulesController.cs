@@ -24,9 +24,11 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddGeneratedScheduleAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GeneratedScheduleResponse))]
+        [HttpPost(Name = "AddGeneratedScheduleAsync")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GeneratedScheduleResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<GeneratedScheduleResponse?>> AddGeneratedScheduleAsync(GeneratedScheduleRequest request)
         {
@@ -36,50 +38,21 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("GeneratedSchedule added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    await _logService.LogAsync("تم إضافة الجدول المُولّد بنجاح", ExternalServicesEnums.LogType.Info);
+                    return CreatedAtRoute("GetGeneratedScheduleByWishListIDAsync", new { listID = response.WishListInfo.WishListID }, response);
                 }
 
-                await _logService.LogAsync("Failed to add GeneratedSchedule.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add GeneratedSchedule.");
+                await _logService.LogAsync("فشل إضافة الجدول المُولّد بسبب خطأ في الخادم", ExternalServicesEnums.LogType.Warning);
+                return StatusCode(StatusCodes.Status500InternalServerError, "فشل إضافة الجدول المُولّد");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
-            }
-        }
-
-        [HttpGet("get/{listID}", Name = "GetGeneratedScheduleByWishListIDAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GeneratedScheduleResponse))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<GeneratedScheduleResponse>> GetGeneratedScheduleByWishListIDAsync(int listID)
-        {
-            try
-            {
-                GeneratedScheduleResponse? response = await _scheduleService.GetGeneratedScheduleByWishListIDAsync(listID);
-
-                if (response != null)
-                {
-                    await _logService.LogAsync($"GeneratedSchedule with list ID {listID} fetched successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
-                }
-
-                await _logService.LogAsync($"GeneratedSchedule with list ID {listID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"GeneratedSchedule with list ID {listID} was not found.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {

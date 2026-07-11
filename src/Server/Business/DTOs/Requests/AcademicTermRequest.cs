@@ -4,7 +4,7 @@ namespace Business.DTOs.Requests
 {
     public class AcademicTermRequest
     {
-        [AllowedValues("يجب أن تكون قيمة الفصل الأكاديمي 1 (الأول) أو 2 (الثاني) أو 3 (الصيفي) فقط", new object[] { 1, 2, 3 })]
+        [AllowedValues("يجب أن تكون قيمة الفصل الأكاديمي 1 (الأول) أو 2 (الثاني) أو 3 (الثالث) فقط", new object[] { 1, 2, 3 })]
         public int TermType { get; set; }
 
         [Required<int>("السنة الأكاديمية مطلوبة")]

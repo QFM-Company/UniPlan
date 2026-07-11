@@ -24,9 +24,10 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddMajorAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MajorResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost(Name = "AddMajorAsync")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MajorResponse))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<MajorResponse?>> AddMajorAsync(MajorRequest request)
         {
@@ -36,21 +37,21 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("Major added successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(response);
+                    await _logService.LogAsync("تم إضافة التخصص بنجاح", ExternalServicesEnums.LogType.Info);
+                    return CreatedAtRoute("GetMajorByIDAsync", new { majorID = response.MajorID }, response);
                 }
 
-                await _logService.LogAsync("Failed to add Major.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add Major.");
+                await _logService.LogAsync("فشل إضافة التخصص بسبب خطأ في الخادم", ExternalServicesEnums.LogType.Warning);
+                return StatusCode(StatusCodes.Status500InternalServerError, "فشل إضافة التخصص");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -58,11 +59,13 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("update/{majorID}", Name = "UpdateMajorAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("{majorID}", Name = "UpdateMajorAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> UpdateMajorMajorAsync(MajorRequest request, int majorID)
+        public async Task<ActionResult> UpdateMajorAsync(int majorID, MajorRequest request)
         {
             try
             {
@@ -70,21 +73,21 @@ namespace API.Controllers
 
                 if (res)
                 {
-                    await _logService.LogAsync("Major updated successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    await _logService.LogAsync("تم تحديث التخصص بنجاح", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync("Failed to update Major.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to update Major.");
+                await _logService.LogAsync($"لم يتم العثور على التخصص بالمعرف {majorID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على التخصص بالمعرف {majorID}");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -92,11 +95,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{majorID}", Name = "DeleteMajorAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpDelete("{majorID}", Name = "DeleteMajorAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteMajorAsync(int majorID)
+        public async Task<ActionResult> DeleteMajorAsync(int majorID)
         {
             try
             {
@@ -104,16 +107,12 @@ namespace API.Controllers
 
                 if (res)
                 {
-                    await _logService.LogAsync("Major deleted successfully.", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    await _logService.LogAsync("تم حذف التخصص بنجاح", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync("Failed to delete Major.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete Major.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على التخصص بالمعرف {majorID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على التخصص بالمعرف {majorID}");
             }
             catch (Exception ex)
             {
@@ -121,7 +120,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{majorID}", Name = "GetMajorByIDAsync")]
+        [HttpGet("{majorID}", Name = "GetMajorByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MajorResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -133,16 +132,12 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync($"Major with ID {majorID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync($"تم جلب التخصص بالمعرف {majorID} بنجاح", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync($"Major with ID {majorID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Major with ID {majorID} was not found.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على التخصص بالمعرف {majorID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على التخصص بالمعرف {majorID}");
             }
             catch (Exception ex)
             {
@@ -150,28 +145,28 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedMajorsAsync")]
+        [HttpGet(Name = "GetPagedMajorsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MajorResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<MajorResponse>?>> GetPagedMajorsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<MajorResponse>>> GetPagedMajorsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
+            }
+
             try
             {
                 IEnumerable<MajorResponse>? responses = await _majorService.GetPagedMajorsAsync(pageNumber, pageSize);
 
-                if (responses != null && responses.Any())
+                if (responses == null)
                 {
-                    await _logService.LogAsync($"Majors fetched successfully for page {pageNumber} with size {pageSize}.", ExternalServicesEnums.LogType.Info);
-                    return Ok(responses);
+                    responses = Enumerable.Empty<MajorResponse>();
                 }
 
-                await _logService.LogAsync($"No majors found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"No majors found on page {pageNumber}.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"تم جلب التخصصات للصفحة {pageNumber} بحجم {pageSize} بنجاح", ExternalServicesEnums.LogType.Info);
+                return Ok(responses);
             }
             catch (Exception ex)
             {

@@ -14,15 +14,17 @@ namespace API.Controllers
     [ApiController]
     public class StudentTermController : ControllerBase
     {
+        private readonly IWishListService _listService;
         private IStudentTermService _studentTermService;
         private ILogService _logService;
         private IExceptionService _exceptionService;
 
-        public StudentTermController(IStudentTermService studentTermService, ILogService logService, IExceptionService exceptionService)
+        public StudentTermController(IStudentTermService studentTermService, ILogService logService, IExceptionService exceptionService, IWishListService listService)
         {
             _studentTermService = studentTermService;
             _logService = logService;
             _exceptionService = exceptionService;
+            _listService = listService;
         }
 
         [HttpPost(Name = "AddStudentTermAsync")]
@@ -85,6 +87,35 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"Student Term with ID {studentTermID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Student Term with ID {studentTermID} was not found.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
+            }
+        }
+
+        [HttpGet("{registrationID}/wishLists", Name = "GetWishListsByRegistrationIDAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<WishListResponse>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        public async Task<ActionResult<IEnumerable<WishListResponse>>> GetWishListsByRegistrationIDAsync(int registrationID)
+        {
+            if (registrationID <= 0)
+            {
+                return BadRequest("يجب أن يكون معرف التسجيل أكبر من 0");
+            }
+
+            try
+            {
+                IEnumerable<WishListResponse>? responses = await _listService.GetWishListsByRegistrationIDAsync(registrationID);
+
+                if (responses == null)
+                {
+                    responses = Enumerable.Empty<WishListResponse>();
+                }
+
+                await _logService.LogAsync($"تم جلب قوائم الرغبات لمعرف التسجيل {registrationID} بنجاح", ExternalServicesEnums.LogType.Info);
+                return Ok(responses);
             }
             catch (Exception ex)
             {

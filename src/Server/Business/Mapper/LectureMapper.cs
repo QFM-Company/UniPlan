@@ -1,6 +1,7 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Core.Entities;
+using Core.Enums;
 
 namespace Business.Mapper
 {
@@ -8,7 +9,7 @@ namespace Business.Mapper
     {
         public static Lecture ToLecture(this LectureRequest request)
         {
-            return new Lecture(-1, request.LectureType, request.DurationValue, new Course { CourseID = request.CourseID });
+            return new Lecture(-1, (LectureType) request.LectureType, request.DurationValue, new Course { CourseID = request.CourseID });
         }
 
         public static void UpdateLecture(this Lecture lecture, LectureRequest? request)
@@ -17,7 +18,7 @@ namespace Business.Mapper
                 return;
 
             lecture.DurationValue = request.DurationValue;
-            lecture.LectureType = request.LectureType;
+            lecture.LectureType = (LectureType) request.LectureType;
 
             if (lecture.Course != null)
                 lecture.Course.CourseID = request.CourseID;
@@ -25,11 +26,10 @@ namespace Business.Mapper
 
         public static LectureResponse? ToResponse(this Lecture lecture)
         {
-
             if (lecture.Course != null)
             {
                 CourseResponse course = lecture.Course.ToResponse();
-                return new LectureResponse(lecture.LectureID, lecture.LectureType, lecture.DurationValue, course);
+                return new LectureResponse(lecture.LectureID, lecture.LectureType.ToString(), lecture.DurationValue, course);
             }
 
             return null;

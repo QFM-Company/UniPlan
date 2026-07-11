@@ -27,7 +27,7 @@ namespace API.Controllers
 
         [HttpPost("login", Name = "LoginAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountResponse))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))] 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AccountResponse?>> LoginAsync(LoginRequest request)
         {
@@ -37,21 +37,21 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync("Account login successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync("تم تسجيل دخول الحساب بنجاح", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync("Failed to login Account.", ExternalServicesEnums.LogType.Warning);
-                return Unauthorized("Failed to login Account"); 
+                await _logService.LogAsync("فشل تسجيل دخول الحساب", ExternalServicesEnums.LogType.Warning);
+                return Unauthorized("فشل تسجيل دخول الحساب");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -61,7 +61,7 @@ namespace API.Controllers
 
         [HttpPut("updatePassword/{accountID}", Name = "UpdatePasswordAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))] 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> UpdatePasswordAsync(ChangePasswordRequest request, int accountID)
         {
@@ -71,21 +71,21 @@ namespace API.Controllers
 
                 if (res)
                 {
-                    await _logService.LogAsync("Account updated successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync("تم تحديث كلمة المرور بنجاح", ExternalServicesEnums.LogType.Info);
                     return Ok(res);
                 }
 
-                await _logService.LogAsync("Failed to update Account.", ExternalServicesEnums.LogType.Warning);
-                return NotFound("Failed to update Account.");
+                await _logService.LogAsync($"لم يتم العثور على الحساب بالمعرف {accountID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على الحساب بالمعرف {accountID}");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -94,7 +94,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("get/{accountID}", Name = "GetAccountByIDAsync")]
+        [HttpGet("{accountID}", Name = "GetAccountByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -106,16 +106,12 @@ namespace API.Controllers
 
                 if (response != null)
                 {
-                    await _logService.LogAsync($"Account with ID {accountID} fetched successfully.", ExternalServicesEnums.LogType.Info);
+                    await _logService.LogAsync($"تم جلب الحساب بالمعرف {accountID} بنجاح", ExternalServicesEnums.LogType.Info);
                     return Ok(response);
                 }
 
-                await _logService.LogAsync($"Account with ID {accountID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Account with ID {accountID} was not found.");
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                await _logService.LogAsync($"لم يتم العثور على الحساب بالمعرف {accountID}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على الحساب بالمعرف {accountID}");
             }
             catch (Exception ex)
             {

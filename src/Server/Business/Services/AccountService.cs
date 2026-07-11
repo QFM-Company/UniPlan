@@ -24,6 +24,9 @@ namespace Business.Services
 
         public async Task<AccountResponse?> GetAccountByIDAsync(int accountID)
         {
+            if (accountID <= 0)
+                return null;
+
             Account? account = await _accountRepository.GetAccountByIDAsync(accountID);
             return account != null ? account.ToResponse() : null;
         }

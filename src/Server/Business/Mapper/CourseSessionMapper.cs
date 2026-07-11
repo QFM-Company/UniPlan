@@ -45,7 +45,7 @@ namespace Business.Mapper
                  courseSession.StartTime,
                  courseSession.EndTime,
                  courseSession.CreatedByAdminID,
-                 courseSession.Day
+                 courseSession.Day.ToString()
             );
         }
 

@@ -22,7 +22,7 @@ namespace Business.Services
 
         public async Task<bool> DeleteLectureAsync(int lectureID)
         {
-            return await _lectureRepository.DeleteLectureAsync(lectureID);
+            return lectureID > 0 && await _lectureRepository.DeleteLectureAsync(lectureID);
         }
 
         public async Task<LectureResponse?> AddLectureAsync(LectureRequest request)
@@ -61,6 +61,9 @@ namespace Business.Services
 
         public async Task<LectureResponse?> GetLectureByIDAsync(int lectureID)
         {
+            if (lectureID <= 0)
+                return null;
+
             Lecture? lecture = await _lectureRepository.GetLectureByIDAsync(lectureID);
             return lecture != null ? lecture.ToResponse() : null;
         }

@@ -14,9 +14,9 @@
 
         public int? CreatedByAdminID { get; set; }
 
-        public DayOfWeek Day { get; set; }
+        public string Day { get; set; }
 
-        public CourseSessionResponse(int sessionID, CourseOfferingResponse courseOffering, HallResponse hall, TimeSpan startTime, TimeSpan endTime, int? createdByAdminID, DayOfWeek day)
+        public CourseSessionResponse(int sessionID, CourseOfferingResponse courseOffering, HallResponse hall, TimeSpan startTime, TimeSpan endTime, int? createdByAdminID, string day)
         {
             SessionID = sessionID;
             CourseOffering = courseOffering;

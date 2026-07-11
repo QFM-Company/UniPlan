@@ -15,7 +15,7 @@ namespace Business.Mapper
 
         public static AcademicTermResponse ToResponse(this AcademicTerm term)
         {
-            return new AcademicTermResponse(term.TermID, term.TermType, term.TermYear);
+            return new AcademicTermResponse(term.TermID, term.TermType.ToString(), term.TermYear);
         }
     }
 }

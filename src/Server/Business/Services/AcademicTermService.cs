@@ -19,9 +19,9 @@ namespace Business.Services
             _termRepository = termRepository;
         }
 
-        public async Task<bool> DeleteAcademicTermAsync(int AcademicTermID)
+        public async Task<bool> DeleteAcademicTermAsync(int termID)
         {
-            return await _termRepository.DeleteAcademicTermAsync(AcademicTermID);
+            return termID > 0 && await _termRepository.DeleteAcademicTermAsync(termID);
         }
 
         public async Task<AcademicTermResponse?> AddAcademicTermAsync(AcademicTermRequest request)
@@ -46,6 +46,9 @@ namespace Business.Services
 
         public async Task<AcademicTermResponse?> GetAcademicTermByIDAsync(int termID)
         {
+            if (termID <= 0)
+                return null;
+
             AcademicTerm? term = await _termRepository.GetAcademicTermByIDAsync(termID);
             return term != null ? term.ToResponse() : null;
         }
