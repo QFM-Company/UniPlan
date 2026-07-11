@@ -17,5 +17,16 @@ namespace DataAccess.Mapping
 
             return new Lecture(lectureID, (LectureType)lectureType, durationValue, course);
         }
+
+        public static Lecture ToLectureBasicInfo(this SqlDataReader reader)
+        {
+            reader.ReadInt("LectureID", out int lectureID, 0);
+            reader.ReadInt("LectureType", out int lectureType, 0);
+
+            Lecture lecture = new Lecture();
+
+            (lecture.LectureID, lecture.LectureType) = (lectureID, (LectureType)lectureType);
+            return lecture;
+        }
     }
 }

@@ -7,5 +7,7 @@ namespace Core.Interfaces.Repositories
         Task<bool> AddGeneratedScheduleAsync(GeneratedSchedule schedule);
 
         Task<GeneratedSchedule?> GetGeneratedScheduleByWishListIDAsync(int listID);
+
+        Task<GeneratedSchedule?> GetScheduleDetailByWishListIDAsync(int listID, int scheduleNum);
     }
 }

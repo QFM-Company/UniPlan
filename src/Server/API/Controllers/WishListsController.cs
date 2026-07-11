@@ -173,5 +173,36 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
+
+        [HttpGet("{listID}/{scheduleNum}/scheduleDetail", Name = "GetScheduleDetailByWishListIDAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduleDetailResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        public async Task<ActionResult<ScheduleDetailResponse>> GetScheduleDetailByWishListIDAsync(int listID, int scheduleNum)
+        {
+            if (listID <= 0 && scheduleNum <= 0)
+            {
+                return BadRequest("يجب أن يكون معرف قائمة الرغبات و رقم الجدول أكبر من 0");
+            }
+
+            try
+            {
+                ScheduleDetailResponse? response = await _scheduleService.GetScheduleDetailByWishListIDAsync(listID, scheduleNum);
+
+                if (response != null)
+                {
+                    await _logService.LogAsync($"تم جلب الجدول المُولّد لقائمة الرغبات بالمعرف و رقم الجدول {scheduleNum}{listID} بنجاح", ExternalServicesEnums.LogType.Info);
+                    return Ok(response);
+                }
+
+                await _logService.LogAsync($"لم يتم العثور على جدول مُولّد لقائمة الرغبات بالمعرف {listID} و رقم الجدول {scheduleNum}", ExternalServicesEnums.LogType.Warning);
+                return NotFound($"لم يتم العثور على جدول مُولّد لقائمة الرغبات بالمعرف {listID} و رقم الجدول {scheduleNum}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
+            }
+        }
     }
 }

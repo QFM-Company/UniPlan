@@ -66,5 +66,14 @@ namespace Business.Services
             GeneratedSchedule? schedule = await _scheduleRepository.GetGeneratedScheduleByWishListIDAsync(listID);
             return schedule != null ? schedule.ToResponse() : null;
         }
+
+        public async Task<ScheduleDetailResponse?> GetScheduleDetailByWishListIDAsync(int listID, int scheduleNum)
+        {
+            if (listID <= 0 || scheduleNum <= 0)
+                return null;
+
+            GeneratedSchedule? schedule = await _scheduleRepository.GetScheduleDetailByWishListIDAsync(listID, scheduleNum);
+            return schedule != null ? schedule.ToScheduleDetailResponse() : null;
+        }
     }
 }

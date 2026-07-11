@@ -40,5 +40,15 @@ namespace DataAccess.Mapping
 
             return new CourseSession(courseSessionID, startTime, endTime, (DayOfWeek) day);
         }
+
+        public static CourseSession ToScheduleContextSession(this SqlDataReader reader)
+        {
+            CourseSession session = reader.ToCourseSessionBasicInfo();
+            session.CourseOffering = reader.ToCourseOfferingBasicInfo();
+            session.CourseOffering.Lecture = reader.ToLectureBasicInfo();
+            session.CourseOffering.Lecture.Course = reader.ToCourseBasicInfo();
+
+            return session;
+        }
     }
 }

@@ -6,8 +6,6 @@
 
         public WishListResponse WishListInfo { get; set; }
 
-        public List<CourseOfferingResponse>? Offerings { get; set; }
-
         public GeneratedScheduleResponse()
         {
             WishListInfo = new WishListResponse();
@@ -17,13 +15,6 @@
         {
             ScheduleID = scheduleID;
             WishListInfo = wishListInfo;
-        }
-
-        public GeneratedScheduleResponse(int scheduleID, WishListResponse wishListInfo, List<CourseOfferingResponse>? offerings)
-        {
-            ScheduleID = scheduleID;
-            WishListInfo = wishListInfo;
-            Offerings = offerings;
         }
     }
 }

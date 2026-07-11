@@ -1,4 +1,4 @@
-USE [UniPlan];
+﻿USE [UniPlan];
 Go
 
 Declare @PersonID int;
@@ -11,6 +11,19 @@ select @PersonID = SCOPE_IDENTITY();
 
 insert into Accounts (AccountName , Email , Password)
 values('Fares' , 'fares.oyion123@gmail.com' , '1234')
+
+select @AccountID = SCOPE_IDENTITY();
+
+insert into Administrators (AccountID , IsActive , PersonID)
+values (@AccountID , 1 , @PersonID);
+
+insert into People (FirstName , LastName)
+Values('Mohmmad' , 'AL-Sheikh');
+
+select @PersonID = SCOPE_IDENTITY();
+
+insert into Accounts (AccountName , Email , Password)
+values('Mo.Sheikh' , 'Mo123@gmail.com' , '1234')
 
 select @AccountID = SCOPE_IDENTITY();
 

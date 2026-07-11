@@ -33,5 +33,14 @@ namespace Business.Mapper
             );
         }
 
+        public static CourseBriefResponse ToBriefResponse(this Course course)
+        {
+            return new CourseBriefResponse(
+                course.CourseID,
+                course.CourseName,
+                course.CourseCode
+            );
+        }
+
     }
 }

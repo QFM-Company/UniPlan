@@ -1,27 +1,17 @@
 ﻿USE [UniPlan];
 GO
 
-IF OBJECT_ID('dbo.SP_GeneratedSchedules_Insert', 'P') IS NOT NULL
-BEGIN
-    DROP PROCEDURE dbo.SP_GeneratedSchedules_Insert;
-END
+
+DROP PROCEDURE IF EXISTS SP_GeneratedSchedules_Insert;
 GO
 
-IF OBJECT_ID('dbo.SP_CourseSessions_Insert', 'P') IS NOT NULL
-BEGIN
-    DROP PROCEDURE dbo.SP_CourseSessions_Insert;
-END
-GO
-
-IF EXISTS (SELECT * FROM sys.types WHERE name = 'IdListType')
-BEGIN
-    DROP TYPE IdListType;
-END
+DROP TYPE IF EXISTS IdListType;
 GO
 
 CREATE TYPE IdListType AS TABLE
 (
-    ID INT
+    OfferingID INT,
+    ScheduleNum INT
 )
 GO
 
@@ -42,8 +32,8 @@ BEGIN
             
             SET @ScheduleID = CONVERT(int, SCOPE_IDENTITY());
 
-            INSERT INTO [dbo].[ScheduleDetails] ([ScheduleID] ,[OfferingID])
-            SELECT DISTINCT @ScheduleID, ID FROM @OfferingIDs;
+            INSERT INTO [dbo].[ScheduleDetails] ([ScheduleID] ,[OfferingID], [ScheduleNum])
+            SELECT DISTINCT @ScheduleID, OfferingID, ScheduleNum FROM @OfferingIDs;
             
         COMMIT;
         SET @Result = 1;     
@@ -65,6 +55,13 @@ AS
     JOIN WishLists_view W ON G.WishListID = W.WishListID
 GO
 
+CREATE OR ALTER VIEW ScheduleDetails_view
+AS
+    SELECT CS.CourseID, CS.CourseName, CS.CourseCode, CS.LectureID, CS.LectureType, CS.SectionNumber, CS.OfferingID,
+        CS.SessionID, CS.DayNum, CS.StartTime, CS.EndTime, S.ScheduleID, S.ScheduleNum
+    FROM ScheduleDetails S
+    JOIN CourseSessions_view CS ON CS.OfferingID = S.OfferingID
+GO
 
 CREATE OR ALTER PROCEDURE SP_GeneratedSchedules_GetByWishListID
     @WishListID int
@@ -80,10 +77,6 @@ BEGIN
 
         SELECT * FROM GeneratedSchedules_view G
         WHERE ScheduleID = @ScheduleID;
-
-        SELECT C.* FROM ScheduleDetails S
-        JOIN CourseOfferings_view C ON C.OfferingID = S.OfferingID
-        WHERE S.ScheduleID = @ScheduleID;
     END TRY
     BEGIN CATCH
         -- CHANGED: THROW keeps the original error details.
@@ -93,3 +86,28 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE SP_ScheduleDetails_GetByWishListIDAndScheduleNum
+    @WishListID int,
+    @ScheduleNum int
+AS
+BEGIN
+    SET NOCOUNT ON
+    
+    DECLARE @ScheduleID INT;
+
+    BEGIN TRY
+        SELECT @ScheduleID = ScheduleID FROM GeneratedSchedules
+        WHERE WishListID = @WishListID;
+
+        SELECT ScheduleID, CourseID, CourseName, CourseCode, LectureID, LectureType, SectionNumber, OfferingID,
+            SessionID, DayNum, StartTime, EndTime 
+        FROM ScheduleDetails_view S
+        WHERE S.ScheduleID = @ScheduleID AND S.ScheduleNum = @ScheduleNum;
+    END TRY
+    BEGIN CATCH
+        -- CHANGED: THROW keeps the original error details.
+        THROW;
+    END CATCH
+
+END;
+GO

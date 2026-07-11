@@ -6,7 +6,13 @@
 
         public WishList WishList { get; set; }
 
-        public List<CourseOffering>? Offerings { get; set; }
+
+        // Stores all generated schedule permutations for database storage
+        public List<List<int>>? GeneratedCombinations { get; set; }
+
+
+        // Contains the single final schedule selected to display to the user
+        public List<CourseSession>? SelectedSchedule { get; set; }
 
 
         public GeneratedSchedule()

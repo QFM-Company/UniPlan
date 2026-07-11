@@ -476,11 +476,12 @@ CREATE TABLE [dbo].[ScheduleDetails]
     [DetailID] int IDENTITY(1,1) NOT NULL,
     [ScheduleID] int NOT NULL,
     [OfferingID] int NOT NULL,
+    [ScheduleNum] INT NOT NULL
 
     CONSTRAINT [PK_ScheduleDetails] PRIMARY KEY CLUSTERED ([DetailID]),
 
     /* FIX TAG: SCHEDULE DETAIL DUPLICATES */
-    CONSTRAINT [UQ_ScheduleDetails_ScheduleID_OfferingID] UNIQUE ([ScheduleID], [OfferingID]),
+    CONSTRAINT [UQ_ScheduleDetails_ScheduleID_OfferingID_ScheduleNum] UNIQUE ([ScheduleID], [OfferingID], [ScheduleNum]),
 
     CONSTRAINT [FK_ScheduleDetail_Schedule]
         FOREIGN KEY ([ScheduleID]) REFERENCES [dbo].[GeneratedSchedules] ([ScheduleID]),

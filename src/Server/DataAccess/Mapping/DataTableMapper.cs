@@ -1,18 +1,21 @@
-﻿using Core.Entities;
-using System.Data;
+﻿using System.Data;
 
 namespace DataAccess.Mapping
 {
     public static class DataTableMapper
     {
-        public static DataTable ToDataTable(this List<CourseOffering> offerings)
+        public static DataTable ToDataTable(this List<List<int>> offerings)
         {
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("OfferingID", typeof(int));
+            dataTable.Columns.Add("ScheduleNum", typeof(int));
 
-            foreach (CourseOffering item in offerings)
+            for (int i = 0; i < offerings.Count; i++)
             {
-                dataTable.Rows.Add(item.OfferingID);
+                foreach (var offeringID in offerings[i])
+                {
+                    dataTable.Rows.Add(new object[] { offeringID, i + 1 });
+                }
             }
 
             return dataTable;

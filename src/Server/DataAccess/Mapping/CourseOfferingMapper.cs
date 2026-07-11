@@ -18,5 +18,17 @@ namespace DataAccess.Mapping
 
             return new CourseOffering(offeringID, sectionNumber, createdByAdminID, term, lecture);
         }
+
+        public static CourseOffering ToCourseOfferingBasicInfo(this SqlDataReader reader)
+        {
+            reader.ReadInt("OfferingID", out int offeringID, 0);
+            reader.ReadInt("SectionNumber", out int sectionNumber, 0);
+
+            CourseOffering offering = new CourseOffering();
+
+            (offering.OfferingID, offering.SectionNumber) = (offeringID, sectionNumber);
+
+            return offering;
+        }
     }
 }

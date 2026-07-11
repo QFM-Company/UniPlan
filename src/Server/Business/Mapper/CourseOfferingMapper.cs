@@ -47,5 +47,17 @@ namespace Business.Mapper
 
             return new CourseOfferingResponse(offering.OfferingID, offering.SectionNumber, offering.CreatedByAdminID, academicTerm, lecture);
         }
+
+        public static CourseOfferingBriefResponse ToBriefResponse(this CourseOffering offering)
+        {
+            LectureBriefResponse? lecture = null;
+
+            if (offering.Lecture != null)
+            {
+                lecture = offering.Lecture.ToBriefResponse();
+            }
+
+            return new CourseOfferingBriefResponse(offering.OfferingID, offering.SectionNumber, lecture);
+        }
     }
 }

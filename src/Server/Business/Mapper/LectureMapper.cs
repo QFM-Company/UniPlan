@@ -34,5 +34,18 @@ namespace Business.Mapper
 
             return null;
         }
+
+        public static LectureBriefResponse? ToBriefResponse(this Lecture lecture)
+        {
+            if (lecture.Course != null)
+            {
+                CourseBriefResponse course = lecture.Course.ToBriefResponse();
+                return new LectureBriefResponse(lecture.LectureID, lecture.LectureType.ToString(), course);
+            }
+
+            return null;
+        }
+
+
     }
 }

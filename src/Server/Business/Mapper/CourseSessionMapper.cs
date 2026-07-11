@@ -49,5 +49,16 @@ namespace Business.Mapper
             );
         }
 
+        public static SessionBriefResponse ToBriefResponse(this CourseSession courseSession)
+        {
+            return new SessionBriefResponse(
+                 courseSession.SessionID,
+                 courseSession.CourseOffering!.ToBriefResponse(),
+                 courseSession.StartTime,
+                 courseSession.EndTime,
+                 courseSession.Day.ToString()
+            );
+        }
+
     }
 }

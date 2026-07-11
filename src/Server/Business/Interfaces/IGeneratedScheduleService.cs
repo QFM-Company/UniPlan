@@ -8,5 +8,7 @@ namespace Business.Interfaces
         Task<GeneratedScheduleResponse?> AddGeneratedScheduleAsync(GeneratedScheduleRequest schedule);
 
         Task<GeneratedScheduleResponse?> GetGeneratedScheduleByWishListIDAsync(int listID);
+
+        Task<ScheduleDetailResponse?> GetScheduleDetailByWishListIDAsync(int listID, int scheduleNum);
     }
 }

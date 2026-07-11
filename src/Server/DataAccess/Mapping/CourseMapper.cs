@@ -15,5 +15,18 @@ namespace DataAccess.Mapping
 
             return new Course(courseID, courseName, creditHours , courseCode);
         }
+
+        public static Course ToCourseBasicInfo(this SqlDataReader reader)
+        {
+            reader.ReadInt("CourseID", out int courseID, -1);
+            reader.ReadString("CourseName", out string courseName, string.Empty);
+            reader.ReadString("CourseCode", out string courseCode, string.Empty);
+
+            Course course = new Course();
+
+            (course.CourseID, course.CourseName, course.CourseCode) = (courseID, courseName, courseCode);
+
+            return course;
+        }
     }
 }

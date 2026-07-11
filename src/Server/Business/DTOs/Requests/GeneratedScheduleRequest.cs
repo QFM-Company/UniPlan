@@ -1,5 +1,4 @@
 ﻿using Infrastructure.ExternalServices.Validation.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Business.DTOs.Requests
 {

@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Extensions;
 using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -41,7 +42,7 @@ namespace DataAccess.Repositories
 
                     command.Parameters.Add(scheduleID);
                     command.Parameters.AddWithValue("@WishListID", (int)schedule.WishList.WishListID);
-                    command.Parameters.AddWithValue("@OfferingIDs", schedule?.Offerings?.ToDataTable());
+                    command.Parameters.AddWithValue("@OfferingIDs", schedule?.GeneratedCombinations?.ToDataTable());
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
@@ -87,18 +88,47 @@ namespace DataAccess.Repositories
                         {
                             schedule = reader.ToGeneratedSchedule();
                         }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logService.LogAsync(ex);
+                throw;
+            }
 
-                        if (schedule != null && reader != null && await reader.NextResultAsync())
+            return schedule;
+        }
+
+        public async Task<GeneratedSchedule?> GetScheduleDetailByWishListIDAsync(int listID, int scheduleNum)
+        {
+            GeneratedSchedule? schedule = null;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
+                using (SqlCommand command = new SqlCommand("SP_ScheduleDetails_GetByWishListIDAndScheduleNum", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@WishListID", listID);
+                    command.Parameters.AddWithValue("@ScheduleNum", scheduleNum);
+
+                    await connection.OpenAsync();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (reader != null && await reader.ReadAsync())
                         {
-                            schedule.Offerings = new List<CourseOffering>();
+                            schedule = new GeneratedSchedule();
+                            schedule.SelectedSchedule = new List<CourseSession>();
 
-                            while (await reader.ReadAsync())
+                            reader.ReadInt("ScheduleID", out int scheduleID, 0);
+                            schedule.ScheduleID = scheduleID;
+
+                            do
                             {
-                                CourseOffering offering = reader.ToCourseOffering();
-                                schedule.Offerings.Add(offering);
-                            }
+                                schedule.SelectedSchedule.Add(reader.ToScheduleContextSession());
+                            } while (await reader.ReadAsync());
                         }
-
                     }
                 }
             }
