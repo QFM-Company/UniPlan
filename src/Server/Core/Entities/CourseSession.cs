@@ -4,9 +4,9 @@
     {
         public int SessionID { get; set; }
 
-        public CourseOffering CourseOffering { get; set; }
+        public CourseOffering? CourseOffering { get; set; }
 
-        public Hall Hall { get; set; }
+        public Hall? Hall { get; set; }
 
         public TimeSpan StartTime { get; set; }
 
@@ -24,6 +24,14 @@
             StartTime = startTime;
             EndTime = endTime;
             CreatedByAdminID = createdByAdminID;
+            Day = day;
+        }
+
+        public CourseSession(int sessionID, TimeSpan startTime, TimeSpan endTime, DayOfWeek day)
+        {
+            SessionID = sessionID;
+            StartTime = startTime;
+            EndTime = endTime;
             Day = day;
         }
     }

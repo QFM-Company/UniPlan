@@ -1,8 +1,10 @@
 ﻿using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using DataAccess.Extensions;
 using DataAccess.Mapping;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 using System.Data;
 
 namespace DataAccess.Repositories
@@ -256,12 +258,7 @@ namespace DataAccess.Repositories
         }
 
 
-        public async Task<IEnumerable<CourseSession?>?>
-            GetCourseSessionsPagedAsync
-            (
-                int pageNumber,
-                int pageSize
-            )
+        public async Task<IEnumerable<CourseSession?>?>GetCourseSessionsPagedAsync(int pageNumber, int pageSize)
         {
             List<CourseSession> courseSessions = new();
 
@@ -294,6 +291,66 @@ namespace DataAccess.Repositories
                         while (await reader.ReadAsync())
                         {
                             courseSessions.Add(reader.ToCourseSession());
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logService.LogAsync(ex);
+                throw;
+            }
+
+            return courseSessions;
+        }
+
+        public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<DayOfWeek> days)
+        {
+            Dictionary<int, Dictionary<int, List<CourseSession>>> courseSessions = new();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
+                using (SqlCommand command = new SqlCommand("SP_CourseSessions_GetByWishListID", connection))
+                {
+
+
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue
+                    (
+                        "@WishListId",
+                        listID
+                    );
+
+                    command.Parameters.AddWithValue
+                    (
+                        "@Days",
+                        days.ToDataTable()
+                    );
+
+                    await connection.OpenAsync();
+
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            reader.ReadInt("LectureID", out int lectureID, 0);
+                            reader.ReadInt("OfferingID", out int offeringID, 0);
+                            CourseSession session = reader.ToCourseSessionBasicInfo();
+
+                            if (!courseSessions.ContainsKey(lectureID))
+                            {
+                                courseSessions.Add(lectureID, new());
+                            }
+
+                            if (!courseSessions[lectureID].ContainsKey(offeringID))
+                            {
+                                courseSessions[lectureID].Add(offeringID, new());
+                            }
+
+                            courseSessions[lectureID][offeringID].Add(session);
                         }
                     }
                 }

@@ -12,7 +12,7 @@ namespace Core.Interfaces.Repositories
 
         Task<CourseSession?> GetCourseSessionByIDAsync(int sessionID);
 
-      //  Task<CourseSession?> GetCourseSessionsByWishListIDAsync(int listID);
+        Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<DayOfWeek> days);
 
         Task<IEnumerable<CourseSession?>?> GetCourseSessionsPagedAsync(int pageNumber, int pageSize);
 
