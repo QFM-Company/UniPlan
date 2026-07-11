@@ -25,7 +25,7 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddWishListItemAsync")]
+        [HttpPost(Name = "AddWishListItemAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(WishListItemResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -60,7 +60,7 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
-        [HttpDelete("delete/{wishListItemID}", Name = "DeleteWishListItemAsync")]
+        [HttpDelete("{wishListItemID}", Name = "DeleteWishListItemAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -88,7 +88,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{wishListItemID}", Name = "GetWishListItemByIDAsync")]
+        [HttpGet("{wishListItemID}", Name = "GetWishListItemByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WishListItemResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]

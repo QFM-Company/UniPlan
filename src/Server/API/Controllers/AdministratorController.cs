@@ -26,7 +26,7 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddAdminAsync")]
+        [HttpPost(Name = "AddAdminAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AdministratorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -64,7 +64,7 @@ namespace API.Controllers
         }
 
 
-        [HttpPut("update/{adminID}", Name = "UpdateAdminAsync")]
+        [HttpPut("{adminID}", Name = "UpdateAdminAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -102,7 +102,7 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("delete/{adminID}", Name = "DeleteAdminAsync")]
+        [HttpDelete("{adminID}", Name = "DeleteAdminAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -132,7 +132,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("get/{adminID}", Name = "GetAdminByIDAsync")]
+        [HttpGet("{adminID}", Name = "GetAdminByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -164,11 +164,11 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedAdminsAsync")]
+        [HttpGet(Name = "GetPagedAdminsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AdministratorResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<AdministratorResponse>?>> GetPagedAdminsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<AdministratorResponse>?>> GetPagedAdminsAsync([FromQuery]int pageNumber = 1, [FromQuery]int pageSize = 10)
         {
             try
             {

@@ -25,7 +25,7 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddStudentTermAsync")]
+        [HttpPost(Name = "AddStudentTermAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(StudentTermResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -61,7 +61,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{studentTermID}", Name = "GetStudentTermByIDAsync")]
+        [HttpGet("{studentTermID}", Name = "GetStudentTermByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentTermResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]

@@ -25,7 +25,7 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddCoursePrequistAsync")]
+        [HttpPost(Name = "AddCoursePrequistAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CoursePrerequisiteResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -61,7 +61,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{coursePrequistID}", Name = "DeleteCoursePrequistAsync")]
+        [HttpDelete("{coursePrequistID}", Name = "DeleteCoursePrequistAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -88,7 +88,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{coursePrequistID}", Name = "GetCoursePrequistByIdAsync")]
+        [HttpGet("{coursePrequistID}", Name = "GetCoursePrequistByIdAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CoursePrerequisiteResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -117,11 +117,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPageCoursesPrequistsAsync")]
+        [HttpGet(Name = "GetPageCoursesPrequistsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CoursePrerequisiteResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<CoursePrerequisiteResponse>>> GetPageCoursesPrequistsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<CoursePrerequisiteResponse>>> GetPageCoursesPrequistsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {

@@ -24,7 +24,7 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddTimeSlotAsync")]
+        [HttpPost(Name = "AddTimeSlotAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TimeSlotResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -62,7 +62,7 @@ namespace API.Controllers
         }
 
 
-        [HttpPut("update/{timeSlotID}", Name = "UpdateTimeSlotAsync")]
+        [HttpPut("{timeSlotID}", Name = "UpdateTimeSlotAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -102,7 +102,7 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("delete/{timeSlotID}", Name = "DeleteTimeSlotAsync")]
+        [HttpDelete("{timeSlotID}", Name = "DeleteTimeSlotAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -131,7 +131,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("get/{timeSlotID}", Name = "GetTimeSlotByIDAsync")]
+        [HttpGet("{timeSlotID}", Name = "GetTimeSlotByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TimeSlotResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -164,11 +164,11 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedTimeSlotsAsync")]
+        [HttpGet(Name = "GetPagedTimeSlotsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TimeSlotResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<TimeSlotResponse>?>> GetPagedTimeSlotsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<TimeSlotResponse>?>> GetPagedTimeSlotsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
