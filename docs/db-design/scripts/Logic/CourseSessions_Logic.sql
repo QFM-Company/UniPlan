@@ -67,13 +67,29 @@ BEGIN
 
     IF NOT EXISTS ( SELECT 1 FROM dbo.CourseOfferings WHERE OfferingID = @OfferingID ) 
     BEGIN 
-        ;THROW 51204, 'Course Offering not found.', 1; 
+        ;THROW 51203, 'Course Offering not found.', 1; 
     END; 
 
     IF NOT EXISTS ( SELECT 1 FROM dbo.Halls WHERE HallID = @HallID ) 
     BEGIN 
-        ;THROW 50805, 'Hall not found.', 1; 
+        ;THROW 50803, 'Hall not found.', 1; 
     END; 
+
+	if Exists(select 1 from CourseSessions cs
+	inner join SessionTimeSlots on cs.SessionID = SessionTimeSlots.SessionID
+	inner join TimeSlots ts on SessionTimeSlots.SlotID = ts.SlotID 
+	inner join Periods p on ts.PeriodID = p.PeriodID
+	where HallID = @HallID And DayNum = @DayNum And 
+	Exists(
+	    select 1 from TimeSlots 
+		inner join Periods on TimeSlots.PeriodID = Periods.PeriodID
+		where Periods.StartTime < p.EndTime And Periods.StartTime > p.StartTime or
+		      Periods.EndTime < p.EndTime And Periods.EndTime > P.StartTime or
+			  Periods.StartTime <= p.StartTime And Periods.EndTime >= p.EndTime
+	))
+	Begin
+        ;THROW 51302, 'This Session Already Took.', 1; 
+	End
 
     BEGIN TRY 
         BEGIN TRANSACTION; 

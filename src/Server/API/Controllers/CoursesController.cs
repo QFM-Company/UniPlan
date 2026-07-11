@@ -24,7 +24,7 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddCourseAsync")]
+        [HttpPost(Name = "AddCourseAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CourseResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -61,7 +61,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("update/{courseID}", Name = "UpdateCourseAsync")]
+        [HttpPut("{courseID}", Name = "UpdateCourseAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
@@ -99,7 +99,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{courseID}", Name = "DeleteCourseAsync")]
+        [HttpDelete("{courseID}", Name = "DeleteCourseAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -126,7 +126,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{courseID}", Name = "GetCourseByIdAsync")]
+        [HttpGet("{courseID}", Name = "GetCourseByIdAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CourseResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -156,11 +156,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPageCoursesAsync")]
+        [HttpGet(Name = "GetPageCoursesAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CourseResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<CourseResponse>>> GetPageCoursesAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<CourseResponse>>> GetPageCoursesAsync([FromQuery]int pageNumber = 1,[FromQuery] int pageSize = 10)
         {
             try
             {

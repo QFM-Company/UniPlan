@@ -24,9 +24,11 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddPeriodAsync")]
+        [HttpPost(Name = "AddPeriodAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PeriodResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<PeriodResponse>> AddPeriodAsync(PeriodRequest request)
         {
@@ -46,11 +48,11 @@ namespace API.Controllers
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
@@ -60,11 +62,11 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("delete/{periodID}", Name = "DeletePeriodAsync")]
+        [HttpDelete("{periodID}", Name = "DeletePeriodAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeletePeriodAsync(int periodID)
+        public async Task<ActionResult> DeletePeriodAsync(int periodID)
         {
             try
             {
@@ -89,9 +91,10 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("get/{periodID}", Name = "GetPeriodByIDAsync")]
+        [HttpGet("{periodID}", Name = "GetPeriodByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PeriodResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<PeriodResponse>> GetPeriodByIDAsync(int periodID)
         {
@@ -120,11 +123,11 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPagedPeriodsAsync")]
+        [HttpGet(Name = "GetPagedPeriodsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PeriodResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<PeriodResponse>?>> GetPagedPeriodsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<PeriodResponse>?>> GetPagedPeriodsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {

@@ -16,10 +16,17 @@ namespace Business.Mapper
             return new Administrator(adminID, person, account, true);
         }
 
+        public static Administrator ToAdministrator(this UpdateAdministratorRequest request, int adminID = -1)
+        {
+            Person person = request.Person.ToPerson();
+            Account? account = request.Account!.ToAccount();
+            return new Administrator(adminID, person, account, true);
+        }
+
         public static void UpdateAdmin(this Administrator admin, UpdateAdministratorRequest request)
         {
             admin.Account!.UpdateAccount(request.Account);
-            admin.Person!.PersonID = request.PersonID;
+            admin.Person = request.Person.ToPerson();
         }
 
         public static AdministratorResponse ToResponse(this Administrator admin)

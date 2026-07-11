@@ -25,9 +25,11 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddCourseSessionAsync")]
+        [HttpPost(Name = "AddCourseSessionAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CourseSessionResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<CourseSessionResponse>> AddCourseSessionAsync(CreateCourseSessionRequest request)
         {
@@ -46,12 +48,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -59,11 +61,13 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("update/{courseSessionID}", Name = "UpdateCourseSessionAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [HttpPut("{courseSessionID}", Name = "UpdateCourseSessionAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> UpdateCourseSessionAsync(int courseID, UpdateCourseSessionRequest request)
+        public async Task<ActionResult> UpdateCourseSessionAsync(int courseID, UpdateCourseSessionRequest request)
         {
             try
             {
@@ -74,7 +78,7 @@ namespace API.Controllers
                     if (result)
                     {
                         await _logService.LogAsync($"Course Session with ID {courseID} updated successfully.", ExternalServicesEnums.LogType.Info);
-                        return Ok(result);
+                        return NoContent();
                     }
                 }
                 await _logService.LogAsync($"Failed to update Course Session with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
@@ -82,12 +86,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -95,11 +99,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{courseSessionID}", Name = "DeleteCourseSessionAsync")]
+        [HttpDelete("{courseSessionID}", Name = "DeleteCourseSessionAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteCourseSessionAsync(int courseID)
+        public async Task<ActionResult> DeleteCourseSessionAsync(int courseID)
         {
             try
             {
@@ -117,17 +121,13 @@ namespace API.Controllers
                 await _logService.LogAsync($"Failed to delete Course Session with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest($"Failed to delete Course Session with ID {courseID}.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
 
-        [HttpGet("get/{courseSessionID}", Name = "GetCourseSessionByIdAsync")]
+        [HttpGet("{courseSessionID}", Name = "GetCourseSessionByIdAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CourseSessionResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -151,21 +151,17 @@ namespace API.Controllers
                 await _logService.LogAsync($"Course Session with ID {courseSessionID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Course Session with ID {courseSessionID} was not found.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPageCourseSessionsAsync")]
+        [HttpGet(Name = "GetPageCourseSessionsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CourseSessionResponse>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<CourseSessionResponse>>> GetPageCourseSessionsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<CourseSessionResponse>>> GetPageCourseSessionsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
@@ -183,10 +179,6 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No course Sessions found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<CourseSessionResponse>());
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {

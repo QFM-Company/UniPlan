@@ -1,4 +1,5 @@
 ﻿using Business.DTOs.Requests.Create;
+using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
@@ -56,19 +57,18 @@ namespace Business.Services
             return _admin?.ToResponse() ?? null;
         }
 
-        public async Task<AdministratorResponse?> UpdateAdministratorAsync(int adminID, CreateAdministratorRequest request)
+        public async Task<bool> UpdateAdministratorAsync(int adminID, UpdateAdministratorRequest request)
         {
             _ValidationService.Validate(request);
+
             _admin = request.ToAdministrator(adminID);
+
             if (_admin != null)
             {
-                bool result = await _AdminRepository.UpdateAdminAsync(_admin);
-                if (result)
-                {
-                    return _admin.ToResponse();
-                }
+                return await _AdminRepository.UpdateAdminAsync(_admin);
             }
-            return null;
+
+            return false;
         }
 
         public async Task<IEnumerable<AdministratorResponse>> GetPageAdministratorsAsync(int pageNumber = 1, int pageSize = 10)

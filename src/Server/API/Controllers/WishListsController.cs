@@ -1,6 +1,7 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
+using Business.Services;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
@@ -16,12 +17,14 @@ namespace API.Controllers
         private readonly IWishListService _listService;
         private readonly ILogService _logService;
         private readonly IExceptionService _exceptionService;
+        private readonly IWishListItemService _wishListItemService;
 
-        public WishListsController(IWishListService listService, ILogService logService, IExceptionService exceptionService)
+        public WishListsController(IWishListService listService, ILogService logService, IExceptionService exceptionService, IWishListItemService wishListItemService)
         {
             _listService = listService;
             _logService = logService;
             _exceptionService = exceptionService;
+            _wishListItemService = wishListItemService;
         }
 
         [HttpPost("add", Name = "AddWishListAsync")]
@@ -138,6 +141,36 @@ namespace API.Controllers
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
                 return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
+            }
+        }
+
+        [HttpGet("{wishListID}/Items", Name = "GetWishListItemsByWishListIDAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<WishListItemResponse>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        public async Task<ActionResult<IEnumerable<WishListItemResponse>?>> GetWishListItemsByWishListIDAsync(int wishListID)
+        {
+            try
+            {
+                if (wishListID > 0)
+                {
+                    IEnumerable<WishListItemResponse>? responses = await _wishListItemService.GetWishListItemsByStudentIDAsync(wishListID);
+
+                    if (responses != null && responses.Any())
+                    {
+                        await _logService.LogAsync($"WishList Items fetched successfully for studentID {wishListID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
+                        return Ok(responses);
+                    }
+                }
+                else return BadRequest("Id Should be more than 0");
+
+
+                await _logService.LogAsync($"No student Courses found.", ExternalServicesEnums.LogType.Warning);
+                return Ok(new List<WishListItemResponse>());
             }
             catch (Exception ex)
             {

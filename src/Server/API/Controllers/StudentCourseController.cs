@@ -25,9 +25,11 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddStudentCourseAsync")]
+        [HttpPost(Name = "AddStudentCourseAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(StudentCourseResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<StudentCourseResponse?>> AddStudentCourseAsync(CreateStudentCourseRequest request)
         {
@@ -46,12 +48,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -59,11 +61,13 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("update/{studentCourseID}", Name = "UpdateStudentCourseAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [HttpPut("{studentCourseID}", Name = "UpdateStudentCourseAsync")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> UpdateStudentCourseAsync(UpdateStudentCourseRequest request, int studentCourseID)
+        public async Task<ActionResult> UpdateStudentCourseAsync(UpdateStudentCourseRequest request, int studentCourseID)
         {
             try
             {
@@ -74,7 +78,7 @@ namespace API.Controllers
                     if (res)
                     {
                         await _logService.LogAsync("Student Course updated successfully.", ExternalServicesEnums.LogType.Info);
-                        return Ok(res);
+                        return NoContent();
                     }
                 }
                 await _logService.LogAsync("Failed to update Student Course.", ExternalServicesEnums.LogType.Warning);
@@ -82,12 +86,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -95,11 +99,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{studentCourseID}", Name = "DeleteStudentCourseAsync")]
+        [HttpDelete("{studentCourseID}", Name = "DeleteStudentCourseAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteStudentCourseAsync(int studentCourseID)
+        public async Task<ActionResult> DeleteStudentCourseAsync(int studentCourseID)
         {
             try
             {
@@ -116,19 +120,16 @@ namespace API.Controllers
                 await _logService.LogAsync("Failed to delete Student Course.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest("Failed to delete Student Course.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
 
-        [HttpGet("get/{studentCourseID}", Name = "GetStudentCourseByIDAsync")]
+        [HttpGet("{studentCourseID}", Name = "GetStudentCourseByIDAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StudentCourseResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<StudentCourseResponse>> GetStudentCourseByIDAsync(int studentCourseID)
         {
@@ -149,49 +150,10 @@ namespace API.Controllers
                 await _logService.LogAsync($"Student Course with ID {studentCourseID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Student Course with ID {studentCourseID} was not found.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
-
-        [HttpGet("student/{studentID}/", Name = "GetStudentCoursesByStudenIDAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StudentCourseResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<StudentCourseResponse>?>> GetStudentCoursesByStudenIDAsync(int studentID)
-        {
-            try
-            {
-                if (studentID > 0)
-                {
-                    IEnumerable<StudentCourseResponse>? responses = await _studentCourseService.GetStudentCoursesByStudentIDAsync(studentID);
-
-                    if (responses != null && responses.Any())
-                    {
-                        await _logService.LogAsync($"Student Courses fetched successfully for studentID {studentID} with size {responses.Count()}.", ExternalServicesEnums.LogType.Info);
-                        return Ok(responses);
-                    }
-                }
-                else return BadRequest("Id Should be more than 0");
-
-                await _logService.LogAsync($"No student Courses found.", ExternalServicesEnums.LogType.Warning);
-                return Ok(new List<StudentCourseResponse>());
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
-            }
-        }
-
     }
 }

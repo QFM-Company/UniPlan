@@ -25,9 +25,11 @@ namespace API.Controllers
             _exceptionService = exceptionService;
         }
 
-        [HttpPost("add", Name = "AddCoursePrequistAsync")]
+        [HttpPost(Name = "AddCoursePrequistAsync")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CoursePrerequisiteResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<CoursePrerequisiteResponse>> AddCoursePrequistAsync(CoursePrerequisiteRequest request)
         {
@@ -46,12 +48,12 @@ namespace API.Controllers
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (ValidationException valException)
             {
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
-                return BadRequest(valException.Message);
+                return UnprocessableEntity(valException.Message);
             }
             catch (Exception ex)
             {
@@ -59,11 +61,11 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete/{coursePrequistID}", Name = "DeleteCoursePrequistAsync")]
+        [HttpDelete("{coursePrequistID}", Name = "DeleteCoursePrequistAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<bool>> DeleteCoursePrequistAsync(int coursePrequistID)
+        public async Task<ActionResult> DeleteCoursePrequistAsync(int coursePrequistID)
         {
             try
             {
@@ -80,17 +82,13 @@ namespace API.Controllers
                 await _logService.LogAsync($"Failed to delete Course Prequist with ID {coursePrequistID}.", ExternalServicesEnums.LogType.Warning);
                 return BadRequest($"Failed to delete Course prequist with ID {coursePrequistID}.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
 
-        [HttpGet("get/{coursePrequistID}", Name = "GetCoursePrequistByIdAsync")]
+        [HttpGet("{coursePrequistID}", Name = "GetCoursePrequistByIdAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CoursePrerequisiteResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -113,21 +111,17 @@ namespace API.Controllers
                 await _logService.LogAsync($"Course Prequist with ID {coursePrequistID} was not found.", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"Course Prequist with ID {coursePrequistID} was not found.");
             }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
-            }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
 
-        [HttpGet("get/{pageNumber}/{pageSize}", Name = "GetPageCoursesPrequistsAsync")]
+        [HttpGet(Name = "GetPageCoursesPrequistsAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CoursePrerequisiteResponse>))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<CoursePrerequisiteResponse>>> GetPageCoursesPrequistsAsync(int pageNumber, int pageSize)
+        public async Task<ActionResult<IEnumerable<CoursePrerequisiteResponse>>> GetPageCoursesPrequistsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
@@ -146,10 +140,6 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"No courses Prequists found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<CoursePrerequisiteResponse>());
-            }
-            catch (SqlException sqlException) when (sqlException.Number > 50000)
-            {
-                return BadRequest(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
