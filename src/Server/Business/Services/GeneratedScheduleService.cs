@@ -5,6 +5,7 @@ using Business.Mapper;
 using Core.Entities;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
+using System.Threading.Tasks;
 
 namespace Business.Services
 {
@@ -12,9 +13,11 @@ namespace Business.Services
     {
         private readonly IGeneratedScheduleRepository _scheduleRepository;
         private readonly IValidationService _validationService;
+        private readonly ICourseSessionService _courseSessionService;
 
-        public GeneratedScheduleService(IGeneratedScheduleRepository scheduleRepository, IValidationService validationService)
+        public GeneratedScheduleService(IGeneratedScheduleRepository scheduleRepository, IValidationService validationService, ICourseSessionService courseSessionService)
         {
+            _courseSessionService = courseSessionService;
             _validationService = validationService;
             _scheduleRepository = scheduleRepository;
         }
@@ -25,14 +28,33 @@ namespace Business.Services
 
             GeneratedSchedule schedule = request.ToGeneratedSchedule();
 
-            if (_GeneratedSchedule(schedule, request.Days) && await _scheduleRepository.AddGeneratedScheduleAsync(schedule))
+            if (await _GeneratedSchedule(schedule, request.Days) && await _scheduleRepository.AddGeneratedScheduleAsync(schedule))
                 return await GetGeneratedScheduleByWishListIDAsync(schedule.WishList.WishListID);
 
             return null;
         }
 
-        private bool _GeneratedSchedule(GeneratedSchedule schedule, List<DayOfWeek> days)
+        private async Task<bool> _GeneratedSchedule(GeneratedSchedule schedule, List<DayOfWeek> days)
         {
+            var sessions = await _courseSessionService.GetWishListSessionsByDaysAsync(schedule.WishList.WishListID, days);
+
+            //foreach (var item in sessions)
+            //{
+            //    Console.WriteLine($"lecture id: {item.Key}");
+            //    Console.WriteLine("\tOfferings");
+                
+            //    foreach (var item1 in item.Value.Keys)
+            //    {
+            //        Console.WriteLine("\t" + item1);
+                    
+            //        Console.WriteLine("\t\tSessions:");
+
+            //        foreach (var item2 in sessions[item.Key][item1])
+            //        {
+            //            Console.WriteLine("\t\t" + item2.SessionID);
+            //        }
+            //    }
+            //}
             return true;
         }
 

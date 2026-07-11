@@ -22,11 +22,18 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
+        
+        DECLARE @TermID INT;
 
-        SELECT S.* FROM WishListItems I
+        SELECT @TermID = TermID FROM WishLists W
+        INNER JOIN StudentTerms ST ON ST.RegistrationID = W.RegistrationID
+        WHERE W.WishListID = @WishListId;
+        
+        SELECT S.LectureID, S.OfferingID, S.SessionID, S.DayNum, S.StartTime, S.EndTime FROM WishListItems I
         JOIN CourseOfferings O ON O.CourseID = I.CourseID
         JOIN CourseSessions_view S ON S.OfferingID = O.OfferingID
-        WHERE I.WishListID = @WishListId AND S.DayNum IN (SELECT Day FROM @Days); 
+        WHERE I.WishListID = @WishListId AND S.DayNum IN (SELECT Day FROM @Days)
+            AND S.TermID = @TermID;
         
     END TRY
     BEGIN CATCH

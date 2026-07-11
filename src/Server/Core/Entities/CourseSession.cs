@@ -4,9 +4,9 @@
     {
         public int SessionID { get; set; }
 
-        public CourseOffering CourseOffering { get; set; }
+        public CourseOffering? CourseOffering { get; set; }
 
-        public Hall Hall { get; set; }
+        public Hall? Hall { get; set; }
 
         public TimeSpan StartTime { get; set; }
 
@@ -26,7 +26,6 @@
             CreatedByAdminID = createdByAdminID;
             Day = day;
         }
-
         public bool OverlapsWith(CourseSession other)
         {
             return Day == other.Day && StartTime < other.EndTime && other.StartTime < EndTime;
@@ -37,6 +36,13 @@
         {
             return Day == day && time >= StartTime && time < EndTime;
         }
-
+        
+        public CourseSession(int sessionID, TimeSpan startTime, TimeSpan endTime, DayOfWeek day)
+        {
+            SessionID = sessionID;
+            StartTime = startTime;
+            EndTime = endTime;
+            Day = day;
+        }
     }
 }
