@@ -98,6 +98,7 @@ namespace API.Controllers
 
         [HttpDelete("{hallID}", Name = "DeleteHallAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult> DeleteHallAsync(int hallID)
@@ -114,6 +115,10 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"لم يتم العثور على القاعة بالمعرف {hallID}", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"لم يتم العثور على القاعة بالمعرف {hallID}");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {

@@ -12,30 +12,25 @@ BEGIN
     SET NOCOUNT ON;
 
     IF NULLIF(LTRIM(RTRIM(@HallName)), N'') IS NULL
-    BEGIN
         RETURN 50801;
-    END
 
-    ELSE IF @Floor IS NOT NULL AND @Floor < 0
-    BEGIN
+    IF @Floor IS NOT NULL AND @Floor < 0
         RETURN 50801;
-    END
 
-    ELSE IF @CreatedByAdminID IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Administrators] WHERE AdminID = @CreatedByAdminID)
-    BEGIN
+    IF @CreatedByAdminID IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Administrators] WHERE AdminID = @CreatedByAdminID)
         RETURN 50203;
-    END
 
-    ELSE IF EXISTS (
+    IF @HallID IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Halls] WHERE HallID = @HallID)
+        RETURN 50803;
+
+    IF EXISTS (
         SELECT 1
         FROM [dbo].[Halls]
         WHERE [HallName] = @HallName
           AND (([Building] = @Building) OR ([Building] IS NULL AND @Building IS NULL))
           AND (@HallID IS NULL OR [HallID] != @HallID)
     )
-    BEGIN
-         RETURN 50802;
-    END
+        RETURN 50802;
 
     RETURN 0;
 END;
@@ -53,7 +48,7 @@ BEGIN
 
     DECLARE @ErrCode int;
 
-    EXEC @ErrCode = SP_Halls_Validate  @HallName, @Building, @Floor, @CreatedByAdminID, NULL;
+    EXEC @ErrCode = SP_Halls_Validate @HallName, @Building, @Floor, @CreatedByAdminID, NULL;
 
     IF @ErrCode != 0
         THROW @ErrCode, '', 1;
@@ -84,7 +79,7 @@ BEGIN
 
     DECLARE @ErrCode int;
 
-    EXEC @ErrCode = SP_Halls_Validate  @HallName, @Building, @Floor, NULL, @HallID;
+    EXEC @ErrCode = SP_Halls_Validate @HallName, @Building, @Floor, NULL, @HallID;
 
     IF @ErrCode != 0
         THROW @ErrCode, '', 1;
@@ -115,6 +110,12 @@ BEGIN
     SET NOCOUNT ON;
 
     SET @Result = 0;
+
+    IF NOT EXISTS (SELECT 1 FROM [dbo].[Halls] WHERE HallID = @HallID)
+        THROW 50803, '', 1;
+
+    IF EXISTS (SELECT 1 FROM [dbo].[CourseSessions] WHERE HallID = @HallID)
+        THROW 50804, '', 1;
 
     BEGIN TRY
         DELETE FROM [dbo].[Halls]

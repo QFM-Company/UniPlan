@@ -61,6 +61,7 @@ namespace API.Controllers
 
         [HttpDelete("{termID}", Name = "DeleteAcademicTermAsync")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult> DeleteAcademicTermAsync(int termID)
@@ -77,6 +78,10 @@ namespace API.Controllers
 
                 await _logService.LogAsync($"فشل الحذف لم يتم العثور على الفصل الدراسي بالمعرف {termID}", ExternalServicesEnums.LogType.Warning);
                 return NotFound($"لم يتم العثور على الفصل الدراسي بالمعرف {termID}");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
             }
             catch (Exception ex)
             {
