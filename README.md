@@ -14,7 +14,7 @@
 
 ## 🛠 Tech Stack
 
-* **Backend**: C#, .NET
+* **Backend**: C#, .NET, Ado.Net, ASP.Net Rest Apis
 * **Database**: SQL Server
 * **Client (Admin)**: .NET Desktop Application
 * **Client (Student)**: React (Currently in development)
@@ -27,7 +27,7 @@ To set up the project locally:
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/QFM-Company/UniPlan.git
+git clone https://github.com/QFM-Company/UniPlan
 
 ```
 
