@@ -59,7 +59,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPut("updatePassword/{accountID}", Name = "UpdatePasswordAsync")]
+        [HttpPut("{accountID}/updatePassword", Name = "UpdatePasswordAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
