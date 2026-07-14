@@ -44,7 +44,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to add Course Prequist.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add Course Prequist.");
+                return BadRequest("فشل في إضافة متطلب الدورة.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -80,7 +80,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync($"Failed to delete Course Prequist with ID {coursePrequistID}.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest($"Failed to delete Course prequist with ID {coursePrequistID}.");
+                return BadRequest($"فشل في حذف متطلب الدورة ذو المعرف {coursePrequistID}.");
             }
             catch (Exception ex)
             {
@@ -106,10 +106,10 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"Course Prequist with ID {coursePrequistID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Course Prequist with ID {coursePrequistID} was not found.");
+                return NotFound($"متطلب الدورة ذو المعرف {coursePrequistID} غير موجود.");
             }
             catch (Exception ex)
             {
@@ -135,7 +135,7 @@ namespace API.Controllers
                         return Ok(responses);
                     }
                 }
-                else return BadRequest("Page Number And Page Size Should be more than 0");
+                else return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
 
 
                 await _logService.LogAsync($"No courses Prequists found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);

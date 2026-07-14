@@ -40,11 +40,11 @@ namespace API.Controllers
                 if (response != null)
                 {
                     await _logService.LogAsync("WishList Item added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtRoute("GetWishListItemByIDAsync", new { wishListItemID = response.ItemID },response);
+                    return CreatedAtRoute("GetWishListItemByIDAsync", new { wishListItemID = response.ItemID }, response);
                 }
 
                 await _logService.LogAsync("Failed to add WishList Item.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add WishList Item.");
+                return BadRequest("فشل في إضافة عنصر قائمة الرغبات.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -80,7 +80,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to delete WishList Item.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete WishList Item.");
+                return BadRequest("فشل في حذف عنصر قائمة الرغبات.");
             }
             catch (Exception ex)
             {
@@ -107,10 +107,10 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"WishList Item with ID {wishListItemID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"WishList Item with ID {wishListItemID} was not found.");
+                return NotFound($"عنصر قائمة الرغبات ذو المعرف {wishListItemID} غير موجود.");
             }
             catch (Exception ex)
             {

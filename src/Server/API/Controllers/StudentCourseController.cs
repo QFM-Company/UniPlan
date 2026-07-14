@@ -40,11 +40,11 @@ namespace API.Controllers
                 if (response != null)
                 {
                     await _logService.LogAsync("Student Course added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtRoute("GetStudentCourseByIDAsync", new { studentCourseID = response.EnrolmentID} , response);
+                    return CreatedAtRoute("GetStudentCourseByIDAsync", new { studentCourseID = response.EnrolmentID }, response);
                 }
 
                 await _logService.LogAsync("Failed to add Student Course.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add Student Course.");
+                return BadRequest("فشل في إضافة تسجيل الطالب في الدورة.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -82,7 +82,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync("Failed to update Student Course.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to update Student Course.");
+                return BadRequest("فشل في تحديث تسجيل الطالب في الدورة.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -118,7 +118,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync("Failed to delete Student Course.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete Student Course.");
+                return BadRequest("فشل في حذف تسجيل الطالب في الدورة.");
             }
             catch (Exception ex)
             {
@@ -145,10 +145,10 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"Student Course with ID {studentCourseID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Student Course with ID {studentCourseID} was not found.");
+                return NotFound($"تسجيل الطالب في الدورة ذو المعرف {studentCourseID} غير موجود.");
             }
             catch (Exception ex)
             {

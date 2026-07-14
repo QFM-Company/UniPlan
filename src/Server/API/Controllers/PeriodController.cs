@@ -39,11 +39,11 @@ namespace API.Controllers
                 if (res != null)
                 {
                     await _logService.LogAsync("Period added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtRoute("GetPeriodByIDAsync", new { periodID = res.PeriodID} , res);
+                    return CreatedAtRoute("GetPeriodByIDAsync", new { periodID = res.PeriodID }, res);
                 }
 
                 await _logService.LogAsync("Failed to add period.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add period.");
+                return BadRequest("فشل في إضافة الفترة.");
             }
             catch (ValidationException valException)
             {
@@ -81,7 +81,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync("Failed to delete period.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete period.");
+                return BadRequest("فشل في حذف الفترة.");
             }
             catch (Exception ex)
             {
@@ -110,10 +110,10 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"period with ID {periodID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"period with ID {periodID} was not found.");
+                return NotFound($"الفترة ذات المعرف {periodID} غير موجودة.");
             }
             catch (Exception ex)
             {
@@ -141,7 +141,7 @@ namespace API.Controllers
                         return Ok(responses);
                     }
                 }
-                else return BadRequest("Page Number And Page Size Should be more than 0");
+                else return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
 
                 await _logService.LogAsync($"No periods found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<PeriodResponse>());

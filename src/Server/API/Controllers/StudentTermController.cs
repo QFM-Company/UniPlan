@@ -42,11 +42,11 @@ namespace API.Controllers
                 if (response != null)
                 {
                     await _logService.LogAsync("Student Term added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtRoute("GetStudentTermByIDAsync", new { studentTermID = response.RegistrationID}, response);
+                    return CreatedAtRoute("GetStudentTermByIDAsync", new { studentTermID = response.RegistrationID }, response);
                 }
 
                 await _logService.LogAsync("Failed to add Student Term.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add Student Term.");
+                return BadRequest("فشل في إضافة فصل الطالب.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -82,11 +82,11 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
 
                 await _logService.LogAsync($"Student Term with ID {studentTermID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Student Term with ID {studentTermID} was not found.");
+                return NotFound($"فصل الطالب ذو المعرف {studentTermID} غير موجود.");
             }
             catch (Exception ex)
             {

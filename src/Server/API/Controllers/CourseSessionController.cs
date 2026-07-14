@@ -44,7 +44,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to add Course Session.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add Course Session.");
+                return BadRequest("فشل في إضافة جلسة الدورة.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -82,7 +82,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync($"Failed to update Course Session with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest($"Failed to update Course Session with ID {courseID}.");
+                return BadRequest($"فشل في تحديث جلسة الدورة ذات المعرف {courseID}.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -119,7 +119,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync($"Failed to delete Course Session with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest($"Failed to delete Course Session with ID {courseID}.");
+                return BadRequest($"فشل في حذف جلسة الدورة ذات المعرف {courseID}.");
             }
             catch (Exception ex)
             {
@@ -146,10 +146,10 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"Course Session with ID {courseSessionID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Course Session with ID {courseSessionID} was not found.");
+                return NotFound($"جلسة الدورة ذات المعرف {courseSessionID} غير موجودة.");
             }
             catch (Exception ex)
             {
@@ -175,7 +175,7 @@ namespace API.Controllers
                         return Ok(responses);
                     }
                 }
-                else return BadRequest("Page Number And Page Size Should be more than 0");
+                else return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
 
                 await _logService.LogAsync($"No course Sessions found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<CourseSessionResponse>());

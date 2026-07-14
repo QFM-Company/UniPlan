@@ -39,11 +39,11 @@ namespace API.Controllers
                 if (res != null)
                 {
                     await _logService.LogAsync("time slot added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtRoute("GetTimeSlotByIDAsync", new { timeSlotID = res.SlotID} , res);
+                    return CreatedAtRoute("GetTimeSlotByIDAsync", new { timeSlotID = res.SlotID }, res);
                 }
 
                 await _logService.LogAsync("Failed to add time slot.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add time slot.");
+                return BadRequest("فشل في إضافة الفترة الزمنية.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -83,7 +83,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync("Failed to update time slot.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to update time slot.");
+                return BadRequest("فشل في تحديث الفترة الزمنية.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -121,7 +121,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync("Failed to delete time slot.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete time slot.");
+                return BadRequest("فشل في حذف الفترة الزمنية.");
             }
             catch (Exception ex)
             {
@@ -150,11 +150,11 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"time slot with ID {timeSlotID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"time slot with ID {timeSlotID} was not found.");
-            }        
+                return NotFound($"الفترة الزمنية ذات المعرف {timeSlotID} غير موجودة.");
+            }
             catch (Exception ex)
             {
                 await _logService.LogAsync(ex);
@@ -182,7 +182,7 @@ namespace API.Controllers
                         return Ok(responses);
                     }
                 }
-                else return BadRequest("Page Number And Page Size Should be more than 0");
+                else return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
 
                 await _logService.LogAsync($"No time slots found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<TimeSlotResponse>());

@@ -43,7 +43,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to add Course.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add Course.");
+                return BadRequest("فشل في إضافة الدورة.");
             }
 
             catch (SqlException sqlException) when (sqlException.Number > 50000)
@@ -82,7 +82,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync($"Failed to update Course with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest($"Failed to update Course with ID {courseID}.");
+                return BadRequest($"فشل في تحديث الدورة ذات المعرف {courseID}.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -118,7 +118,7 @@ namespace API.Controllers
                     }
                 }
                 await _logService.LogAsync($"Failed to delete Course with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest($"Failed to delete Course with ID {courseID}.");
+                return BadRequest($"فشل في حذف الدورة ذات المعرف {courseID}.");
             }
             catch (Exception ex)
             {
@@ -145,10 +145,10 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"Course with ID {courseID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"Course with ID {courseID} was not found.");
+                return NotFound($"الدورة ذات المعرف {courseID} غير موجودة.");
             }
             catch (Exception ex)
             {
@@ -160,7 +160,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CourseResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<CourseResponse>>> GetPageCoursesAsync([FromQuery]int pageNumber = 1,[FromQuery] int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<CourseResponse>>> GetPageCoursesAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
@@ -174,7 +174,7 @@ namespace API.Controllers
                         return Ok(responses);
                     }
                 }
-                else return BadRequest("Page Number And Page Size Should be more than 0");
+                else return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
 
                 await _logService.LogAsync($"No courses found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<CourseResponse>());

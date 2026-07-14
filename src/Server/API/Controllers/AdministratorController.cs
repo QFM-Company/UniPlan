@@ -41,11 +41,11 @@ namespace API.Controllers
                 if (res != null)
                 {
                     await _logService.LogAsync("admin added successfully.", ExternalServicesEnums.LogType.Info);
-                    return CreatedAtRoute("GetAdminByIDAsync", new { adminID = res.AdminID } , res);
+                    return CreatedAtRoute("GetAdminByIDAsync", new { adminID = res.AdminID }, res);
                 }
 
                 await _logService.LogAsync("Failed to add admin.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to add admin.");
+                return BadRequest("فشل في إضافة المسؤول.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -83,7 +83,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to update admin.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to update admin.");
+                return BadRequest("فشل في تحديث المسؤول.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -122,7 +122,7 @@ namespace API.Controllers
                 }
 
                 await _logService.LogAsync("Failed to delete admin.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest("Failed to delete admin.");
+                return BadRequest("فشل في حذف المسؤول.");
             }
             catch (Exception ex)
             {
@@ -151,10 +151,10 @@ namespace API.Controllers
                         return Ok(response);
                     }
                 }
-                else return BadRequest("Id Should be more than 0");
+                else return BadRequest("يجب أن يكون المعرف أكبر من 0");
 
                 await _logService.LogAsync($"admin with ID {adminID} was not found.", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"admin with ID {adminID} was not found.");
+                return NotFound($"المسؤول ذو المعرف {adminID} غير موجود.");
             }
             catch (Exception ex)
             {
@@ -168,7 +168,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AdministratorResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult<IEnumerable<AdministratorResponse>?>> GetPagedAdminsAsync([FromQuery]int pageNumber = 1, [FromQuery]int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<AdministratorResponse>?>> GetPagedAdminsAsync([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
@@ -182,7 +182,7 @@ namespace API.Controllers
                         return Ok(responses);
                     }
                 }
-                else return BadRequest("Page Number And Page Size Should be more than 0");
+                else return BadRequest("يجب أن يكون رقم الصفحة وحجم الصفحة أكبر من 0");
 
                 await _logService.LogAsync($"No admins found on page {pageNumber}.", ExternalServicesEnums.LogType.Warning);
                 return Ok(new List<AdministratorResponse>());
