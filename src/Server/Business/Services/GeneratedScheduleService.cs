@@ -36,26 +36,30 @@ namespace Business.Services
 
         private async Task<bool> _GeneratedSchedule(GeneratedSchedule schedule, List<int> days)
         {
-            var sessions = await _courseSessionService.GetWishListSessionsByDaysAsync(schedule.WishList.WishListID, days);
+            var map = await _courseSessionService.GetWishListSessionsByDaysAsync(schedule.WishList.WishListID, days);
+            if (map == null) return false;
+            schedule.GeneratedCombinations = _GetAllSchedules(map, 0, new List<int>(), new List<List<int>>());
 
-            //foreach (var item in sessions)
-            //{
-            //    Console.WriteLine($"lecture id: {item.Key}");
-            //    Console.WriteLine("\tOfferings");
-                
-            //    foreach (var item1 in item.Value.Keys)
-            //    {
-            //        Console.WriteLine("\t" + item1);
-                    
-            //        Console.WriteLine("\t\tSessions:");
+            Console.WriteLine(string.Join(" \n " , schedule.GeneratedCombinations.Select(x => string.Join(" , ", x))));
 
-            //        foreach (var item2 in sessions[item.Key][item1])
-            //        {
-            //            Console.WriteLine("\t\t" + item2.SessionID);
-            //        }
-            //    }
-            //}
             return true;
+        }
+
+        private List<List<int>> _GetAllSchedules(Dictionary<int, Dictionary<int, List<CourseSession>>> map , int lectureIndex , List<int> schedule , List<List<int>> res)
+        {
+            if(lectureIndex == map.Keys.Count)
+            {
+                res.Add(new List<int>(schedule));
+            }
+
+            foreach (int item in map[map.Keys.ElementAt(lectureIndex)].Keys)
+            {
+                schedule.Add(item);
+                _GetAllSchedules(map, lectureIndex + 1, schedule, res);
+                schedule.Remove(item);
+            }
+
+            return res;
         }
 
         public async Task<GeneratedScheduleResponse?> GetGeneratedScheduleByWishListIDAsync(int listID)
