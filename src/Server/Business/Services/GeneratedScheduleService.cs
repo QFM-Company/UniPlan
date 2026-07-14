@@ -36,30 +36,33 @@ namespace Business.Services
 
         private async Task<bool> _GeneratedSchedule(GeneratedSchedule schedule, List<int> days)
         {
-            var map = await _courseSessionService.GetWishListSessionsByDaysAsync(schedule.WishList.WishListID, days);
-            if (map == null) return false;
-            schedule.GeneratedCombinations = _GetAllSchedules(map, 0, new List<int>(), new List<List<int>>());
+            var availableSessionsMap = await _courseSessionService.GetWishListSessionsByDaysAsync(schedule.WishList.WishListID, days);
 
-            Console.WriteLine(string.Join(" \n " , schedule.GeneratedCombinations.Select(x => string.Join(" , ", x))));
+            if (availableSessionsMap == null) 
+                return false;
+
+            List<int> lectures = availableSessionsMap.Keys.ToList();
+            schedule.GeneratedCombinations = _GetAllSchedules(availableSessionsMap, new List<int>(), new List<List<int>>(), lectures);
 
             return true;
         }
 
-        private List<List<int>> _GetAllSchedules(Dictionary<int, Dictionary<int, List<CourseSession>>> map , int lectureIndex , List<int> schedule , List<List<int>> res)
+        private List<List<int>> _GetAllSchedules(Dictionary<int, Dictionary<int, List<CourseSession>>> availableSessionsMap, List<int> schedule, List<List<int>> schedules, List<int> lectures, int lectureIndex = 0)
         {
-            if(lectureIndex == map.Keys.Count)
+            if(lectureIndex == lectures.Count)
             {
-                res.Add(new List<int>(schedule));
+                schedules.Add(new List<int>(schedule));
+                return schedules;
             }
 
-            foreach (int item in map[map.Keys.ElementAt(lectureIndex)].Keys)
+            foreach (int offeringID in availableSessionsMap[lectures[lectureIndex]].Keys)
             {
-                schedule.Add(item);
-                _GetAllSchedules(map, lectureIndex + 1, schedule, res);
-                schedule.Remove(item);
+                schedule.Add(offeringID);
+                _GetAllSchedules(availableSessionsMap, schedule, schedules, lectures, lectureIndex + 1);
+                schedule.Remove(offeringID);
             }
 
-            return res;
+            return schedules;
         }
 
         public async Task<GeneratedScheduleResponse?> GetGeneratedScheduleByWishListIDAsync(int listID)
