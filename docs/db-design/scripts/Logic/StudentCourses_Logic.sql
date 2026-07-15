@@ -1,6 +1,15 @@
 ﻿USE [UniPlan];
 GO
 
+DROP TYPE IF EXISTS CourseIdListType;
+GO
+
+CREATE TYPE CourseIdListType AS TABLE
+(
+    CourseID INT
+)
+GO
+
 CREATE OR ALTER PROCEDURE SP_StudentCourses_Insert
     @StudentID INT,
     @CourseID INT,
@@ -141,8 +150,43 @@ GO
 
 
 
+Create OR Alter Procedure SP_SyncPassedCourses
+@PassedCoursesIDs CourseIdListType readonly ,
+@StudentId int
+As
+Begin 
+    SET NOCOUNT ON;
+
+	if not Exists(select 1 from Students 
+	where StudentID = @StudentId)
+	Begin
+        ;throw 50303, 'Student Dose Not Exist', 1;
+	End
+
+	IF EXISTS (
+    SELECT 1 
+    FROM @PassedCoursesIDs p
+    LEFT JOIN dbo.Courses c ON p.CourseID = c.CourseID -- Replace c.CourseID with your actual primary key column name
+    WHERE c.CourseID IS NULL)
+    BEGIN
+        ;THROW 50304, 'One or more provided Course IDs do not exist.', 1;
+    END
 
 
+	Begin Try
+	    
+		delete from StudentCourses 
+		where StudentID = @StudentId;
+
+		insert into StudentCourses (StudentID , CourseID , IsPassed)
+		select distinct @StudentId , CourseID , 1 from @PassedCoursesIDs;
+
+	End Try
+	Begin Catch
+	End Catch
+END
+
+go
 
 
 

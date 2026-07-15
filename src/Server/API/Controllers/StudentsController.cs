@@ -242,5 +242,13 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
+
+
+
+        [HttpPost("{studentID}/passed-courses", Name = "SyncStudentPassedCourses")]
+        public async Task<ActionResult> SyncStudentPassedCourses(int studentID)
+        {
+
+        }
     }
 }
