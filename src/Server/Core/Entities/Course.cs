@@ -22,5 +22,10 @@
         }
 
         public Course() { }
+
+        public override string ToString()
+        {
+            return string.Format("اسم المادة: {0}\nكود المادة: {1}", CourseName, CourseCode);
+        }
     }
 }

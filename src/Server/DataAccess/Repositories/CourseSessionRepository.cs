@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 using DataAccess.Extensions;
@@ -307,6 +308,7 @@ namespace DataAccess.Repositories
         public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<int> days)
         {
             Dictionary<int, Dictionary<int, List<CourseSession>>> courseSessions = new();
+            HashSet<string> unavailableLecturesForDays = new();
 
             try
             {
@@ -338,7 +340,7 @@ namespace DataAccess.Repositories
                         {
                             reader.ReadInt("LectureID", out int lectureID, 0);
                             reader.ReadInt("OfferingID", out int offeringID, 0);
-                            CourseSession session = reader.ToCourseSessionBasicInfo();
+                            CourseSession session = reader.ToScheduleContextSession();
 
                             if (!courseSessions.ContainsKey(lectureID))
                             {
@@ -351,6 +353,11 @@ namespace DataAccess.Repositories
                             }
 
                             courseSessions[lectureID][offeringID].Add(session);
+
+                            if(offeringID == 0)
+                            {
+                                unavailableLecturesForDays.Add($"لا توجد المحاضرة التالية بالايام المطلوبة\n{session.CourseOffering?.Lecture}\n\n");
+                            }
                         }
                     }
                 }
@@ -360,6 +367,9 @@ namespace DataAccess.Repositories
                 await _logService.LogAsync(ex);
                 throw;
             }
+
+            if (unavailableLecturesForDays.Count > 0)
+                throw new ScheduleException(string.Join("\n", unavailableLecturesForDays));
 
             return courseSessions;
         }

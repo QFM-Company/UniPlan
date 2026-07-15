@@ -221,7 +221,7 @@ CREATE TABLE [dbo].[TimeSlots]
     CONSTRAINT [PK_TimeSlots] PRIMARY KEY CLUSTERED ([SlotID]),
 
     /* FIX TAG: TIME SLOT VALIDATION */
-    CONSTRAINT [CK_TimeSlots_DayNum] CHECK ([DayNum] BETWEEN 1 AND 7),
+    CONSTRAINT [CK_TimeSlots_DayNum] CHECK ([DayNum] BETWEEN 0 AND 6),
     CONSTRAINT [UQ_TimeSlots_DayNum_PeriodID] UNIQUE ([DayNum], [PeriodID]),
 
     CONSTRAINT [FK_TimeSlot_Period]

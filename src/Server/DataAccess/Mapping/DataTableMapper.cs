@@ -1,10 +1,11 @@
-﻿using System.Data;
+﻿using Core.Services;
+using System.Data;
 
 namespace DataAccess.Mapping
 {
     public static class DataTableMapper
     {
-        public static DataTable ToDataTable(this List<List<int>> offerings)
+        public static DataTable ToDataTable(this List<ScheduleManager> offerings)
         {
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("OfferingID", typeof(int));

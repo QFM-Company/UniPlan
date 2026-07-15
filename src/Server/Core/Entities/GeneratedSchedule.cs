@@ -1,4 +1,6 @@
-﻿namespace Core.Entities
+﻿using Core.Services;
+
+namespace Core.Entities
 {
     public class GeneratedSchedule
     {
@@ -8,7 +10,7 @@
 
 
         // Stores all generated schedule permutations for database storage
-        public List<List<int>>? GeneratedCombinations { get; set; }
+        public List<ScheduleManager>? GeneratedCombinations { get; set; }
 
 
         // Contains the single final schedule selected to display to the user

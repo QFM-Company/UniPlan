@@ -29,12 +29,14 @@ BEGIN
         INNER JOIN StudentTerms ST ON ST.RegistrationID = W.RegistrationID
         WHERE W.WishListID = @WishListId;
         
-        SELECT S.LectureID, S.OfferingID, S.SessionID, S.DayNum, S.StartTime, S.EndTime FROM WishListItems I
-        JOIN CourseOfferings O ON O.CourseID = I.CourseID
-        JOIN CourseSessions_view S ON S.OfferingID = O.OfferingID
-        WHERE I.WishListID = @WishListId AND S.DayNum IN (SELECT Day FROM @Days)
-            AND S.TermID = @TermID;
-        
+        SELECT C.CourseID, C.CourseName, C.CourseCode, L.LectureID, L.LectureType, S.SectionNumber, S.OfferingID,
+            S.SessionID, S.DayNum, S.StartTime, S.EndTime FROM WishListItems I
+        JOIN Lectures L ON L.CourseID = I.CourseID
+        JOIN Courses C ON C.CourseID = I.CourseID
+        LEFT JOIN CourseSessions_view S ON S.LectureID = L.LectureID 
+        AND DayNum IN (SELECT * FROM @Days) AND TermID = @TermID
+        WHERE I.WishListID = @WishListId;
+
     END TRY
     BEGIN CATCH
         ROLLBACK;

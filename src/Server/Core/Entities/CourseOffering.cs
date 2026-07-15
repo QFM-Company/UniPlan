@@ -39,5 +39,10 @@ namespace Core.Entities
             Term = term;
             Lecture = lecture;
         }
+
+        public override string ToString()
+        {
+            return string.Format("رقم الشعبة: {0}\n{1}", SectionNumber, Lecture);
+        }
     }
 }

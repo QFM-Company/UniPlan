@@ -21,8 +21,7 @@ namespace Core.Entities
         {
             LectureID = lectureID;
 
-            Course = new Course(/*courseID*/);
-            Course.CourseID = courseID;
+            Course = new Course(courseID);
         }
 
         public Lecture(int lectureID, LectureType lectureType, int durationValue, Course course)
@@ -38,6 +37,11 @@ namespace Core.Entities
             LectureID = lectureID;
             LectureType = lectureType;
             DurationValue = durationValue;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("نوع المحاضرة: {0}\n{1}", LectureType, Course);
         }
     }
 }

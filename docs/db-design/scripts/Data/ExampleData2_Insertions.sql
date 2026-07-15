@@ -1,4 +1,4 @@
-use [UniPlan];
+﻿use [UniPlan];
 go
 
 
@@ -102,7 +102,7 @@ exec SP_CourseSessions_Insert @OfferingID, 20, 0, '14:00:00', '15:30:00', 6, @Cu
 insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
 values (2, @TermID, 54, 43);
 set @OfferingID = SCOPE_IDENTITY();
-exec SP_CourseSessions_Insert @OfferingID, 21, 0, '10:00:00', '11:30:00', 7, @CurrentSessionID OUTPUT;
+exec SP_CourseSessions_Insert @OfferingID, 21, 0, '10:00:00', '11:30:00', 6, @CurrentSessionID OUTPUT;
 go
 
 
@@ -114,13 +114,13 @@ declare @CurrentSessionID int;
 insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
 values (1, @TermID, 65, 50);
 set @OfferingID = SCOPE_IDENTITY();
-exec SP_CourseSessions_Insert @OfferingID, 7, 0, '10:00:00', '13:00:00', 7, @CurrentSessionID OUTPUT;
+exec SP_CourseSessions_Insert @OfferingID, 7, 0, '10:00:00', '13:00:00', 2, @CurrentSessionID OUTPUT;
 
 
 insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
 values (1, @TermID, 66, 50);
 set @OfferingID = SCOPE_IDENTITY();
-exec SP_CourseSessions_Insert @OfferingID, 18, 0, '14:00:00', '15:30:00', 7, @CurrentSessionID OUTPUT;
+exec SP_CourseSessions_Insert @OfferingID, 18, 0, '14:00:00', '15:30:00', 2, @CurrentSessionID OUTPUT;
 
 
 insert into CourseOfferings (SectionNumber, TermID, LectureID, CourseID)
