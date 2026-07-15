@@ -244,11 +244,15 @@ namespace API.Controllers
         }
 
 
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        //[ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        //[HttpPost("{studentID}/passed-courses", Name = "SyncStudentPassedCourses")]
+        //public async Task<ActionResult> SyncStudentPassedCourses(int studentID , SyncStudentPassedCoursesRequest request)
+        //{
 
-        [HttpPost("{studentID}/passed-courses", Name = "SyncStudentPassedCourses")]
-        public async Task<ActionResult> SyncStudentPassedCourses(int studentID)
-        {
-
-        }
+        //}
     }
 }
