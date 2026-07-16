@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="UserControls\a50y1m3m.ydh~" />
+    <None Remove="UserControls\DynamicDataGrid2.resx~RF82a55.TMP" />
+    <None Remove="UserControls\Header.cs~RF56ea4e.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

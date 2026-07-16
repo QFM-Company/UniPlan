@@ -1,17 +1,18 @@
 ﻿using System.Data;
-using ViewModels.Interface;
 using Client.Models;
 using Client.Services;
+using ViewModels.Interfaces;
 
 namespace ViewModels
 {
-    public class HallsViewModel : IHallsViewModel
+    public class HallsViewModel : IViewModel
     {
-        private readonly HallApiService _hallApi;
+        private readonly ApiService<HallModel> _hallApi;
 
-        public HallsViewModel(HallApiService hallApiService)
+        public HallsViewModel(ApiService<HallModel> hallApiService)
         {
             _hallApi = hallApiService;
+            _hallApi.SubUri = "api/halls";
         }
 
         private DataView _ConvertToDataView(List<HallModel>? hallModels)
@@ -41,7 +42,19 @@ namespace ViewModels
 
         public async Task<DataView> GetDataView(int pageNumber, int pageSize)
         {
-            List<HallModel>? hallModels = await _hallApi.GetHallsAsync(pageNumber, pageSize);
+            List<HallModel>? hallModels = await _hallApi.GetAllAsync(pageNumber, pageSize);
+            return _ConvertToDataView(hallModels);
+        }
+
+        public async Task<DataView> GetDataViewByID(int id)
+        {
+            HallModel? hallModel = await _hallApi.GetByIdAsync(id);
+
+            List<HallModel> hallModels = new List<HallModel>();
+
+            if (hallModel != null)
+                hallModels.Add(hallModel);
+
             return _ConvertToDataView(hallModels);
         }
     }

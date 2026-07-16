@@ -33,28 +33,35 @@
             // 
             // txtSearch
             // 
-            txtSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtSearch.BorderStyle = BorderStyle.FixedSingle;
             txtSearch.Cursor = Cursors.IBeam;
+            txtSearch.Dock = DockStyle.Fill;
+            txtSearch.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtSearch.ForeColor = Color.Black;
             txtSearch.Location = new Point(0, 0);
+            txtSearch.Margin = new Padding(2);
             txtSearch.Name = "txtSearch";
-            txtSearch.Size = new Size(260, 35);
+            txtSearch.Size = new Size(283, 38);
             txtSearch.TabIndex = 0;
             txtSearch.Text = "Search...";
             txtSearch.UseWaitCursor = true;
             // 
             // SearchControl
             // 
-            AutoScaleDimensions = new SizeF(12F, 30F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Controls.Add(txtSearch);
             Margin = new Padding(0);
             Name = "SearchControl";
-            Size = new Size(260, 24);
+            Size = new Size(283, 39);
             ResumeLayout(false);
             PerformLayout();
+        }
+
+        public TextBox TextBox
+        {
+            get => txtSearch;
         }
 
         #endregion

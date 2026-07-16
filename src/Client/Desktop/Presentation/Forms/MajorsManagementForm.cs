@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ViewModels;
 
-namespace Controls.UserControls
+namespace Presentation.Forms
 {
-    public partial class DynamicDataGrid2 : UserControl
+    public partial class MajorsManagementForm : BaseManagementForm
     {
-        public DynamicDataGrid2()
+        public MajorsManagementForm(MajorsViewModel majorsViewModel) : base(majorsViewModel)
         {
-            InitializeComponent();
         }
     }
 }
