@@ -170,7 +170,7 @@ Begin
     LEFT JOIN dbo.Courses c ON p.CourseID = c.CourseID -- Replace c.CourseID with your actual primary key column name
     WHERE c.CourseID IS NULL)
     BEGIN
-        ;THROW 50304, 'One or more provided Course IDs do not exist.', 1;
+        ;THROW 50903, 'One or more provided Course IDs do not exist.', 1;
     END
 
 
