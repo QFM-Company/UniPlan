@@ -11,7 +11,7 @@
 
             if(x.OverlapsWith(y))
             {
-                ConflictMessage = $"يوجد تعارض في المواعيد بين الشعبتين\n\nالشعبة الاولى {x}\n\nالشعبة الثانية {y}";
+                ConflictMessage = $"{x}\n{y}";
                 return 0;
             }
 

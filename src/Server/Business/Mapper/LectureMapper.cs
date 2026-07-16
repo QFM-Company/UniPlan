@@ -2,6 +2,7 @@
 using Business.DTOs.Responses;
 using Core.Entities;
 using Core.Enums;
+using Core.Extensions;
 
 namespace Business.Mapper
 {
@@ -29,7 +30,7 @@ namespace Business.Mapper
             if (lecture.Course != null)
             {
                 CourseResponse course = lecture.Course.ToResponse();
-                return new LectureResponse(lecture.LectureID, lecture.LectureType.ToString(), lecture.DurationValue, course);
+                return new LectureResponse(lecture.LectureID, lecture.LectureType.ToArabicString(), lecture.DurationValue, course);
             }
 
             return null;
@@ -40,7 +41,7 @@ namespace Business.Mapper
             if (lecture.Course != null)
             {
                 CourseBriefResponse course = lecture.Course.ToBriefResponse();
-                return new LectureBriefResponse(lecture.LectureID, lecture.LectureType.ToString(), course);
+                return new LectureBriefResponse(lecture.LectureID, lecture.LectureType.ToArabicString(), course);
             }
 
             return null;

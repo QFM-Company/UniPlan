@@ -30,20 +30,18 @@ namespace Business.Services
 
             GeneratedSchedule schedule = request.ToGeneratedSchedule();
 
-            await _GeneratedSchedule(schedule, request.Days);
-
-            if (await _scheduleRepository.AddGeneratedScheduleAsync(schedule))
+            if (await _GeneratedSchedule(schedule, request.Days) && await _scheduleRepository.AddGeneratedScheduleAsync(schedule))
                 return await GetGeneratedScheduleByWishListIDAsync(schedule.WishList.WishListID);
 
             return null;
         }
 
-        private async Task _GeneratedSchedule(GeneratedSchedule schedule, List<int> days)
+        private async Task<bool> _GeneratedSchedule(GeneratedSchedule schedule, List<int> days)
         {
             var availableSessionsMap = await _courseSessionService.GetWishListSessionsByDaysAsync(schedule.WishList.WishListID, days);
 
             if (availableSessionsMap == null || availableSessionsMap.Count == 0)
-                throw new ScheduleException("قائمة الرغبات غير موجودة تأكد من معرف");
+                return false;
 
             List<int> lectures = availableSessionsMap.Keys.ToList();
             HashSet<string> conflictMeesages = new HashSet<string>();
@@ -52,7 +50,12 @@ namespace Business.Services
 
 
             if (schedule.GeneratedCombinations.Count == 0)
-                throw new ConflictException(string.Join("\n\n\n", conflictMeesages));
+            {
+                string conflictMessage = string.Join("\n", conflictMeesages.Select((c, i) => $"التعارض رقم: {i + 1}\n{c}"));
+                throw new ConflictException($"لا يمكنك توليد جدولك الجامعي بسبب وجود تعارضات عددعم: {conflictMeesages.Count}\n" + conflictMessage);
+            }
+
+            return true;
         }
 
         private List<ScheduleManager> _GetAllSchedules(Dictionary<int, Dictionary<int, List<CourseSession>>> availableSessionsMap, ScheduleManager schedule, List<ScheduleManager> schedules, List<int> lectures, HashSet<string> conflictMeesages, int lectureIndex = 0)

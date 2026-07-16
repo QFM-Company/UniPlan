@@ -42,7 +42,7 @@ namespace Core.Entities
 
         public override string ToString()
         {
-            return string.Format("رقم الشعبة: {0}\n{1}", SectionNumber, Lecture);
+            return string.Format("رقم الشعبة {0} {1}", SectionNumber, Lecture);
         }
     }
 }

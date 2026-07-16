@@ -2,6 +2,7 @@
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Core.Entities;
+using Core.Extensions;
 
 namespace Business.Mapper
 {
@@ -45,7 +46,7 @@ namespace Business.Mapper
                  courseSession.StartTime,
                  courseSession.EndTime,
                  courseSession.CreatedByAdminID,
-                 courseSession.Day.ToString()
+                 courseSession.Day.ToArabicString()
             );
         }
 
@@ -56,7 +57,7 @@ namespace Business.Mapper
                  courseSession.CourseOffering!.ToBriefResponse(),
                  courseSession.StartTime,
                  courseSession.EndTime,
-                 courseSession.Day.ToString()
+                 courseSession.Day.ToArabicString()
             );
         }
 

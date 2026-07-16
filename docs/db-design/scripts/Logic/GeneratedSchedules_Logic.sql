@@ -26,10 +26,10 @@ BEGIN
     SET XACT_ABORT ON;
 
     IF NOT EXISTS (SELECT 1 FROM [dbo].[WishLists] WHERE WishListID = @WishListID)
-        RETURN 51703;  
+        THROW 51703, '', 1; 
 
     IF EXISTS (SELECT 1 FROM [dbo].[GeneratedSchedules] WHERE WishListID = @WishListID)
-        RETURN 51902;
+        THROW 51902, '', 1;
 
     BEGIN TRY
         BEGIN TRANSACTION

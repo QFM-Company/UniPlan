@@ -308,7 +308,6 @@ namespace DataAccess.Repositories
         public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<int> days)
         {
             Dictionary<int, Dictionary<int, List<CourseSession>>> courseSessions = new();
-            HashSet<string> unavailableLecturesForDays = new();
 
             try
             {
@@ -353,11 +352,6 @@ namespace DataAccess.Repositories
                             }
 
                             courseSessions[lectureID][offeringID].Add(session);
-
-                            if(offeringID == 0)
-                            {
-                                unavailableLecturesForDays.Add($"لا توجد المحاضرة التالية بالايام المطلوبة\n{session.CourseOffering?.Lecture}\n\n");
-                            }
                         }
                     }
                 }
@@ -367,9 +361,6 @@ namespace DataAccess.Repositories
                 await _logService.LogAsync(ex);
                 throw;
             }
-
-            if (unavailableLecturesForDays.Count > 0)
-                throw new ScheduleException(string.Join("\n", unavailableLecturesForDays));
 
             return courseSessions;
         }

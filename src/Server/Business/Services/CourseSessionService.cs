@@ -4,6 +4,7 @@ using Business.DTOs.Responses;
 using Business.Interfaces;
 using Business.Mapper;
 using Core.Entities;
+using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
 using Core.Interfaces.Repositories;
 
@@ -70,7 +71,28 @@ namespace Business.Services
 
         public async Task<Dictionary<int, Dictionary<int, List<CourseSession>>>?> GetWishListSessionsByDaysAsync(int listID, List<int> days)
         {
-            return await _courseSessionRepository.GetWishListSessionsByDaysAsync(listID, days);
+            var availableSessionsMap =  await _courseSessionRepository.GetWishListSessionsByDaysAsync(listID, days);
+
+            if (availableSessionsMap == null || availableSessionsMap.Count == 0)
+                return null;
+
+            HashSet<string> unavailableLecturesForDays = new();
+
+            foreach (var item in availableSessionsMap.Keys)
+            {
+                if(availableSessionsMap[item].Keys.Contains(0))
+                {
+                    var session = availableSessionsMap[item]?.FirstOrDefault().Value?.FirstOrDefault();
+                    unavailableLecturesForDays.Add(session?.CourseOffering?.Lecture?.ToString() ?? string.Empty);
+                }
+            }
+
+            if (unavailableLecturesForDays.Count > 0)
+            {
+                throw new ValidationException($"هناك محاضرات غير موجودة بالأيام التي تريدها عدد محاضرات: {unavailableLecturesForDays.Count}\n" + string.Join("\n", unavailableLecturesForDays));
+            }
+
+            return availableSessionsMap;
         }
     }
 }
