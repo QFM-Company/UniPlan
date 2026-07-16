@@ -193,7 +193,32 @@ END
 go
 
 
+Create OR Alter Procedure SP_GetStudentOpenCourses
+@StudentID int
+As
+Begin 
+    if not Exists(select 1 from Students where StudentID = @StudentID)
+	Begin 
+	   ;throw 50303, 'Student Dose Not Exist', 1;
+	End
 
+	Begin try
 
+	select Co.* from
+	(
+	   select c.* from Courses c
+	   where c.CourseID not in (select CourseID from StudentCourses where StudentID = @StudentID)
+	) As Co
+	where Co.CourseID not in (select CourseID from CoursePrerequisites) or Co.CourseID in
+	(
+	   select CourseID from CoursePrerequisites 
+	   where PrerequisiteCourseID in(select CourseID from StudentCourses where StudentID = @StudentID)
+	)
+
+	End TRy
+	Begin Catch
+	  throw;
+	End Catch
+End
 
 
