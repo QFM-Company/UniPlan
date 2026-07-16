@@ -13,6 +13,9 @@ namespace Core.Interfaces.Repositories
         Task<StudentCourse?> GetStudentCourseByIDAsync(int enrolmentID);
 
         Task<IEnumerable<StudentCourse>?> GetStudentCoursesByStudentIDAsync(int studentID);
+
+        Task<bool> SyncStudentCoursesAsync(int studentID, List<int> coursesIDs);
+
     }
 }
 

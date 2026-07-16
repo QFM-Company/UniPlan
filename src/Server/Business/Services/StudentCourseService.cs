@@ -65,5 +65,11 @@ namespace Business.Services
             StudentCourse? studentCourse = await _studentCourseRepository.GetStudentCourseByIDAsync(enrolmentD);
             return studentCourse != null ? studentCourse.ToResponse() : null;
         }
+
+        public async Task<bool> SyncStudentCoursesAsync(int studentID, List<int> coursesIDs)
+        {
+            return await _studentCourseRepository.SyncStudentCoursesAsync(studentID, coursesIDs);
+        }
+
     }
 }

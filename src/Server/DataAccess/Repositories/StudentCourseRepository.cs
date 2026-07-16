@@ -192,5 +192,55 @@ namespace DataAccess.Repositories
 
             return studentCourses;
         }
+
+        public async Task<bool> SyncStudentCoursesAsync(int studentID, List<int> coursesIDs)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
+                using (SqlCommand command = new SqlCommand("SP_SyncPassedCourses", connection))
+                {
+
+                    var table = new DataTable();
+                    table.Columns.Add("CourseID", typeof(int));
+
+                    foreach (var id in coursesIDs)
+                    {
+                        table.Rows.Add(id);
+                    }
+
+                    command.CommandType = CommandType.StoredProcedure;
+                    var result = new SqlParameter("@Result", SqlDbType.Bit)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(result);
+                    command.Parameters.AddWithValue("@StudentID", studentID);
+
+                    var tvpParam = new SqlParameter("@PassedCoursesIDs", table)
+                    {
+                        SqlDbType = SqlDbType.Structured,
+                        TypeName = "dbo.CourseIdListType"
+                    };
+
+                    command.Parameters.Add(tvpParam);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                    if (result.Value != DBNull.Value && bool.TryParse(result.Value.ToString(), out bool res))
+                    {
+                        return res;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logService.LogAsync(ex);
+                throw;
+            }
+            return false;
+        }
+
+
     }
 }

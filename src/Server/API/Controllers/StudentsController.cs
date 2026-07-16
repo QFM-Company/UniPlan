@@ -244,15 +244,40 @@ namespace API.Controllers
         }
 
 
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        //[ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
-        //[ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        //[HttpPost("{studentID}/passed-courses", Name = "SyncStudentPassedCourses")]
-        //public async Task<ActionResult> SyncStudentPassedCourses(int studentID , SyncStudentPassedCoursesRequest request)
-        //{
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [HttpPost("{studentID}/passed-courses", Name = "SyncStudentPassedCourses")]
+        public async Task<ActionResult> SyncStudentPassedCourses(int studentID, SyncStudentPassedCoursesRequest request)
+        {
+            if (studentID <= 0 || request.PassedCourseIds.Count(cID => cID <= 0) > 0)
+            {
+                return BadRequest("يجب أن يكون معرف الطالب و معرفات الكورسات أكبر من 0");
+            }
 
-        //}
+            try
+            {
+                bool res = await _studentCourseService.SyncStudentCoursesAsync(studentID , request.PassedCourseIds);
+
+                if (res)
+                {
+                    await _logService.LogAsync("the courses was synced", ExternalServicesEnums.LogType.Info);
+                    return NoContent();
+                }
+
+                await _logService.LogAsync($"an error ocuerd during syncing courses to student : {studentID}", ExternalServicesEnums.LogType.Warning);
+                return BadRequest($"حصل خطأ");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
+            }
+        }
     }
 }

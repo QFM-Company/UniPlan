@@ -152,7 +152,8 @@ GO
 
 Create OR Alter Procedure SP_SyncPassedCourses
 @PassedCoursesIDs CourseIdListType readonly ,
-@StudentId int
+@StudentId int,
+@Result bit out
 As
 Begin 
     SET NOCOUNT ON;
@@ -181,8 +182,11 @@ Begin
 		insert into StudentCourses (StudentID , CourseID , IsPassed)
 		select distinct @StudentId , CourseID , 1 from @PassedCoursesIDs;
 
+		set @Result = 1;
 	End Try
 	Begin Catch
+	    set @Result = 0;
+	    throw;
 	End Catch
 END
 

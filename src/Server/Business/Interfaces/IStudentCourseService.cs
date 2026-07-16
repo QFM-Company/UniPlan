@@ -16,5 +16,6 @@ namespace Business.Interfaces
 
         Task<StudentCourseResponse?> GetStudentCourseByIDAsync(int enrolmentD);
 
+        Task<bool> SyncStudentCoursesAsync(int studentID, List<int> coursesIDs);
     }
 }
