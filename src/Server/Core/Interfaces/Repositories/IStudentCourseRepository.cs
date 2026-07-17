@@ -16,6 +16,7 @@ namespace Core.Interfaces.Repositories
 
         Task<bool> SyncStudentCoursesAsync(int studentID, List<int> coursesIDs);
 
+        Task<IEnumerable<Course>?> GetOpenCoursesByStudentIDAsync(int studentID);
     }
 }
 

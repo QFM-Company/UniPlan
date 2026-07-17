@@ -71,5 +71,10 @@ namespace Business.Services
             return await _studentCourseRepository.SyncStudentCoursesAsync(studentID, coursesIDs);
         }
 
+        public async Task<IEnumerable<Course>?> GetOpenCoursesByStudentIDAsync(int studentID)
+        {
+            return await _studentCourseRepository.GetOpenCoursesByStudentIDAsync(studentID);
+        }
+
     }
 }

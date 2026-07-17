@@ -1,6 +1,7 @@
 ﻿using Business.DTOs.Requests.Create;
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
+using Core.Entities;
 
 namespace Business.Interfaces
 {
@@ -17,5 +18,6 @@ namespace Business.Interfaces
         Task<StudentCourseResponse?> GetStudentCourseByIDAsync(int enrolmentD);
 
         Task<bool> SyncStudentCoursesAsync(int studentID, List<int> coursesIDs);
+        Task<IEnumerable<Course>?> GetOpenCoursesByStudentIDAsync(int studentID);
     }
 }
