@@ -241,6 +241,41 @@ namespace DataAccess.Repositories
             return false;
         }
 
+        public async Task<IEnumerable<Course>?> GetOpenCoursesByStudentIDAsync(int studentID)
+        {
+            List<Course> openCourses = new List<Course>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
+                using (SqlCommand command = new SqlCommand("SP_GetStudentOpenCourses", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@StudentID", studentID);
+
+                    await connection.OpenAsync();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (reader != null)
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                openCourses.Add(reader.ToCourse());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logService.LogAsync(ex);
+                throw;
+            }
+
+            return openCourses;
+        }
+
 
     }
 }

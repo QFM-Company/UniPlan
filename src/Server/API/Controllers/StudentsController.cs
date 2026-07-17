@@ -2,9 +2,11 @@
 using Business.DTOs.Requests.Update;
 using Business.DTOs.Responses;
 using Business.Interfaces;
+using Core.Entities;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Interfaces.ExternalServices;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -246,7 +248,6 @@ namespace API.Controllers
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         [HttpPost("{studentID}/passed-courses", Name = "SyncStudentPassedCourses")]
@@ -279,5 +280,42 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
             }
         }
+
+
+        [ProducesResponseType(StatusCodes.Status200OK , Type = typeof(IEnumerable<Course>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [HttpGet("{studentID}/open-courses", Name = "GetStudentOpenCourses")]
+        public async Task<ActionResult<IEnumerable<Course>>> GetStudentOpenCourses(int studentID)
+        {
+            if (studentID <= 0)
+            {
+                return BadRequest("يجب أن يكون معرف الطالب أكبر من 0");
+            }
+
+            try
+            {
+                var res = await _studentCourseService.GetOpenCoursesByStudentIDAsync(studentID);
+
+                if (res != null)
+                {
+                    await _logService.LogAsync($"open courses for student {studentID} were fetched", ExternalServicesEnums.LogType.Info);
+                    return Ok(res);
+                }
+
+                await _logService.LogAsync($"an error ocuerd during get open courses to student : {studentID}", ExternalServicesEnums.LogType.Warning);
+                return BadRequest($"حصل خطأ");
+            }
+            catch (SqlException sqlException) when (sqlException.Number > 50000)
+            {
+                return Conflict(_exceptionService.GetExceptionMessage(sqlException));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, _exceptionService.GetExceptionMessage(ex));
+            }
+        }
+
     }
 }
