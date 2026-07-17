@@ -25,6 +25,8 @@ BEGIN
         ;THROW 51501, 'StudentCourse validation failed', 1;
     END
 
+	-- ****** I should Add Logic to check if Course Has Prequists (Fares)
+
     BEGIN TRY
         INSERT INTO [dbo].[StudentCourses]
         (
@@ -167,7 +169,7 @@ Begin
 	IF EXISTS (
     SELECT 1 
     FROM @PassedCoursesIDs p
-    LEFT JOIN dbo.Courses c ON p.CourseID = c.CourseID -- Replace c.CourseID with your actual primary key column name
+    LEFT JOIN dbo.Courses c ON p.CourseID = c.CourseID 
     WHERE c.CourseID IS NULL)
     BEGIN
         ;THROW 50903, 'One or more provided Course IDs do not exist.', 1;
@@ -178,6 +180,9 @@ Begin
 	    
 		delete from StudentCourses 
 		where StudentID = @StudentId;
+
+
+		-- ***** I should Find a Way To Use The Procedure To Check if there Are Prequists (Fares)
 
 		insert into StudentCourses (StudentID , CourseID , IsPassed)
 		select distinct @StudentId , CourseID , 1 from @PassedCoursesIDs;
@@ -204,10 +209,23 @@ Begin
 
 	Begin try
 
+	Declare @StudentMajorID int;
+
+	select @StudentMajorID = s.MajorID from Students s where StudentID = @StudentID;
+
+	Declare @MainMajorID int;
+
+	select @MainMajorID = Majors.MajorID from Majors where MajorName = 'هندسة المعلوماتية - اختصاص عام';
+
+
+	-- ***** I should Solve the At Least Hours Problem Like The graduate Project needs 125 Hours (Fares)
+
 	select Co.* from
 	(
 	   select c.* from Courses c
-	   where c.CourseID not in (select CourseID from StudentCourses where StudentID = @StudentID)
+	   where c.CourseID not in (select CourseID from StudentCourses where StudentID = @StudentID) 
+	   And (c.CourseID in (select CourseID from MajorCourses where MajorID = @StudentMajorID)
+	   Or c.CourseID in (select CourseID from MajorCourses where MajorID = @MainMajorID))
 	) As Co
 	where Co.CourseID not in (select CourseID from CoursePrerequisites) or Co.CourseID not in
 	(
@@ -221,4 +239,3 @@ Begin
 	End Catch
 End
 go
-
