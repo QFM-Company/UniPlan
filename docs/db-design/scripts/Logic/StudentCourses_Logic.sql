@@ -207,12 +207,12 @@ Begin
 	select Co.* from
 	(
 	   select c.* from Courses c
-	   where c.CourseID not in (select CourseID from StudentCourses where StudentID = @StudentID)
+	   where c.CourseID not in (select CourseID from StudentCourses where StudentID = 1)
 	) As Co
-	where Co.CourseID not in (select CourseID from CoursePrerequisites) or Co.CourseID in
+	where Co.CourseID not in (select CourseID from CoursePrerequisites) or Co.CourseID not in
 	(
-	   select CourseID from CoursePrerequisites 
-	   where PrerequisiteCourseID in(select CourseID from StudentCourses where StudentID = @StudentID)
+	   select CourseID from CoursePrerequisites cp
+	   where PrerequisiteCourseID not in(select CourseID from StudentCourses where StudentID = 1)
 	)
 
 	End TRy
@@ -220,5 +220,3 @@ Begin
 	  throw;
 	End Catch
 End
-
-
