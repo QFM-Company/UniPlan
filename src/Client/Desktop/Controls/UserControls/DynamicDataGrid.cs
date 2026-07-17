@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Controls.UserControls
 {
@@ -10,6 +11,10 @@ namespace Controls.UserControls
 
         public event LoadDataDelegate? OnLoadData;
         public event GetByIDDelegate? OnGetByID;
+        public event Action<object, DataRowView>? OnUpdateRow;
+        public event Action<object, DataRowView>? OnDeleteRow;
+        public event Action<object>? OnAddRow;
+
         private int _currentPage;
 
         public DynamicDataGrid()
@@ -90,7 +95,7 @@ namespace Controls.UserControls
             }
         }
 
-        private async void uniPlanButton1_Click(object sender, EventArgs e)
+        private async void btnSearch_Click(object sender, EventArgs e)
         {
             await TriggerGetByID();
         }
@@ -99,7 +104,7 @@ namespace Controls.UserControls
         {
             try
             {
-                if (OnGetByID != null && !string.IsNullOrWhiteSpace(searchControl1.TextBox.Text) && int.TryParse(searchControl1.TextBox.Text, out int id))
+                if (OnGetByID != null && searchControl1.TextBox.TryGetInt(out int id))
                 {
                     dataGrid.DataSource = await OnGetByID.Invoke(id);
                 }
@@ -111,9 +116,30 @@ namespace Controls.UserControls
 
         }
 
-        private void uniPlanButton2_Click(object sender, EventArgs e)
+        private void btnRefresh_Click(object sender, EventArgs e)
         {
             RefreshData();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (dataGrid.CurrentRow != null && dataGrid.CurrentRow.DataBoundItem is DataRowView selectedRow)
+            {
+                OnDeleteRow?.Invoke(this, selectedRow);
+            }
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (dataGrid.CurrentRow != null && dataGrid.CurrentRow.DataBoundItem is DataRowView selectedRow)
+            {
+                OnUpdateRow?.Invoke(this, selectedRow);
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            OnAddRow?.Invoke(this);
         }
     }
 }

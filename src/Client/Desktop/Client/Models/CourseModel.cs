@@ -1,6 +1,6 @@
 ﻿namespace Client.Models
 {
-    public class CourseModel
+    public class CourseModel : BaseModel
     {
         public int CourseID { get; set; }
         public string? CourseName { get; set; }

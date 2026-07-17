@@ -1,6 +1,6 @@
 ﻿namespace Client.Models
 {
-    public class AcademicTermModel
+    public class AcademicTermModel : BaseModel
     {
         public int TermID { get; set; }
         public string TermType { get; set; } = string.Empty;

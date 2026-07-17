@@ -57,5 +57,23 @@ namespace ViewModels
 
             return _ConvertToDataView(hallModels);
         }
+
+        public async Task<bool> CreateAsync(BaseModel model)
+        {
+            HallModel? hall = (HallModel)model;
+            hall = await _hallApi.CreateAsync(hall);
+            return hall != null;
+        }
+
+        public async Task<bool> UpdateAsync(BaseModel model)
+        {
+            HallModel? hall = (HallModel)model;
+            return await _hallApi.UpdateAsync(hall.HallID, hall);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _hallApi.DeleteAsync(id);
+        }
     }
 }

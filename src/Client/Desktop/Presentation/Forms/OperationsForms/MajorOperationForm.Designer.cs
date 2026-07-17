@@ -1,6 +1,6 @@
-﻿namespace Presentation.Forms
+﻿namespace Presentation.Forms.OperationsForms
 {
-    partial class HallsManagementForm
+    partial class MajorOperationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,17 +30,13 @@
         {
             SuspendLayout();
             // 
-            // dg_halls
-            // 
-            dataGrid.Size = new Size(918, 514);
-            // 
-            // HallsManagementForm
+            // MajorOperationForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(918, 597);
-            Name = "HallsManagementForm";
-            Text = "HallsManagementForm";
+            ClientSize = new Size(596, 780);
+            Name = "MajorOperationForm";
+            Text = "MajorOperationForm";
             ResumeLayout(false);
         }
 

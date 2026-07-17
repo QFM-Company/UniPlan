@@ -1,4 +1,6 @@
-﻿namespace Controls.UserControls
+﻿using Controls.Customs;
+
+namespace Controls.UserControls
 {
     partial class SearchControl
     {
@@ -28,44 +30,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-            txtSearch = new TextBox();
+            txtSearch = new UniPlanTextBox();
             SuspendLayout();
             // 
             // txtSearch
             // 
-            txtSearch.BorderStyle = BorderStyle.FixedSingle;
-            txtSearch.Cursor = Cursors.IBeam;
+            txtSearch.DataType = TextBoxDataType.Integer;
             txtSearch.Dock = DockStyle.Fill;
             txtSearch.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            txtSearch.ForeColor = Color.Black;
             txtSearch.Location = new Point(0, 0);
-            txtSearch.Margin = new Padding(2);
+            txtSearch.Margin = new Padding(4);
             txtSearch.Name = "txtSearch";
-            txtSearch.Size = new Size(283, 38);
-            txtSearch.TabIndex = 0;
-            txtSearch.Text = "Search...";
-            txtSearch.UseWaitCursor = true;
+            txtSearch.Size = new Size(216, 38);
+            txtSearch.TabIndex = 2;
+            txtSearch.Text = "بحث حسب المعرف";
+            txtSearch.TextAlign = HorizontalAlignment.Right;
+            txtSearch.Click += txtSearch_Enter;
+            txtSearch.Leave += txtSearch_Leave;
             // 
             // SearchControl
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(12F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Controls.Add(txtSearch);
+            Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Margin = new Padding(0);
             Name = "SearchControl";
-            Size = new Size(283, 39);
+            Size = new Size(216, 36);
             ResumeLayout(false);
             PerformLayout();
         }
 
-        public TextBox TextBox
-        {
-            get => txtSearch;
-        }
-
         #endregion
 
-        private TextBox txtSearch;
+        private UniPlanTextBox txtSearch;
     }
 }

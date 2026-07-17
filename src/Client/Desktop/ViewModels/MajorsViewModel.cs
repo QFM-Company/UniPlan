@@ -53,5 +53,20 @@ namespace ViewModels
 
             return _ConvertToDataView(majorModels);
         }
+
+        public Task<bool> CreateAsync(BaseModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(BaseModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

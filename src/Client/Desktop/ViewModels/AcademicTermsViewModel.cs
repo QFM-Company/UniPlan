@@ -51,5 +51,20 @@ namespace ViewModels
                 list.Add(model);
             return _ConvertToDataView(list);
         }
+
+        public Task<bool> CreateAsync(BaseModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(BaseModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
