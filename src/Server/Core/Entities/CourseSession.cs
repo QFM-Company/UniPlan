@@ -1,4 +1,6 @@
-﻿namespace Core.Entities
+﻿using Core.Extensions;
+
+namespace Core.Entities
 {
     public class CourseSession
     {
@@ -42,8 +44,8 @@
 
         public override string ToString()
         {
-            return string.Format("{0}\nاليوم: {1}\nبداية المحاضرة: {2}\nنهاية المحاضرة: {3}", CourseOffering
-                , Day , StartTime , EndTime
+            return string.Format("{0} يوم {1} من ساعة {2} الى الساعة {3}", CourseOffering
+                , Day.ToArabicString() , StartTime , EndTime
                 );
         }
     }

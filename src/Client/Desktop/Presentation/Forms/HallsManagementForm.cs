@@ -1,17 +1,11 @@
-﻿using ViewModels.Interface;
+﻿using ViewModels;
 
 namespace Presentation.Forms
 {
-    public partial class HallsManagement : Form
+    public partial class HallsManagementForm : BaseManagementForm
     {
-        private readonly IHallsViewModel _hallsViewModel;
-
-        public HallsManagement(IHallsViewModel hallsViewModel)
+        public HallsManagementForm(HallsViewModel hallsViewModel) : base(hallsViewModel)
         {
-            InitializeComponent();
-            _hallsViewModel = hallsViewModel;
-
-            dynamicDataGrid1.OnLoadData += _hallsViewModel.GetDataView;
         }
     }
 }

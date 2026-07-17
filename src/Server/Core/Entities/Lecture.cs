@@ -1,4 +1,5 @@
 ﻿using Core.Enums;
+using Core.Extensions;
 
 namespace Core.Entities
 {
@@ -41,7 +42,7 @@ namespace Core.Entities
 
         public override string ToString()
         {
-            return string.Format("نوع المحاضرة: {0}\n{1}", LectureType, Course);
+            return string.Format("{0} {1}", LectureType.ToArabicString(), Course);
         }
     }
 }

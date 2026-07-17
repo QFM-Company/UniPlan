@@ -1,4 +1,6 @@
-﻿namespace Controls.UserControls
+﻿using Controls.Properties;
+
+namespace Controls.UserControls
 {
     partial class Header
     {
@@ -27,20 +29,23 @@
             // lbHeader
             // 
             lbHeader.AutoSize = true;
-            lbHeader.Font = new Font("Tajawal", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbHeader.ForeColor = Color.FromArgb(30, 58, 71);
-            lbHeader.Location = new Point(115, 28);
+            lbHeader.BackColor = Color.Transparent;
+            lbHeader.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbHeader.ForeColor = Color.FromArgb(44, 62, 80);
+            lbHeader.Location = new Point(77, 19);
+            lbHeader.Margin = new Padding(2, 0, 2, 0);
             lbHeader.Name = "lbHeader";
-            lbHeader.Size = new Size(126, 47);
+            lbHeader.Size = new Size(116, 31);
             lbHeader.TabIndex = 2;
             lbHeader.Text = "UniPlan";
             // 
             // piclogo
             // 
-            piclogo.Image = global::Controls.Properties.Resources.UniPlan;
+            piclogo.Image = Resources.UniPlan;
             piclogo.Location = new Point(1, 1);
+            piclogo.Margin = new Padding(2);
             piclogo.Name = "piclogo";
-            piclogo.Size = new Size(103, 103);
+            piclogo.Size = new Size(69, 69);
             piclogo.SizeMode = PictureBoxSizeMode.Zoom;
             piclogo.TabIndex = 1;
             piclogo.TabStop = false;
@@ -53,18 +58,20 @@
             pnlHeader.Controls.Add(piclogo);
             pnlHeader.Dock = DockStyle.Fill;
             pnlHeader.Location = new Point(0, 0);
+            pnlHeader.Margin = new Padding(2);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(1400, 105);
+            pnlHeader.Size = new Size(933, 70);
             pnlHeader.TabIndex = 1;
             // 
             // Header
             // 
-            AutoScaleDimensions = new SizeF(12F, 30F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Controls.Add(pnlHeader);
+            Margin = new Padding(2);
             Name = "Header";
-            Size = new Size(1400, 105);
+            Size = new Size(933, 70);
             ((System.ComponentModel.ISupportInitialize)piclogo).EndInit();
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();

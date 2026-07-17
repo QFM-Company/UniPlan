@@ -21,6 +21,9 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    IF NOT EXISTS (SELECT 1 FROM [dbo].[WishLists] WHERE WishListID = @WishListID)
+        THROW 51703, '', 1;
+
     BEGIN TRY
         
         DECLARE @TermID INT;

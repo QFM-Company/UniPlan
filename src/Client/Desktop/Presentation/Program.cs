@@ -1,8 +1,8 @@
+﻿using Client.Models;
 using Client.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.Forms;
 using ViewModels;
-using ViewModels.Interface;
 
 namespace Presentation
 {
@@ -20,7 +20,7 @@ namespace Presentation
 
             ServiceProvider = services.BuildServiceProvider();
 
-            var mainForm = ServiceProvider.GetRequiredService<HallsManagement>();
+            var mainForm = ServiceProvider.GetRequiredService<MainForm>();
             Application.Run(mainForm);
         }
 
@@ -31,10 +31,21 @@ namespace Presentation
                 BaseAddress = new Uri("https://localhost:7068/")
             });
 
-            services.AddScoped<HallApiService>();
+            services.AddScoped<ApiService<HallModel>>();
+            services.AddTransient<HallsViewModel>();
 
-            services.AddTransient<IHallsViewModel, HallsViewModel>();
-            services.AddTransient<HallsManagement>();
+            services.AddScoped<ApiService<MajorModel>>();
+            services.AddTransient<MajorsViewModel>();
+
+            services.AddScoped<HallsViewModel>();
+            services.AddTransient<HallsManagementForm>();
+
+            services.AddScoped<MajorsViewModel>();
+            services.AddTransient<MajorsManagementForm>();
+
+            services.AddScoped<HallsManagementForm>();
+            services.AddScoped<MajorsManagementForm>();
+            services.AddTransient<MainForm>();
         }
     }
 }

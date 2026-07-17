@@ -1,6 +1,6 @@
 ﻿namespace Core.Exceptions
 {
-    public class ConflictException : ScheduleException
+    public class ConflictException : Exception
     {
         public ConflictException(string conflictMeesages) : base(conflictMeesages)
         {

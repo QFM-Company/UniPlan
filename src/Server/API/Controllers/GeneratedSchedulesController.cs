@@ -54,9 +54,9 @@ namespace API.Controllers
                 await _logService.LogAsync(valException.Message, ExternalServicesEnums.LogType.Error);
                 return UnprocessableEntity(valException.Message);
             }
-            catch (ScheduleException schException)
+            catch (ConflictException conException)
             {
-                return Conflict(schException.Message);
+                return Conflict(conException.Message);
             }
             catch (Exception ex)
             {
