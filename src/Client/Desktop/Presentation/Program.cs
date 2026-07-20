@@ -38,9 +38,11 @@ namespace Presentation
             services.AddTransient<MajorsViewModel>();
 
             services.AddScoped<HallsViewModel>();
+            services.AddScoped<ApiService<HallModel>>();
             services.AddTransient<HallsManagementForm>();
 
             services.AddScoped<MajorsViewModel>();
+            services.AddScoped<ApiService<BaseModel>>();
             services.AddTransient<MajorsManagementForm>();
 
             services.AddScoped<HallsManagementForm>();

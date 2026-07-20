@@ -2,8 +2,10 @@
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Controls;
+using UniPlan.Controls;
 
-namespace UniPlan.Controls.CustomButtons
+namespace Controls.Customs
 {
     public class UniPlanButton : Button
     {

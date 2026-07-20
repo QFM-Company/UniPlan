@@ -31,18 +31,18 @@
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            uniPlanButton1 = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            btnSearch = new Controls.Customs.UniPlanButton();
             panel1 = new Panel();
             searchControl1 = new SearchControl();
-            uniPlanButton2 = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            btnRefresh = new Controls.Customs.UniPlanButton();
             panel2 = new Panel();
             panel4 = new Panel();
-            uniPlanButton5 = new UniPlan.Controls.CustomButtons.UniPlanButton();
-            uniPlanButton4 = new UniPlan.Controls.CustomButtons.UniPlanButton();
-            uniPlanButton3 = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            btnUpdate = new Controls.Customs.UniPlanButton();
+            btnDelete = new Controls.Customs.UniPlanButton();
+            btnAdd = new Controls.Customs.UniPlanButton();
             panel3 = new Panel();
-            btnPervious = new UniPlan.Controls.CustomButtons.UniPlanButton();
-            btnNext = new UniPlan.Controls.CustomButtons.UniPlanButton();
+            btnPervious = new Controls.Customs.UniPlanButton();
+            btnNext = new Controls.Customs.UniPlanButton();
             dataGrid = new DataGridView();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -51,32 +51,32 @@
             ((System.ComponentModel.ISupportInitialize)dataGrid).BeginInit();
             SuspendLayout();
             // 
-            // uniPlanButton1
+            // btnSearch
             // 
-            uniPlanButton1.BackColor = Color.FromArgb(30, 58, 138);
-            uniPlanButton1.BorderRadius = 15;
-            uniPlanButton1.FlatAppearance.BorderSize = 0;
-            uniPlanButton1.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton1.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton1.FlatStyle = FlatStyle.Flat;
-            uniPlanButton1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton1.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton1.Location = new Point(247, 19);
-            uniPlanButton1.Margin = new Padding(2);
-            uniPlanButton1.Name = "uniPlanButton1";
-            uniPlanButton1.Size = new Size(50, 40);
-            uniPlanButton1.TabIndex = 11;
-            uniPlanButton1.Tag = "-";
-            uniPlanButton1.Text = "🔎";
-            uniPlanButton1.UseVisualStyleBackColor = false;
-            uniPlanButton1.Click += uniPlanButton1_Click;
+            btnSearch.BackColor = Color.FromArgb(30, 58, 138);
+            btnSearch.BorderRadius = 15;
+            btnSearch.FlatAppearance.BorderSize = 0;
+            btnSearch.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            btnSearch.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            btnSearch.FlatStyle = FlatStyle.Flat;
+            btnSearch.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnSearch.ForeColor = Color.FromArgb(255, 255, 255);
+            btnSearch.Location = new Point(247, 19);
+            btnSearch.Margin = new Padding(2);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(50, 40);
+            btnSearch.TabIndex = 11;
+            btnSearch.Tag = "-";
+            btnSearch.Text = "🔎";
+            btnSearch.UseVisualStyleBackColor = false;
+            btnSearch.Click += btnSearch_Click;
             // 
             // panel1
             // 
             panel1.BackColor = Color.White;
             panel1.Controls.Add(searchControl1);
-            panel1.Controls.Add(uniPlanButton2);
-            panel1.Controls.Add(uniPlanButton1);
+            panel1.Controls.Add(btnRefresh);
+            panel1.Controls.Add(btnSearch);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
@@ -86,32 +86,33 @@
             // searchControl1
             // 
             searchControl1.BackColor = Color.White;
+            searchControl1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             searchControl1.Location = new Point(16, 19);
             searchControl1.Margin = new Padding(0);
             searchControl1.Name = "searchControl1";
             searchControl1.Size = new Size(229, 40);
             searchControl1.TabIndex = 13;
             // 
-            // uniPlanButton2
+            // btnRefresh
             // 
-            uniPlanButton2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            uniPlanButton2.BackColor = Color.FromArgb(30, 58, 138);
-            uniPlanButton2.BorderRadius = 15;
-            uniPlanButton2.FlatAppearance.BorderSize = 0;
-            uniPlanButton2.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton2.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton2.FlatStyle = FlatStyle.Flat;
-            uniPlanButton2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton2.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton2.Location = new Point(741, 19);
-            uniPlanButton2.Margin = new Padding(2);
-            uniPlanButton2.Name = "uniPlanButton2";
-            uniPlanButton2.Size = new Size(48, 40);
-            uniPlanButton2.TabIndex = 12;
-            uniPlanButton2.Tag = "-";
-            uniPlanButton2.Text = "🔄";
-            uniPlanButton2.UseVisualStyleBackColor = false;
-            uniPlanButton2.Click += uniPlanButton2_Click;
+            btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnRefresh.BackColor = Color.FromArgb(30, 58, 138);
+            btnRefresh.BorderRadius = 15;
+            btnRefresh.FlatAppearance.BorderSize = 0;
+            btnRefresh.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            btnRefresh.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            btnRefresh.FlatStyle = FlatStyle.Flat;
+            btnRefresh.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnRefresh.ForeColor = Color.FromArgb(255, 255, 255);
+            btnRefresh.Location = new Point(740, 19);
+            btnRefresh.Margin = new Padding(2);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(48, 40);
+            btnRefresh.TabIndex = 12;
+            btnRefresh.Tag = "-";
+            btnRefresh.Text = "🔄";
+            btnRefresh.UseVisualStyleBackColor = false;
+            btnRefresh.Click += btnRefresh_Click;
             // 
             // panel2
             // 
@@ -127,73 +128,76 @@
             // panel4
             // 
             panel4.BackColor = Color.White;
-            panel4.Controls.Add(uniPlanButton5);
-            panel4.Controls.Add(uniPlanButton4);
-            panel4.Controls.Add(uniPlanButton3);
+            panel4.Controls.Add(btnUpdate);
+            panel4.Controls.Add(btnDelete);
+            panel4.Controls.Add(btnAdd);
             panel4.Dock = DockStyle.Fill;
             panel4.Location = new Point(297, 0);
             panel4.Name = "panel4";
             panel4.Size = new Size(510, 70);
             panel4.TabIndex = 1;
             // 
-            // uniPlanButton5
+            // btnUpdate
             // 
-            uniPlanButton5.Anchor = AnchorStyles.Top;
-            uniPlanButton5.BackColor = Color.Gray;
-            uniPlanButton5.BorderRadius = 15;
-            uniPlanButton5.FlatAppearance.BorderSize = 0;
-            uniPlanButton5.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton5.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton5.FlatStyle = FlatStyle.Flat;
-            uniPlanButton5.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton5.ForeColor = Color.White;
-            uniPlanButton5.Location = new Point(195, 16);
-            uniPlanButton5.Margin = new Padding(2);
-            uniPlanButton5.Name = "uniPlanButton5";
-            uniPlanButton5.Size = new Size(119, 39);
-            uniPlanButton5.TabIndex = 5;
-            uniPlanButton5.Tag = "-";
-            uniPlanButton5.Text = "Update";
-            uniPlanButton5.UseVisualStyleBackColor = false;
+            btnUpdate.Anchor = AnchorStyles.Top;
+            btnUpdate.BackColor = Color.Gray;
+            btnUpdate.BorderRadius = 15;
+            btnUpdate.FlatAppearance.BorderSize = 0;
+            btnUpdate.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            btnUpdate.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            btnUpdate.FlatStyle = FlatStyle.Flat;
+            btnUpdate.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnUpdate.ForeColor = Color.White;
+            btnUpdate.Location = new Point(195, 16);
+            btnUpdate.Margin = new Padding(2);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(119, 39);
+            btnUpdate.TabIndex = 5;
+            btnUpdate.Tag = "-";
+            btnUpdate.Text = "تعديل";
+            btnUpdate.UseVisualStyleBackColor = false;
+            btnUpdate.Click += btnUpdate_Click;
             // 
-            // uniPlanButton4
+            // btnDelete
             // 
-            uniPlanButton4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            uniPlanButton4.BackColor = Color.FromArgb(220, 38, 38);
-            uniPlanButton4.BorderRadius = 15;
-            uniPlanButton4.FlatAppearance.BorderSize = 0;
-            uniPlanButton4.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton4.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton4.FlatStyle = FlatStyle.Flat;
-            uniPlanButton4.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton4.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton4.Location = new Point(358, 16);
-            uniPlanButton4.Margin = new Padding(2);
-            uniPlanButton4.Name = "uniPlanButton4";
-            uniPlanButton4.Size = new Size(119, 39);
-            uniPlanButton4.TabIndex = 4;
-            uniPlanButton4.Tag = "-";
-            uniPlanButton4.Text = "Delete";
-            uniPlanButton4.UseVisualStyleBackColor = false;
+            btnDelete.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnDelete.BackColor = Color.FromArgb(220, 38, 38);
+            btnDelete.BorderRadius = 15;
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            btnDelete.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnDelete.ForeColor = Color.FromArgb(255, 255, 255);
+            btnDelete.Location = new Point(358, 16);
+            btnDelete.Margin = new Padding(2);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(119, 39);
+            btnDelete.TabIndex = 4;
+            btnDelete.Tag = "-";
+            btnDelete.Text = "حذف";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click;
             // 
-            // uniPlanButton3
+            // btnAdd
             // 
-            uniPlanButton3.BackColor = Color.FromArgb(30, 58, 138);
-            uniPlanButton3.BorderRadius = 15;
-            uniPlanButton3.FlatAppearance.BorderSize = 0;
-            uniPlanButton3.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
-            uniPlanButton3.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
-            uniPlanButton3.FlatStyle = FlatStyle.Flat;
-            uniPlanButton3.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            uniPlanButton3.ForeColor = Color.FromArgb(255, 255, 255);
-            uniPlanButton3.Location = new Point(32, 16);
-            uniPlanButton3.Margin = new Padding(2);
-            uniPlanButton3.Name = "uniPlanButton3";
-            uniPlanButton3.Size = new Size(119, 39);
-            uniPlanButton3.TabIndex = 3;
-            uniPlanButton3.Tag = "-";
-            uniPlanButton3.Text = "Add";
-            uniPlanButton3.UseVisualStyleBackColor = false;
+            btnAdd.BackColor = Color.FromArgb(30, 58, 138);
+            btnAdd.BorderRadius = 15;
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.FlatAppearance.MouseDownBackColor = Color.FromArgb(19, 122, 148);
+            btnAdd.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 177, 212);
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnAdd.ForeColor = Color.FromArgb(255, 255, 255);
+            btnAdd.Location = new Point(32, 16);
+            btnAdd.Margin = new Padding(2);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(119, 39);
+            btnAdd.TabIndex = 3;
+            btnAdd.Tag = "-";
+            btnAdd.Text = "اضافة";
+            btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Click += btnAdd_Click;
             // 
             // panel3
             // 
@@ -318,18 +322,18 @@
         }
 
         #endregion
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton1;
+        private Controls.Customs.UniPlanButton btnSearch;
         private Panel panel1;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton2;
+        private Controls.Customs.UniPlanButton btnRefresh;
         private Panel panel2;
         private DataGridView dataGrid;
-        private UniPlan.Controls.CustomButtons.UniPlanButton btnPervious;
+        private Controls.Customs.UniPlanButton btnPervious;
         private Panel panel4;
         private Panel panel3;
-        private UniPlan.Controls.CustomButtons.UniPlanButton btnNext;
+        private Controls.Customs.UniPlanButton btnNext;
         private SearchControl searchControl1;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton5;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton4;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton3;
+        private Controls.Customs.UniPlanButton btnUpdate;
+        private Controls.Customs.UniPlanButton btnDelete;
+        private Controls.Customs.UniPlanButton btnAdd;
     }
 }

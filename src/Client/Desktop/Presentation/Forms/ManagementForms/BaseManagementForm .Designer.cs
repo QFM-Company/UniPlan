@@ -68,10 +68,10 @@
         }
 
         #endregion
-        private UniPlan.Controls.CustomButtons.UniPlanButton HallsBtn;
+        private Controls.Customs.UniPlanButton HallsBtn;
         private Controls.UserControls.Header header1;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton1;
-        private UniPlan.Controls.CustomButtons.UniPlanButton uniPlanButton2;
+        private Controls.Customs.UniPlanButton uniPlanButton1;
+        private Controls.Customs.UniPlanButton uniPlanButton2;
         private Controls.UserControls.SearchControl searchControl1;
         protected Controls.UserControls.DynamicDataGrid dataGrid;
     }
