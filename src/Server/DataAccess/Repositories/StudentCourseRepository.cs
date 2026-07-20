@@ -200,7 +200,6 @@ namespace DataAccess.Repositories
                 using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
                 using (SqlCommand command = new SqlCommand("SP_SyncPassedCourses", connection))
                 {
-
                     var table = new DataTable();
                     table.Columns.Add("CourseID", typeof(int));
 

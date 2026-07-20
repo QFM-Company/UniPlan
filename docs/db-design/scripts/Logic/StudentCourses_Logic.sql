@@ -219,7 +219,7 @@ Begin
 
 
 	-- ***** I should Solve the At Least Hours Problem Like The graduate Project needs 125 Hours (Fares)
-
+	-- ***** Make sure if he ended 4 subjects of متطلبات الكلية then don't return the others and 2 subjects of متطلبات الجامعة too (Fares)
 	select Co.* from
 	(
 	   select c.* from Courses c

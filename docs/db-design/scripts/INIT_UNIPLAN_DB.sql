@@ -158,6 +158,9 @@ CREATE TABLE [dbo].[Students]
     [PersonID] int NOT NULL,
     [AccountID] int NOT NULL,
     [MajorID] int NOT NULL,
+	[CompletedHours] int default 0,
+
+
 
     CONSTRAINT [PK_Students] PRIMARY KEY CLUSTERED ([StudentID]),
 
@@ -235,6 +238,7 @@ CREATE TABLE [dbo].[Courses]
     [CourseName] nvarchar(100) NOT NULL,
     [CreditHours] int NOT NULL,
     [CourseCode] nvarchar(8) NULL,
+	[NeededHours] int default 0,
 
 
     CONSTRAINT [PK_Courses] PRIMARY KEY CLUSTERED ([CourseID]),
