@@ -1,33 +1,41 @@
-﻿using System.Data;
-using Client.Models;
+﻿using Client.Models;
+using Client.Models.Requests;
+using Client.Models.Responses;
 using Client.Services;
+using Core.Interfaces.ExternalServices;
+using System.Data;
 using ViewModels.Interfaces;
 
 namespace ViewModels
 {
     public class HallsViewModel : IViewModel
     {
-        private readonly ApiService<HallModel> _hallApi;
+        private readonly HallApiService _hallApi;
+        private readonly IValidationService _validationService;
 
-        public HallsViewModel(ApiService<HallModel> hallApiService)
+        public HallsViewModel(HallApiService hallApiService, IValidationService validationService)
         {
             _hallApi = hallApiService;
-            _hallApi.SubUri = "api/halls";
+            _validationService = validationService;
         }
 
-        private DataView _ConvertToDataView(List<HallModel>? hallModels)
+        private DataView _ToDataView(List<HallResponse>? hallResponses)
         {
             DataTable table = new DataTable();
 
-            table.Columns.Add("Hall ID");
-            table.Columns.Add("Hall Name");
-            table.Columns.Add("Building");
-            table.Columns.Add("Floor");
+            DataColumn primaryKey = new DataColumn("معرف القاعة");
 
-            if (hallModels == null)
+            table.Columns.Add(primaryKey);
+            table.Columns.Add("اسم القاعة");
+            table.Columns.Add("المبنى");
+            table.Columns.Add("الطابق");
+
+            table.PrimaryKey = new DataColumn[] { primaryKey };
+
+            if (hallResponses == null)
                 return table.DefaultView;
 
-            foreach (var hall in hallModels)
+            foreach (var hall in hallResponses)
             {
                 table.Rows.Add(
                     hall.HallID,
@@ -42,38 +50,45 @@ namespace ViewModels
 
         public async Task<DataView> GetDataView(int pageNumber, int pageSize)
         {
-            List<HallModel>? hallModels = await _hallApi.GetAllAsync(pageNumber, pageSize);
-            return _ConvertToDataView(hallModels);
+            List<HallResponse>? hallResponses = await _hallApi.GetHallsAsync(pageNumber, pageSize);
+            return _ToDataView(hallResponses);
         }
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            HallModel? hallModel = await _hallApi.GetByIdAsync(id);
+            HallResponse? hallResponse = await _hallApi.GetHallAsync(id);
 
-            List<HallModel> hallModels = new List<HallModel>();
+            List<HallResponse> hallResponses = new List<HallResponse>();
 
-            if (hallModel != null)
-                hallModels.Add(hallModel);
+            if (hallResponse != null)
+                hallResponses.Add(hallResponse);
 
-            return _ConvertToDataView(hallModels);
+            return _ToDataView(hallResponses);
         }
 
         public async Task<bool> CreateAsync(BaseModel model)
         {
-            HallModel? hall = (HallModel)model;
-            hall = await _hallApi.CreateAsync(hall);
+            HallRequest? hall = (HallRequest)model;
+
+            _validationService.Validate(hall);
+
+            hall = await _hallApi.PostHallAsync(hall);
+
             return hall != null;
         }
 
-        public async Task<bool> UpdateAsync(BaseModel model)
+        public async Task<bool> UpdateAsync(int id, BaseModel model)
         {
-            HallModel? hall = (HallModel)model;
-            return await _hallApi.UpdateAsync(hall.HallID, hall);
+            HallRequest? hall = (HallRequest)model;
+
+            _validationService.Validate(hall);
+
+            return await _hallApi.PutHallAsync(id, hall);
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            return await _hallApi.DeleteAsync(id);
+            return await _hallApi.DeleteHallAsync(id);
         }
     }
 }

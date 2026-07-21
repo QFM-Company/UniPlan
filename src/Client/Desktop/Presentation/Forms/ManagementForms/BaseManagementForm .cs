@@ -15,6 +15,8 @@ namespace Presentation.Forms
         private BaseOperationForm _operationForm;
         protected BaseModel? _model;
 
+        private int _id;
+
         public BaseManagementForm(IViewModel viewModel, BaseOperationForm operationForm) : this()
         {
             _viewModel = viewModel;
@@ -31,7 +33,7 @@ namespace Presentation.Forms
             InitializeComponent();
         }
 
-        public void HandleUpdateClick(object sender, DataRowView selectedRow)
+        public void HandleUpdateClick(object sender, int id, DataRowView selectedRow)
         {
             if (DesignMode)
                 return;
@@ -40,6 +42,7 @@ namespace Presentation.Forms
 
             _operationForm.Model = _model;
             _operationForm.Mode = Mode.Update;
+            _id = id;
             _operationForm.ShowDialog();
 
             Refresh(sender);
@@ -60,15 +63,13 @@ namespace Presentation.Forms
         {
             try
             {
-                HallModel hall = (HallModel)model;
-
                 if (mode == Mode.Add)
                 {
-                    return await _viewModel.CreateAsync(hall);
+                    return await _viewModel.CreateAsync(model);
                 }
                 else
                 {
-                    return await _viewModel.UpdateAsync(hall);
+                    return await _viewModel.UpdateAsync(_id, model);
                 }
             }
             catch (Exception ex)
@@ -79,7 +80,7 @@ namespace Presentation.Forms
             return false;
         }
 
-        public async void HandleDeleteClick(object sender, DataRowView selectedRow)
+        public async void HandleDeleteClick(object sender, int id)
         {
             DialogResult result = MessageBox.Show("هل أنت متأكد أنك تريد الحذف؟", "UniPlan", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.No)
@@ -87,8 +88,6 @@ namespace Presentation.Forms
 
             try
             {
-                UpdateModel(selectedRow);
-                int id = GetModelId();
                 if (await _viewModel.DeleteAsync(id))
                 {
                     MessageBox.Show("تمت العملية بنجاح", "UniPlan", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -100,14 +99,6 @@ namespace Presentation.Forms
             {
                 MessageBox.Show(ex.Message, "UniPlan", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-
-
-
-        public virtual int GetModelId()
-        {
-            return 0;
         }
 
         public virtual void UpdateModel(DataRowView selectedRow)

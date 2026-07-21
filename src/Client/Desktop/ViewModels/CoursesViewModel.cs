@@ -1,72 +1,69 @@
-﻿using System.Data;
-using Client.Models;
+﻿using Client.Models;
+using Client.Models.Requests;
+using Client.Models.Responses;
 using Client.Services;
+using Core.Interfaces.ExternalServices;
+using System.Data;
 using ViewModels.Interfaces;
 
 namespace ViewModels
 {
     public class CoursesViewModel : IViewModel
     {
-        private readonly ApiService<CourseModel> _courseApi;
+        private readonly CourseApiService _courseApi;
+        private readonly IValidationService _validationService;
 
-        public CoursesViewModel(ApiService<CourseModel> courseApiService)
+        public CoursesViewModel(CourseApiService courseApiService, IValidationService validationService)
         {
             _courseApi = courseApiService;
-            _courseApi.SubUri = "api/courses";
+            _validationService = validationService;
         }
 
-        private DataView _ConvertToDataView(List<CourseModel>? models)
+        private DataView _ToDataView(List<CourseResponse>? courses)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("Course ID");
-            table.Columns.Add("Course Name");
-            table.Columns.Add("Credit Hours");
-            table.Columns.Add("Course Code");
+            table.Columns.Add("معرف المقرر", typeof(int));
+            table.Columns.Add("اسم المقرر", typeof(string));
+            table.Columns.Add("رمز المقرر", typeof(string));
+            table.Columns.Add("عدد الساعات", typeof(int));
+            table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (models == null)
-                return table.DefaultView;
-
-            foreach (var course in models)
-            {
-                table.Rows.Add(
-                    course.CourseID,
-                    course.CourseName,
-                    course.CreditHours,
-                    course.CourseCode
-                );
-            }
-
+            if (courses == null) return table.DefaultView;
+            foreach (var c in courses) table.Rows.Add(c.CourseID, c.CourseName, c.CourseCode, c.CreditHours);
             return table.DefaultView;
         }
 
         public async Task<DataView> GetDataView(int pageNumber, int pageSize)
         {
-            var models = await _courseApi.GetAllAsync(pageNumber, pageSize);
-            return _ConvertToDataView(models);
+            var data = await _courseApi.GetCoursesAsync(pageNumber, pageSize);
+            return _ToDataView(data);
         }
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var model = await _courseApi.GetByIdAsync(id);
-            var list = new List<CourseModel>();
-            if (model != null)
-                list.Add(model);
-            return _ConvertToDataView(list);
+            var data = await _courseApi.GetCourseAsync(id);
+            var list = data == null ? new List<CourseResponse>() : new List<CourseResponse> { data };
+            return _ToDataView(list);
         }
 
-        public Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(BaseModel model)
         {
-            throw new NotImplementedException();
+            var req = (CourseRequest)model;
+            _validationService.Validate(req);
+            req = await _courseApi.PostCourseAsync(req);
+            return req != null;
         }
 
-        public Task<bool> UpdateAsync(BaseModel model)
+        public async Task<bool> UpdateAsync(int id, BaseModel model)
         {
-            throw new NotImplementedException();
+            var req = (CourseRequest)model;
+            _validationService.Validate(req);
+            return await _courseApi.PutCourseAsync(id, req);
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _courseApi.DeleteCourseAsync(id);
         }
     }
 }

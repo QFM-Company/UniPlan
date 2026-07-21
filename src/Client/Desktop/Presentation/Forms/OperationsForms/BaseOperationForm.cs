@@ -7,7 +7,10 @@ namespace Presentation.Forms.OperationsForms
     {
         public BaseModel? Model { get; set; }
         public Mode Mode { get; set; }
+
         public event Func<BaseModel, Mode, Task<bool>>? OnSaveClick;
+
+        public int Id { get; set; }
 
         public BaseOperationForm()
         {
@@ -20,6 +23,21 @@ namespace Presentation.Forms.OperationsForms
         }
 
         public virtual void LoadData()
+        {
+
+        }
+
+        public virtual void UpdateMode()
+        {
+
+        }
+
+        public virtual void AddMode()
+        {
+
+        }
+
+        public virtual void InitializeFields()
         {
 
         }
@@ -42,7 +60,19 @@ namespace Presentation.Forms.OperationsForms
 
         private void BaseOperationForm_Load(object sender, EventArgs e)
         {
-            LoadData();
+            InitializeFields();
+
+            if (Mode == Mode.Update)
+            {
+                lblFormName.Text = $"واجهة التعديل";
+                UpdateMode();
+                LoadData();
+            }
+            else
+            {
+                lblFormName.Text = "واجهة الأضافة";
+                AddMode();
+            }
         }
     }
 }

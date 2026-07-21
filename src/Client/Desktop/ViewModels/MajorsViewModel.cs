@@ -1,72 +1,67 @@
-﻿using System.Data;
-using Client.Models;
+﻿using Client.Models;
+using Client.Models.Requests;
+using Client.Models.Responses;
 using Client.Services;
+using Core.Interfaces.ExternalServices;
+using System.Data;
 using ViewModels.Interfaces;
 
 namespace ViewModels
 {
     public class MajorsViewModel : IViewModel
     {
-        private readonly ApiService<MajorModel> _majorApi;
+        private readonly MajorApiService _majorApi;
+        private readonly IValidationService _validationService;
 
-        public MajorsViewModel(ApiService<MajorModel> majorApiService)
+        public MajorsViewModel(MajorApiService majorApiService, IValidationService validationService)
         {
             _majorApi = majorApiService;
-            _majorApi.SubUri = "api/majors";
+            _validationService = validationService;
         }
 
-        private DataView _ConvertToDataView(List<MajorModel>? models)
+        private DataView _ToDataView(List<MajorResponse>? majors)
         {
             DataTable table = new DataTable();
+            table.Columns.Add("معرف التخصص", typeof(int));
+            table.Columns.Add("اسم التخصص", typeof(string));
+            table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            table.Columns.Add("Major ID");
-            table.Columns.Add("Major Name");
-
-            if (models == null)
-                return table.DefaultView;
-
-            foreach (var major in models)
-            {
-                table.Rows.Add(
-                    major.MajorID,
-                    major.MajorName ?? string.Empty
-                );
-            }
-
+            if (majors == null) return table.DefaultView;
+            foreach (var m in majors) table.Rows.Add(m.MajorID, m.MajorName);
             return table.DefaultView;
         }
 
         public async Task<DataView> GetDataView(int pageNumber, int pageSize)
         {
-            List<MajorModel>? models = await _majorApi.GetAllAsync(pageNumber, pageSize);
-            return _ConvertToDataView(models);
+            var data = await _majorApi.GetMajorsAsync(pageNumber, pageSize);
+            return _ToDataView(data);
         }
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            MajorModel? model = await _majorApi.GetByIdAsync(id);
-
-            List<MajorModel> majorModels = new List<MajorModel>();
-
-            if (model != null)
-                majorModels.Add(model);
-
-            return _ConvertToDataView(majorModels);
+            var data = await _majorApi.GetMajorAsync(id);
+            var list = data == null ? new List<MajorResponse>() : new List<MajorResponse> { data };
+            return _ToDataView(list);
         }
 
-        public Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(BaseModel model)
         {
-            throw new NotImplementedException();
+            var req = (MajorRequest)model;
+            _validationService.Validate(req);
+            req = await _majorApi.PostMajorAsync(req);
+            return req != null;
         }
 
-        public Task<bool> UpdateAsync(BaseModel model)
+        public async Task<bool> UpdateAsync(int id, BaseModel model)
         {
-            throw new NotImplementedException();
+            var req = (MajorRequest)model;
+            _validationService.Validate(req);
+            return await _majorApi.PutMajorAsync(id, req);
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _majorApi.DeleteMajorAsync(id);
         }
     }
 }

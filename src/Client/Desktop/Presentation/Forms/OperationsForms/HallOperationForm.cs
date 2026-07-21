@@ -1,5 +1,8 @@
 ﻿using Client.Models;
+using Client.Models.Requests;
+using Client.Models.Responses;
 using System;
+using ViewModels.Extensions;
 
 namespace Presentation.Forms.OperationsForms
 {
@@ -10,9 +13,19 @@ namespace Presentation.Forms.OperationsForms
             InitializeComponent();
         }
 
+        public override void UpdateMode()
+        {
+            uniPlanTextBox4.Enabled = false;
+        }
+
+        public override void AddMode()
+        {
+            uniPlanTextBox4.Enabled = true;
+        }
+
         public override void UpdateModel()
         {
-            HallModel hall = (HallModel)Model ?? new HallModel();
+            HallRequest hall = new HallRequest();
 
             uniPlanTextBox4.TryGetInt(out int createdByAdminID);
             uniPlanTextBox3.TryGetInt(out int floor);
@@ -28,12 +41,20 @@ namespace Presentation.Forms.OperationsForms
 
         public override void LoadData()
         {
-            HallModel hall = (HallModel)Model ?? new HallModel();
+            HallResponse hall = Model.ToHall();
 
             uniPlanTextBox4.Text = hall?.CreatedByAdminID.ToString();
             uniPlanTextBox3.Text = hall?.Floor.ToString();
             uniPlanTextBox1.Text = hall?.HallName;
             uniPlanTextBox2.Text = hall?.Building;
+        }
+
+        public override void InitializeFields()
+        {
+            uniPlanTextBox4.Text = string.Empty;
+            uniPlanTextBox3.Text = string.Empty;
+            uniPlanTextBox1.Text = string.Empty;
+            uniPlanTextBox2.Text = string.Empty;
         }
     }
 }

@@ -32,7 +32,9 @@
             panel1 = new Panel();
             btnSave = new Controls.Customs.UniPlanButton();
             panel2 = new Panel();
+            lblFormName = new Label();
             panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // header1
@@ -79,11 +81,24 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(lblFormName);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 88);
             panel2.Name = "panel2";
             panel2.Size = new Size(615, 504);
             panel2.TabIndex = 2;
+            // 
+            // lblFormName
+            // 
+            lblFormName.AutoSize = true;
+            lblFormName.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblFormName.ForeColor = Color.FromArgb(30, 58, 138);
+            lblFormName.Location = new Point(219, 26);
+            lblFormName.Name = "lblFormName";
+            lblFormName.RightToLeft = RightToLeft.Yes;
+            lblFormName.Size = new Size(176, 38);
+            lblFormName.TabIndex = 9;
+            lblFormName.Text = "واجهة الأضافة";
             // 
             // BaseOperationForm
             // 
@@ -98,6 +113,8 @@
             StartPosition = FormStartPosition.CenterScreen;
             Load += BaseOperationForm_Load;
             panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -107,5 +124,6 @@
         private Panel panel1;
         private Controls.Customs.UniPlanButton btnSave;
         protected Panel panel2;
+        private Label lblFormName;
     }
 }

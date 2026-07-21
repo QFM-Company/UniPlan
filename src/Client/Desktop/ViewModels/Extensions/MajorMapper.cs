@@ -1,21 +1,23 @@
 ﻿using Client.Models;
+using Client.Models.Responses;
 using System.Data;
 
 namespace ViewModels.Extensions
 {
     public static class MajorMapper
     {
-        public static MajorModel? ToMajor(this DataRowView selectedRow)
+        public static MajorResponse? ToMajor(this DataRowView row)
         {
-            if (selectedRow.Row.Table.Columns.Count == 1)
-                return null;
+            if (row.Row.Table.Columns.Count == 0) return null;
+            return new MajorResponse(
+                int.TryParse(row["معرف التخصص"]?.ToString(), out var id) ? id : 0,
+                row["اسم التخصص"]?.ToString()
+            );
+        }
 
-            MajorModel majorModel = new MajorModel();
-
-            majorModel.MajorID = Convert.ToInt32(selectedRow["Major ID"]);
-            majorModel.MajorName = selectedRow["Major Name"].ToString() ?? string.Empty;
-
-            return majorModel;
+        public static MajorResponse ToMajor(this BaseModel? model)
+        {
+            return model as MajorResponse ?? new MajorResponse();
         }
     }
 }

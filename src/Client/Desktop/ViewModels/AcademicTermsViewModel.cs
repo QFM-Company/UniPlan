@@ -1,68 +1,65 @@
-﻿using System.Data;
-using Client.Models;
+﻿using Client.Models;
+using Client.Models.Requests;
+using Client.Models.Responses;
 using Client.Services;
+using Core.Interfaces.ExternalServices;
+using System.Data;
 using ViewModels.Interfaces;
 
 namespace ViewModels
 {
     public class AcademicTermsViewModel : IViewModel
     {
-        private readonly ApiService<AcademicTermModel> _academicTermApi;
+        private readonly AcademicTermApiService _termApi;
+        private readonly IValidationService _validationService;
 
-        public AcademicTermsViewModel(ApiService<AcademicTermModel> academicTermApiService)
+        public AcademicTermsViewModel(AcademicTermApiService termApiService, IValidationService validationService)
         {
-            _academicTermApi = academicTermApiService;
-            _academicTermApi.SubUri = "api/academicterms";
+            _termApi = termApiService;
+            _validationService = validationService;
         }
 
-        private DataView _ConvertToDataView(List<AcademicTermModel>? models)
+        private DataView _ToDataView(List<AcademicTermResponse>? terms)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("Term ID");
-            table.Columns.Add("Term Type");
-            table.Columns.Add("Term Year");
+            table.Columns.Add("معرف الفصل", typeof(int));
+            table.Columns.Add("نوع الفصل", typeof(string));
+            table.Columns.Add("السنة", typeof(int));
+            table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (models == null)
-                return table.DefaultView;
-
-            foreach (var term in models)
-            {
-                table.Rows.Add(
-                    term.TermID,
-                    term.TermType,
-                    term.TermYear
-                );
-            }
-
+            if (terms == null) return table.DefaultView;
+            foreach (var t in terms) table.Rows.Add(t.TermID, t.TermType, t.TermYear);
             return table.DefaultView;
         }
 
         public async Task<DataView> GetDataView(int pageNumber, int pageSize)
         {
-            var models = await _academicTermApi.GetAllAsync(pageNumber, pageSize);
-            return _ConvertToDataView(models);
+            var data = await _termApi.GetAcademicTermsAsync(pageNumber, pageSize);
+            return _ToDataView(data);
         }
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var model = await _academicTermApi.GetByIdAsync(id);
-            var list = new List<AcademicTermModel>();
-            if (model != null)
-                list.Add(model);
-            return _ConvertToDataView(list);
+            var data = await _termApi.GetAcademicTermAsync(id);
+            var list = data == null ? new List<AcademicTermResponse>() : new List<AcademicTermResponse> { data };
+            return _ToDataView(list);
         }
 
-        public Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(BaseModel model)
         {
-            throw new NotImplementedException();
+            var req = (AcademicTermRequest)model;
+            _validationService.Validate(req);
+            req = await _termApi.PostAcademicTermAsync(req);
+            return req != null;
         }
 
-        public Task<bool> UpdateAsync(BaseModel model)
+
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _termApi.DeleteAcademicTermAsync(id);
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<bool> UpdateAsync(int id, BaseModel model)
         {
             throw new NotImplementedException();
         }

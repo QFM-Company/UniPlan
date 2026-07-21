@@ -30,6 +30,16 @@
         {
             header1 = new Controls.UserControls.Header();
             panel1 = new Panel();
+            button12 = new Button();
+            button11 = new Button();
+            button10 = new Button();
+            button9 = new Button();
+            button8 = new Button();
+            button7 = new Button();
+            button6 = new Button();
+            button5 = new Button();
+            button4 = new Button();
+            button3 = new Button();
             button2 = new Button();
             button1 = new Button();
             panel1.SuspendLayout();
@@ -48,6 +58,16 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(button12);
+            panel1.Controls.Add(button11);
+            panel1.Controls.Add(button10);
+            panel1.Controls.Add(button9);
+            panel1.Controls.Add(button8);
+            panel1.Controls.Add(button7);
+            panel1.Controls.Add(button6);
+            panel1.Controls.Add(button5);
+            panel1.Controls.Add(button4);
+            panel1.Controls.Add(button3);
             panel1.Controls.Add(button2);
             panel1.Controls.Add(button1);
             panel1.Dock = DockStyle.Fill;
@@ -56,23 +76,123 @@
             panel1.Size = new Size(991, 455);
             panel1.TabIndex = 1;
             // 
+            // button12
+            // 
+            button12.Location = new Point(46, 324);
+            button12.Name = "button12";
+            button12.Size = new Size(164, 79);
+            button12.TabIndex = 10;
+            button12.Text = "القطع الزمنية";
+            button12.UseVisualStyleBackColor = true;
+            button12.Click += button12_Click;
+            // 
+            // button11
+            // 
+            button11.Location = new Point(301, 324);
+            button11.Name = "button11";
+            button11.Size = new Size(164, 79);
+            button11.TabIndex = 9;
+            button11.Text = "الطلاب";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += button11_Click;
+            // 
+            // button10
+            // 
+            button10.Location = new Point(527, 324);
+            button10.Name = "button10";
+            button10.Size = new Size(164, 79);
+            button10.TabIndex = 8;
+            button10.Text = "الفترات";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += button10_Click;
+            // 
+            // button9
+            // 
+            button9.Location = new Point(784, 324);
+            button9.Name = "button9";
+            button9.Size = new Size(164, 79);
+            button9.TabIndex = 7;
+            button9.Text = "المحاضرات";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
+            // 
+            // button8
+            // 
+            button8.Location = new Point(46, 178);
+            button8.Name = "button8";
+            button8.Size = new Size(164, 79);
+            button8.TabIndex = 6;
+            button8.Text = "الجلسات";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
+            // 
+            // button7
+            // 
+            button7.Location = new Point(301, 42);
+            button7.Name = "button7";
+            button7.Size = new Size(164, 79);
+            button7.TabIndex = 5;
+            button7.Text = "الشعب الدراسية";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
+            // button6
+            // 
+            button6.Location = new Point(527, 42);
+            button6.Name = "button6";
+            button6.Size = new Size(164, 79);
+            button6.TabIndex = 4;
+            button6.Text = "الأدمن";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(784, 42);
+            button5.Name = "button5";
+            button5.Size = new Size(164, 79);
+            button5.TabIndex = 3;
+            button5.Text = "الفصول";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(784, 178);
+            button4.Name = "button4";
+            button4.Size = new Size(164, 79);
+            button4.TabIndex = 3;
+            button4.Text = "المتطلبات الدراسية";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(527, 178);
+            button3.Name = "button3";
+            button3.Size = new Size(164, 79);
+            button3.TabIndex = 2;
+            button3.Text = "الكورسات";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
             // button2
             // 
-            button2.Location = new Point(77, 262);
+            button2.Location = new Point(301, 178);
             button2.Name = "button2";
             button2.Size = new Size(164, 79);
             button2.TabIndex = 1;
-            button2.Text = "Majors";
+            button2.Text = "الأختصاصات";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
             // button1
             // 
-            button1.Location = new Point(77, 52);
+            button1.Location = new Point(46, 42);
             button1.Name = "button1";
             button1.Size = new Size(164, 79);
             button1.TabIndex = 0;
-            button1.Text = "Halls";
+            button1.Text = "القاعات";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -96,5 +216,15 @@
         private Panel panel1;
         private Button button2;
         private Button button1;
+        private Button button12;
+        private Button button11;
+        private Button button10;
+        private Button button9;
+        private Button button8;
+        private Button button7;
+        private Button button6;
+        private Button button5;
+        private Button button4;
+        private Button button3;
     }
 }

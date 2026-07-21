@@ -11,7 +11,7 @@ namespace ViewModels.Interfaces
 
         Task<bool> CreateAsync(BaseModel model);
 
-        Task<bool> UpdateAsync(BaseModel model);
+        Task<bool> UpdateAsync(int id, BaseModel model);
 
         Task<bool> DeleteAsync(int id);
     }

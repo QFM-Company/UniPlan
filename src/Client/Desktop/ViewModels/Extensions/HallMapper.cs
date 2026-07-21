@@ -1,4 +1,6 @@
 ﻿using Client.Models;
+using Client.Models.Requests;
+using Client.Models.Responses;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,19 +12,27 @@ namespace ViewModels.Extensions
 {
     public static class HallMapper
     {
-        public static HallModel? ToHall(this DataRowView selectedRow)
+        public static HallResponse? ToHall(this DataRowView selectedRow)
         {
-            if (selectedRow.Row.Table.Columns.Count == 1)
+            if (selectedRow.Row.Table.Columns.Count <= 1)
                 return null;
 
-            HallModel hallModel = new HallModel();
+            HallResponse hallModel = new HallResponse();
 
-            hallModel.HallID = Convert.ToInt32(selectedRow["Hall ID"]);
-            hallModel.Floor = Convert.ToInt32(selectedRow["Floor"]);
-            hallModel.HallName = selectedRow["Hall Name"].ToString() ?? string.Empty;
-            hallModel.Building = selectedRow["Building"].ToString() ?? string.Empty;
+            hallModel.HallID = int.Parse(selectedRow["معرف القاعة"].ToString() ?? string.Empty);
+            hallModel.Floor = int.Parse(selectedRow["الطابق"].ToString() ?? string.Empty);
+            hallModel.HallName = selectedRow["اسم القاعة"].ToString() ?? string.Empty;
+            hallModel.Building = selectedRow["المبنى"].ToString() ?? string.Empty;
 
             return hallModel;
+        }
+
+        public static HallResponse ToHall(this BaseModel? baseModel)
+        {
+            if (baseModel == null)
+                return new HallResponse();
+
+            return (HallResponse) baseModel;
         }
     }
 }

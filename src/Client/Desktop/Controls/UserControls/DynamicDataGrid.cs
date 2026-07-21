@@ -11,8 +11,8 @@ namespace Controls.UserControls
 
         public event LoadDataDelegate? OnLoadData;
         public event GetByIDDelegate? OnGetByID;
-        public event Action<object, DataRowView>? OnUpdateRow;
-        public event Action<object, DataRowView>? OnDeleteRow;
+        public event Action<object, int, DataRowView>? OnUpdateRow;
+        public event Action<object, int>? OnDeleteRow;
         public event Action<object>? OnAddRow;
 
         private int _currentPage;
@@ -22,14 +22,14 @@ namespace Controls.UserControls
             InitializeComponent();
             _currentPage = 1;
 
-            dataGrid.DataSource = _GetMessageView("Load...");
+            dataGrid.DataSource = _GetMessageView("يتم التحميل ...");
         }
 
         private DataView _GetMessageView(string message)
         {
             DataTable table = new DataTable();
 
-            table.Columns.Add("Message");
+            table.Columns.Add("الرسائل");
             table.Rows.Add(message);
 
             return table.DefaultView;
@@ -125,7 +125,17 @@ namespace Controls.UserControls
         {
             if (dataGrid.CurrentRow != null && dataGrid.CurrentRow.DataBoundItem is DataRowView selectedRow)
             {
-                OnDeleteRow?.Invoke(this, selectedRow);
+                DataTable currentTable = selectedRow.Row.Table;
+
+                if (currentTable.PrimaryKey != null && currentTable.PrimaryKey.Length > 0)
+                {
+                    DataColumn pkColumn = currentTable.PrimaryKey[0];
+
+                    if(int.TryParse(selectedRow.Row[pkColumn].ToString(), out int primaryKey))
+                    {
+                        OnDeleteRow?.Invoke(this, primaryKey);
+                    }                   
+                }
             }
         }
 
@@ -133,7 +143,17 @@ namespace Controls.UserControls
         {
             if (dataGrid.CurrentRow != null && dataGrid.CurrentRow.DataBoundItem is DataRowView selectedRow)
             {
-                OnUpdateRow?.Invoke(this, selectedRow);
+                DataTable currentTable = selectedRow.Row.Table;
+
+                if (currentTable.PrimaryKey != null && currentTable.PrimaryKey.Length > 0)
+                {
+                    DataColumn pkColumn = currentTable.PrimaryKey[0];
+
+                    if (int.TryParse(selectedRow.Row[pkColumn].ToString(), out int primaryKey))
+                    {
+                        OnUpdateRow?.Invoke(this, primaryKey, selectedRow);
+                    }
+                }
             }
         }
 

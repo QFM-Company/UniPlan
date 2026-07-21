@@ -57,7 +57,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(393, 73);
+            label1.Location = new Point(393, 97);
             label1.Name = "label1";
             label1.RightToLeft = RightToLeft.Yes;
             label1.Size = new Size(133, 31);
@@ -68,7 +68,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(393, 178);
+            label2.Location = new Point(393, 202);
             label2.Name = "label2";
             label2.RightToLeft = RightToLeft.Yes;
             label2.Size = new Size(88, 31);
@@ -79,7 +79,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.Location = new Point(393, 283);
+            label3.Location = new Point(393, 307);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.Yes;
             label3.Size = new Size(84, 31);
@@ -90,7 +90,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(393, 388);
+            label4.Location = new Point(393, 412);
             label4.Name = "label4";
             label4.RightToLeft = RightToLeft.Yes;
             label4.Size = new Size(143, 31);
@@ -101,7 +101,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             uniPlanTextBox1.DataType = TextBoxDataType.String;
             uniPlanTextBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox1.Location = new Point(41, 73);
+            uniPlanTextBox1.Location = new Point(41, 97);
             uniPlanTextBox1.Name = "uniPlanTextBox1";
             uniPlanTextBox1.Size = new Size(318, 34);
             uniPlanTextBox1.TabIndex = 4;
@@ -110,7 +110,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             uniPlanTextBox2.DataType = TextBoxDataType.String;
             uniPlanTextBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox2.Location = new Point(41, 175);
+            uniPlanTextBox2.Location = new Point(41, 199);
             uniPlanTextBox2.Name = "uniPlanTextBox2";
             uniPlanTextBox2.Size = new Size(318, 34);
             uniPlanTextBox2.TabIndex = 5;
@@ -119,7 +119,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             uniPlanTextBox3.DataType = TextBoxDataType.Integer;
             uniPlanTextBox3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox3.Location = new Point(41, 280);
+            uniPlanTextBox3.Location = new Point(41, 304);
             uniPlanTextBox3.Name = "uniPlanTextBox3";
             uniPlanTextBox3.Size = new Size(318, 34);
             uniPlanTextBox3.TabIndex = 6;
@@ -128,7 +128,7 @@ namespace Presentation.Forms.OperationsForms
             // 
             uniPlanTextBox4.DataType = TextBoxDataType.Integer;
             uniPlanTextBox4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox4.Location = new Point(41, 388);
+            uniPlanTextBox4.Location = new Point(41, 412);
             uniPlanTextBox4.Name = "uniPlanTextBox4";
             uniPlanTextBox4.Size = new Size(318, 34);
             uniPlanTextBox4.TabIndex = 7;

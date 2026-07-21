@@ -31,7 +31,6 @@ namespace Business.Mapper
             courseSession.Hall = new Hall();
             courseSession.Hall.HallID = request.HallID;
             courseSession.CourseOffering = new CourseOffering();
-            courseSession.CourseOffering.OfferingID = request.CourseOfferingID;
             courseSession.StartTime = request.PeriodData.StartTime;
             courseSession.EndTime = request.PeriodData.EndTime;
             courseSession.Day = request.Day;

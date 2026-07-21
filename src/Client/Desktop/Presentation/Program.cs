@@ -1,7 +1,11 @@
 ﻿using Client.Models;
+using Client.Models.Requests;
 using Client.Services;
+using Core.Interfaces.ExternalServices;
+using Infrastructure.ExternalServices.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.Forms;
+using Presentation.Forms.ManagementForms;
 using ViewModels;
 
 namespace Presentation
@@ -26,27 +30,67 @@ namespace Presentation
 
         private static void ConfigureServices(IServiceCollection services)
         {
+            // تعيين HttpClient مع BaseAddress
             services.AddScoped(sp => new HttpClient
             {
                 BaseAddress = new Uri("https://localhost:7068/")
             });
 
-            services.AddScoped<ApiService<HallModel>>();
+            services.AddScoped<IValidationService, ValidationService>();
+
+            // ======================
+            // Api Services (Scoped)
+            // ======================
+            services.AddTransient<ApiService>();
+
+            services.AddTransient<HallApiService>();
+            services.AddTransient<AdministratorApiService>();
+            services.AddTransient<CourseOfferingApiService>();
+            services.AddTransient<CourseSessionApiService>();
+            services.AddTransient<AcademicTermApiService>();
+            services.AddTransient<CourseApiService>();
+            services.AddTransient<CoursePrerequisiteApiService>();
+            services.AddTransient<LectureApiService>();
+            services.AddTransient<MajorApiService>();
+            services.AddTransient<PeriodApiService>();
+            services.AddTransient<PersonApiService>();
+            services.AddTransient<TimeSlotApiService>();
+            services.AddTransient<StudentApiService>();
+
+            // ======================
+            // View Models (Transient)
+            // ======================
             services.AddTransient<HallsViewModel>();
-
-            services.AddScoped<ApiService<MajorModel>>();
+            services.AddTransient<AdministratorsViewModel>();
+            services.AddTransient<CourseOfferingsViewModel>();
+            services.AddTransient<CourseSessionsViewModel>();
+            services.AddTransient<AcademicTermsViewModel>();
+            services.AddTransient<CoursesViewModel>();
+            services.AddTransient<CoursePrerequisitesViewModel>();
+            services.AddTransient<LecturesViewModel>();
             services.AddTransient<MajorsViewModel>();
+            services.AddTransient<PeriodsViewModel>();
+            services.AddTransient<PersonsViewModel>();
+            services.AddTransient<TimeSlotsViewModel>();
+            services.AddTransient<StudentsViewModel>();
 
-            services.AddScoped<HallsViewModel>();
-            services.AddScoped<ApiService<HallModel>>();
+            // ======================
+            // Forms
+            // ======================
             services.AddTransient<HallsManagementForm>();
-
-            services.AddScoped<MajorsViewModel>();
-            services.AddScoped<ApiService<BaseModel>>();
+            services.AddTransient<AdministratorsManagementForm>();
+            services.AddTransient<CourseOfferingsManagementForm>();
+            services.AddTransient<CourseSessionsManagementForm>();
+            services.AddTransient<AcademicTermsManagementForm>();
+            services.AddTransient<CoursesManagementForm>();
+            services.AddTransient<CoursePrerequisitesManagementForm>();
+            services.AddTransient<LecturesManagementForm>();
             services.AddTransient<MajorsManagementForm>();
+            services.AddTransient<PeriodsManagementForm>();
+            services.AddTransient<TimeSlotsManagementForm>();
+            services.AddTransient<StudentsManagementForm>();
 
-            services.AddScoped<HallsManagementForm>();
-            services.AddScoped<MajorsManagementForm>();
+
             services.AddTransient<MainForm>();
         }
     }

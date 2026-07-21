@@ -5,35 +5,19 @@ namespace Business.DTOs.Requests.Update
 {
     public class ChangePasswordRequest
     {
-        [Required<int>("معرف الحساب مطلوب")]
-        [Range<int>("يجب أن يكون المعرف أكبر من 0", 1, int.MaxValue)]
-        public int AccountID { get; set; }
 
         [Required<string>("كلمة المرور الجديدة مطلوبة")]
         [Length("يجب أن تكون كلمة المرور بين 8 و 50 حرفًا", 50, 8)]
         [Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$",
             "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم ورمز خاص")]
-        public string NewPassword { get; set; }
+        public string? NewPassword { get; set; }
 
         [Required<string>("كلمة المرور القديمة مطلوبة")]
         [Length("يجب أن تكون كلمة المرور بين 8 و 50 حرفًا", 50, 8)]
         [Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$",
             "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم ورمز خاص")]
         [Compare(nameof(NewPassword), ComparisonType.NotEqual, "يجب أن تكون كلمة المرور الجديدة مختلفة عن القديمة")]
-        public string OLdPassword { get; set; }
+        public string? OLdPassword { get; set; }
 
-        public ChangePasswordRequest()
-        {
-            AccountID = -1;
-            NewPassword = string.Empty;
-            OLdPassword = string.Empty;
-        }
-
-        public ChangePasswordRequest(int accountID, string newPassword, string oLdPassword)
-        {
-            AccountID = accountID;
-            NewPassword = newPassword;
-            OLdPassword = oLdPassword;
-        }
     }
 }

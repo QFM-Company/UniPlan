@@ -1,8 +1,4 @@
-﻿using Client.Models;
-using Client.Services;
-using Presentation.Forms.Enums;
-using Presentation.Forms.OperationsForms;
-using System.Configuration;
+﻿using Presentation.Forms.OperationsForms;
 using System.Data;
 using ViewModels;
 using ViewModels.Extensions;
@@ -15,15 +11,6 @@ namespace Presentation.Forms
             : base(hallsViewModel, new HallOperationForm())
         {
             InitializeComponent();
-        }
-
-        public override int GetModelId()
-        {
-            if (_model == null)
-                return 0;
-
-            var hall = (HallModel)_model;
-            return hall.HallID;
         }
 
         public override void UpdateModel(DataRowView selectedRow)

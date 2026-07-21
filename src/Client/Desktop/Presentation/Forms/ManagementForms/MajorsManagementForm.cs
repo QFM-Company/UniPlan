@@ -15,15 +15,6 @@ namespace Presentation.Forms
             InitializeComponent();
         }
 
-        public override int GetModelId()
-        {
-            if (_model == null) 
-                return 0;
-
-            var major = (MajorModel)_model;
-            return major.MajorID;
-        }
-
         public override void UpdateModel(DataRowView selectedRow)
         {
             _model = selectedRow.ToMajor();

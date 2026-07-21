@@ -1,0 +1,25 @@
+﻿namespace Client.Models.Responses
+{
+    public class AccountResponse : BaseModel
+    {
+        public int AccountID { get; set; }
+
+        public string AccountName { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+
+        public AccountResponse()
+        {
+            AccountID = -1;
+            AccountName = string.Empty;
+            Email = string.Empty;
+        }
+
+        public AccountResponse(int accountID, string accountName, string email)
+        {
+            AccountID = accountID;
+            AccountName = accountName;
+            Email = email;
+        }
+    }
+}
