@@ -67,22 +67,22 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult> UpdateCourseSessionAsync(int courseID, UpdateCourseSessionRequest request)
+        public async Task<ActionResult> UpdateCourseSessionAsync(int courseSessionID, UpdateCourseSessionRequest request)
         {
             try
             {
-                if (courseID > 0)
+                if (courseSessionID > 0)
                 {
-                    var result = await _courseSessionService.UpdateCourseSessionAsync(request, courseID);
+                    var result = await _courseSessionService.UpdateCourseSessionAsync(request, courseSessionID);
 
                     if (result)
                     {
-                        await _logService.LogAsync($"Course Session with ID {courseID} updated successfully.", ExternalServicesEnums.LogType.Info);
+                        await _logService.LogAsync($"Course Session with ID {courseSessionID} updated successfully.", ExternalServicesEnums.LogType.Info);
                         return NoContent();
                     }
                 }
-                await _logService.LogAsync($"Failed to update Course Session with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest($"فشل في تحديث جلسة الدورة ذات المعرف {courseID}.");
+                await _logService.LogAsync($"Failed to update Course Session with ID {courseSessionID}.", ExternalServicesEnums.LogType.Warning);
+                return BadRequest($"فشل في تحديث جلسة الدورة ذات المعرف {courseSessionID}.");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {
@@ -103,23 +103,23 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult> DeleteCourseSessionAsync(int courseID)
+        public async Task<ActionResult> DeleteCourseSessionAsync(int courseSessionID)
         {
             try
             {
-                if (courseID > 0)
+                if (courseSessionID > 0)
                 {
-                    bool result = await _courseSessionService.DeleteCourseSessionAsync(courseID);
+                    bool result = await _courseSessionService.DeleteCourseSessionAsync(courseSessionID);
 
                     if (result)
                     {
-                        await _logService.LogAsync($"Course Session with ID {courseID} deleted successfully.", ExternalServicesEnums.LogType.Info);
+                        await _logService.LogAsync($"Course Session with ID {courseSessionID} deleted successfully.", ExternalServicesEnums.LogType.Info);
                         return NoContent();
                     }
                 }
 
-                await _logService.LogAsync($"Failed to delete Course Session with ID {courseID}.", ExternalServicesEnums.LogType.Warning);
-                return BadRequest($"فشل في حذف جلسة الدورة ذات المعرف {courseID}.");
+                await _logService.LogAsync($"Failed to delete Course Session with ID {courseSessionID}.", ExternalServicesEnums.LogType.Warning);
+                return BadRequest($"فشل في حذف جلسة الدورة ذات المعرف {courseSessionID}.");
             }
             catch (Exception ex)
             {
