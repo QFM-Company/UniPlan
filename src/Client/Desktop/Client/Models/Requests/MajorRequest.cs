@@ -11,16 +11,5 @@ namespace Client.Models.Requests
         [Range<int>("معرف الأختصاص الأب يجب أن لا يكون عدد سالب", 0, int.MaxValue)]
         public int ParentMajorID { get; set; }
 
-        public MajorRequest(string majorName, int parentMajorID)
-        {
-            MajorName = majorName;
-            ParentMajorID = parentMajorID;
-        }
-
-        public MajorRequest()
-        {
-            MajorName = null;
-            ParentMajorID = default;
-        }
     }
 }

@@ -31,119 +31,119 @@ namespace Presentation.Forms.OperationsForms
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HallOperationForm));
-            label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
-            label4 = new Label();
-            uniPlanTextBox1 = new UniPlanTextBox();
-            uniPlanTextBox2 = new UniPlanTextBox();
-            uniPlanTextBox3 = new UniPlanTextBox();
-            uniPlanTextBox4 = new UniPlanTextBox();
+            lblHallName = new Label();
+            lblBuilding = new Label();
+            lblFloor = new Label();
+            lblCreatedByAdminID = new Label();
+            txtHallName = new UniPlanTextBox();
+            txtBuilding = new UniPlanTextBox();
+            txtFloor = new UniPlanTextBox();
+            txtCreatedByAdminID = new UniPlanTextBox();
             panel2.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // panel2
-            // 
-            panel2.Controls.Add(uniPlanTextBox4);
-            panel2.Controls.Add(uniPlanTextBox3);
-            panel2.Controls.Add(uniPlanTextBox2);
-            panel2.Controls.Add(uniPlanTextBox1);
-            panel2.Controls.Add(label4);
-            panel2.Controls.Add(label3);
-            panel2.Controls.Add(label2);
-            panel2.Controls.Add(label1);
+            //
+            panel2.Controls.Add(txtCreatedByAdminID);
+            panel2.Controls.Add(txtFloor);
+            panel2.Controls.Add(txtBuilding);
+            panel2.Controls.Add(txtHallName);
+            panel2.Controls.Add(lblCreatedByAdminID);
+            panel2.Controls.Add(lblFloor);
+            panel2.Controls.Add(lblBuilding);
+            panel2.Controls.Add(lblHallName);
             panel2.Size = new Size(591, 510);
-            panel2.Controls.SetChildIndex(label1, 0);
-            panel2.Controls.SetChildIndex(label2, 0);
-            panel2.Controls.SetChildIndex(label3, 0);
-            panel2.Controls.SetChildIndex(label4, 0);
-            panel2.Controls.SetChildIndex(uniPlanTextBox1, 0);
-            panel2.Controls.SetChildIndex(uniPlanTextBox2, 0);
-            panel2.Controls.SetChildIndex(uniPlanTextBox3, 0);
-            panel2.Controls.SetChildIndex(uniPlanTextBox4, 0);
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(393, 97);
-            label1.Name = "label1";
-            label1.RightToLeft = RightToLeft.Yes;
-            label1.Size = new Size(133, 31);
-            label1.TabIndex = 0;
-            label1.Text = " اسم القاعة :";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(393, 202);
-            label2.Name = "label2";
-            label2.RightToLeft = RightToLeft.Yes;
-            label2.Size = new Size(88, 31);
-            label2.TabIndex = 1;
-            label2.Text = " المبنى:";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.Location = new Point(393, 307);
-            label3.Name = "label3";
-            label3.RightToLeft = RightToLeft.Yes;
-            label3.Size = new Size(84, 31);
-            label3.TabIndex = 2;
-            label3.Text = "الطابق:";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(393, 412);
-            label4.Name = "label4";
-            label4.RightToLeft = RightToLeft.Yes;
-            label4.Size = new Size(143, 31);
-            label4.TabIndex = 3;
-            label4.Text = "معرف الأدمن:";
-            // 
-            // uniPlanTextBox1
-            // 
-            uniPlanTextBox1.DataType = TextBoxDataType.String;
-            uniPlanTextBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox1.Location = new Point(41, 97);
-            uniPlanTextBox1.Name = "uniPlanTextBox1";
-            uniPlanTextBox1.Size = new Size(318, 34);
-            uniPlanTextBox1.TabIndex = 4;
-            // 
-            // uniPlanTextBox2
-            // 
-            uniPlanTextBox2.DataType = TextBoxDataType.String;
-            uniPlanTextBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox2.Location = new Point(41, 199);
-            uniPlanTextBox2.Name = "uniPlanTextBox2";
-            uniPlanTextBox2.Size = new Size(318, 34);
-            uniPlanTextBox2.TabIndex = 5;
-            // 
-            // uniPlanTextBox3
-            // 
-            uniPlanTextBox3.DataType = TextBoxDataType.Integer;
-            uniPlanTextBox3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox3.Location = new Point(41, 304);
-            uniPlanTextBox3.Name = "uniPlanTextBox3";
-            uniPlanTextBox3.Size = new Size(318, 34);
-            uniPlanTextBox3.TabIndex = 6;
-            // 
-            // uniPlanTextBox4
-            // 
-            uniPlanTextBox4.DataType = TextBoxDataType.Integer;
-            uniPlanTextBox4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            uniPlanTextBox4.Location = new Point(41, 412);
-            uniPlanTextBox4.Name = "uniPlanTextBox4";
-            uniPlanTextBox4.Size = new Size(318, 34);
-            uniPlanTextBox4.TabIndex = 7;
-            // 
+            panel2.Controls.SetChildIndex(lblHallName, 0);
+            panel2.Controls.SetChildIndex(lblBuilding, 0);
+            panel2.Controls.SetChildIndex(lblFloor, 0);
+            panel2.Controls.SetChildIndex(lblCreatedByAdminID, 0);
+            panel2.Controls.SetChildIndex(txtHallName, 0);
+            panel2.Controls.SetChildIndex(txtBuilding, 0);
+            panel2.Controls.SetChildIndex(txtFloor, 0);
+            panel2.Controls.SetChildIndex(txtCreatedByAdminID, 0);
+            //
+            // lblHallName
+            //
+            lblHallName.AutoSize = true;
+            lblHallName.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblHallName.Location = new Point(393, 97);
+            lblHallName.Name = "lblHallName";
+            lblHallName.RightToLeft = RightToLeft.Yes;
+            lblHallName.Size = new Size(133, 31);
+            lblHallName.TabIndex = 0;
+            lblHallName.Text = " اسم القاعة :";
+            //
+            // lblBuilding
+            //
+            lblBuilding.AutoSize = true;
+            lblBuilding.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblBuilding.Location = new Point(393, 202);
+            lblBuilding.Name = "lblBuilding";
+            lblBuilding.RightToLeft = RightToLeft.Yes;
+            lblBuilding.Size = new Size(88, 31);
+            lblBuilding.TabIndex = 1;
+            lblBuilding.Text = " المبنى:";
+            //
+            // lblFloor
+            //
+            lblFloor.AutoSize = true;
+            lblFloor.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblFloor.Location = new Point(393, 307);
+            lblFloor.Name = "lblFloor";
+            lblFloor.RightToLeft = RightToLeft.Yes;
+            lblFloor.Size = new Size(84, 31);
+            lblFloor.TabIndex = 2;
+            lblFloor.Text = "الطابق:";
+            //
+            // lblCreatedByAdminID
+            //
+            lblCreatedByAdminID.AutoSize = true;
+            lblCreatedByAdminID.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCreatedByAdminID.Location = new Point(393, 412);
+            lblCreatedByAdminID.Name = "lblCreatedByAdminID";
+            lblCreatedByAdminID.RightToLeft = RightToLeft.Yes;
+            lblCreatedByAdminID.Size = new Size(143, 31);
+            lblCreatedByAdminID.TabIndex = 3;
+            lblCreatedByAdminID.Text = "معرف الأدمن:";
+            //
+            // txtHallName
+            //
+            txtHallName.DataType = TextBoxDataType.String;
+            txtHallName.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtHallName.Location = new Point(41, 97);
+            txtHallName.Name = "txtHallName";
+            txtHallName.Size = new Size(318, 34);
+            txtHallName.TabIndex = 4;
+            //
+            // txtBuilding
+            //
+            txtBuilding.DataType = TextBoxDataType.String;
+            txtBuilding.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtBuilding.Location = new Point(41, 199);
+            txtBuilding.Name = "txtBuilding";
+            txtBuilding.Size = new Size(318, 34);
+            txtBuilding.TabIndex = 5;
+            //
+            // txtFloor
+            //
+            txtFloor.DataType = TextBoxDataType.Integer;
+            txtFloor.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtFloor.Location = new Point(41, 304);
+            txtFloor.Name = "txtFloor";
+            txtFloor.Size = new Size(318, 34);
+            txtFloor.TabIndex = 6;
+            //
+            // txtCreatedByAdminID
+            //
+            txtCreatedByAdminID.DataType = TextBoxDataType.Integer;
+            txtCreatedByAdminID.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtCreatedByAdminID.Location = new Point(41, 412);
+            txtCreatedByAdminID.Name = "txtCreatedByAdminID";
+            txtCreatedByAdminID.Size = new Size(318, 34);
+            txtCreatedByAdminID.TabIndex = 7;
+            //
             // HallOperationForm
-            // 
+            //
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(591, 723);
@@ -156,13 +156,13 @@ namespace Presentation.Forms.OperationsForms
 
         #endregion
 
-        private Label label1;
-        private Label label4;
-        private Label label3;
-        private Label label2;
-        private Controls.Customs.UniPlanTextBox uniPlanTextBox4;
-        private Controls.Customs.UniPlanTextBox uniPlanTextBox3;
-        private Controls.Customs.UniPlanTextBox uniPlanTextBox2;
-        private Controls.Customs.UniPlanTextBox uniPlanTextBox1;
+        private Label lblHallName;
+        private Label lblBuilding;
+        private Label lblFloor;
+        private Label lblCreatedByAdminID;
+        private UniPlanTextBox txtHallName;
+        private UniPlanTextBox txtBuilding;
+        private UniPlanTextBox txtFloor;
+        private UniPlanTextBox txtCreatedByAdminID;
     }
 }

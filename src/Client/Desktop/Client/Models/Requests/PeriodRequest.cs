@@ -12,10 +12,5 @@ namespace Client.Models.Requests
         [Compare(nameof(StartTime), ComparisonType.GreaterThan, "يجب ان تكون الفنرة الثانية اكبر من الفترة الاولى")]
         public TimeSpan EndTime { get; set; }
 
-        public PeriodRequest(TimeSpan startTime, TimeSpan endTime)
-        {
-            StartTime = startTime;
-            EndTime = endTime;
-        }
     }
 }

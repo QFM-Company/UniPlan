@@ -16,7 +16,7 @@ namespace Presentation.Forms.ManagementForms
     public partial class LecturesManagementForm : BaseManagementForm
     {
         public LecturesManagementForm(LecturesViewModel lecturesViewModel)
-            : base(lecturesViewModel, new BaseOperationForm())
+            : base(lecturesViewModel, new LectureOperationForm())
         {
             InitializeComponent();
         }

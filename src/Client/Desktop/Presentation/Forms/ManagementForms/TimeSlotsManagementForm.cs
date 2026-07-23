@@ -16,7 +16,7 @@ namespace Presentation.Forms.ManagementForms
     public partial class TimeSlotsManagementForm : BaseManagementForm
     {
         public TimeSlotsManagementForm(TimeSlotsViewModel timeSlotsViewModel)
-            : base(timeSlotsViewModel, new BaseOperationForm())
+            : base(timeSlotsViewModel, new TimeSlotOperationForm())
         {
             InitializeComponent();
         }

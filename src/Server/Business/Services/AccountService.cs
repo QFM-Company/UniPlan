@@ -34,9 +34,7 @@ namespace Business.Services
         public async Task<AccountResponse?> LoginAsync(LoginRequest request)
         {
             _validationService.Validate(request);
-
             Account? account = await _accountRepository.GetAccountByNameAsync(request.AccountName);
-            request.Password = _passwordHasher.HashPassword(request.Password);
 
             if (_passwordHasher.VerifyPassword(request.Password, account?.Password ?? string.Empty))
                 return account?.ToResponse();
@@ -47,16 +45,17 @@ namespace Business.Services
         public async Task<bool> UpdatePasswordAsync(ChangePasswordRequest request, int accountID)
         {
             _validationService.Validate(request);
-
             Account? account = await _accountRepository.GetAccountByIDAsync(accountID);
 
-            account?.UpdateAccount(request);
             if (account != null)
             {
-                account.Password = _passwordHasher.HashPassword(account.Password);
-                request.OLdPassword = _passwordHasher.HashPassword(request?.OLdPassword ?? string.Empty);
+                if(_passwordHasher.VerifyPassword(request.OLdPassword ?? string.Empty, account.Password))
+                {
+                    account.UpdateAccount(request);
+                    account.Password = _passwordHasher.HashPassword(account.Password);
 
-                return await _accountRepository.UpdatePasswordAsync(account, request?.OLdPassword ?? string.Empty);
+                    return await _accountRepository.UpdatePasswordAsync(account);
+                }
             }
 
             return false;

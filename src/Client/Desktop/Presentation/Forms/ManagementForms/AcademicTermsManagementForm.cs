@@ -16,7 +16,7 @@ namespace Presentation.Forms.ManagementForms
     public partial class AcademicTermsManagementForm : BaseManagementForm
     {
         public AcademicTermsManagementForm(AcademicTermsViewModel academicTermsViewModel)
-            : base(academicTermsViewModel, new BaseOperationForm())
+            : base(academicTermsViewModel, new AcademicTermOperationForm())
         {
             InitializeComponent();
         }

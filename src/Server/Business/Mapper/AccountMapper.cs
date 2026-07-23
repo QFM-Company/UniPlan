@@ -37,7 +37,7 @@ namespace Business.Mapper
             if (request == null)
                 return;
 
-            account.Password = request.NewPassword;
+            account.Password = request.NewPassword ?? string.Empty;
         }
 
         public static AccountResponse ToResponse(this Account account)

@@ -13,11 +13,5 @@ namespace Client.Models.Requests
 
         public string? CourseCode { get; set; }
 
-        public CourseRequest(string? courseName, int creditHours, string? courseCode)
-        {
-            CourseName = courseName;
-            CreditHours = creditHours;
-            CourseCode = courseCode;
-        }
     }
 }

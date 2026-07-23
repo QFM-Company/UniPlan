@@ -27,6 +27,8 @@ namespace API.Controllers
 
         [HttpPost("login", Name = "LoginAsync")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountResponse))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<AccountResponse?>> LoginAsync(LoginRequest request)
@@ -60,8 +62,10 @@ namespace API.Controllers
         }
 
         [HttpPut("{accountID}/updatePassword", Name = "UpdatePasswordAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
         public async Task<ActionResult<bool>> UpdatePasswordAsync(ChangePasswordRequest request, int accountID)
         {
@@ -72,11 +76,11 @@ namespace API.Controllers
                 if (res)
                 {
                     await _logService.LogAsync("تم تحديث كلمة المرور بنجاح", ExternalServicesEnums.LogType.Info);
-                    return Ok(res);
+                    return NoContent();
                 }
 
-                await _logService.LogAsync($"لم يتم العثور على الحساب بالمعرف {accountID}", ExternalServicesEnums.LogType.Warning);
-                return NotFound($"لم يتم العثور على الحساب بالمعرف {accountID}");
+                await _logService.LogAsync("فشل تعديل كلمة السر للحساب", ExternalServicesEnums.LogType.Warning);
+                return Unauthorized("فشل تعديل كلمة السر للحساب");
             }
             catch (SqlException sqlException) when (sqlException.Number > 50000)
             {

@@ -13,10 +13,5 @@ namespace Client.Models.Requests
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int PeriodID { get; set; }
 
-        public TimeSlotRequest(int day, int periodID)
-        {
-            Day = day;
-            PeriodID = periodID;
-        }
     }
 }

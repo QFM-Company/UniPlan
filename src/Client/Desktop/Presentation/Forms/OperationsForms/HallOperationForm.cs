@@ -1,7 +1,6 @@
 ﻿using Client.Models;
 using Client.Models.Requests;
 using Client.Models.Responses;
-using System;
 using ViewModels.Extensions;
 
 namespace Presentation.Forms.OperationsForms
@@ -15,26 +14,26 @@ namespace Presentation.Forms.OperationsForms
 
         public override void UpdateMode()
         {
-            uniPlanTextBox4.Enabled = false;
+            txtCreatedByAdminID.Enabled = false;
         }
 
         public override void AddMode()
         {
-            uniPlanTextBox4.Enabled = true;
+            txtCreatedByAdminID.Enabled = true;
         }
 
         public override void UpdateModel()
         {
             HallRequest hall = new HallRequest();
 
-            uniPlanTextBox4.TryGetInt(out int createdByAdminID);
-            uniPlanTextBox3.TryGetInt(out int floor);
+            txtCreatedByAdminID.TryGetInt(out int createdByAdminID);
+            txtFloor.TryGetInt(out int floor);
 
             hall.Floor = floor;
             hall.CreatedByAdminID = createdByAdminID;
 
-            hall.HallName = uniPlanTextBox1.Text.ToString() ?? string.Empty;
-            hall.Building = uniPlanTextBox2.Text.ToString() ?? string.Empty;
+            hall.HallName = txtHallName.Text ?? string.Empty;
+            hall.Building = txtBuilding.Text ?? string.Empty;
 
             Model = (Person)hall;
         }
@@ -43,18 +42,18 @@ namespace Presentation.Forms.OperationsForms
         {
             HallResponse hall = Model.ToHall();
 
-            uniPlanTextBox4.Text = hall?.CreatedByAdminID.ToString();
-            uniPlanTextBox3.Text = hall?.Floor.ToString();
-            uniPlanTextBox1.Text = hall?.HallName;
-            uniPlanTextBox2.Text = hall?.Building;
+            txtCreatedByAdminID.Text = hall?.CreatedByAdminID.ToString();
+            txtFloor.Text = hall?.Floor.ToString();
+            txtHallName.Text = hall?.HallName;
+            txtBuilding.Text = hall?.Building;
         }
 
         public override void InitializeFields()
         {
-            uniPlanTextBox4.Text = string.Empty;
-            uniPlanTextBox3.Text = string.Empty;
-            uniPlanTextBox1.Text = string.Empty;
-            uniPlanTextBox2.Text = string.Empty;
+            txtCreatedByAdminID.Text = string.Empty;
+            txtFloor.Text = string.Empty;
+            txtHallName.Text = string.Empty;
+            txtBuilding.Text = string.Empty;
         }
     }
 }

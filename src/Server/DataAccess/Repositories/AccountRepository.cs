@@ -20,7 +20,7 @@ namespace DataAccess.Repositories
         }
 
 
-        public async Task<bool> UpdatePasswordAsync(Account account, string oldPassword)
+        public async Task<bool> UpdatePasswordAsync(Account account)
         {
             try
             {
@@ -37,7 +37,6 @@ namespace DataAccess.Repositories
                     command.Parameters.Add(result);
                     command.Parameters.AddWithValue("@AccountID", account.AccountID);
                     command.Parameters.AddWithValue("@NewPassword", account.Password);
-                    command.Parameters.AddWithValue("@OLdPassword", oldPassword);
 
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();

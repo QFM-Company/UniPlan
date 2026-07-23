@@ -138,7 +138,6 @@ GO
 CREATE OR ALTER PROCEDURE SP_Accounts_UpdatePassword
     @AccountID int,
     @NewPassword nvarchar(255),
-    @OLdPassword nvarchar(255),
     @Result bit OUTPUT
 AS
 BEGIN
@@ -147,7 +146,7 @@ BEGIN
     BEGIN TRY
         UPDATE Accounts
         SET [Password] = @NewPassword
-        WHERE [AccountID] = @AccountID AND [Password] = @OLdPassword;
+        WHERE [AccountID] = @AccountID;
 
         IF @@ROWCOUNT > 0
         BEGIN

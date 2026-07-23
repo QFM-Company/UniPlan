@@ -15,12 +15,5 @@ namespace Client.Models.Requests
         [Required<int>("معرف الكورس مطلوب")]
         [Range<int>("يجب أن يكون المعرف أكبر من 0", 1, int.MaxValue)]
         public int CourseID { get; set; }
-
-        public LectureRequest(int lectureType, int durationValue, int courseID)
-        {
-            LectureType = lectureType;
-            DurationValue = durationValue;
-            CourseID = courseID;
-        }
     }
 }
