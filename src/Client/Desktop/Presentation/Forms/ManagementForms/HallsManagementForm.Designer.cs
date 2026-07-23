@@ -32,11 +32,7 @@
             // 
             // HallsManagementForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(919, 563);
             Name = "HallsManagementForm";
-            Text = "HallsManagementForm";
             ResumeLayout(false);
         }
 

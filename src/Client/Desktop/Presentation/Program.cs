@@ -1,12 +1,10 @@
-﻿using Client.Models;
-using Client.Models.Requests;
-using Client.Services;
+﻿using Client.Services;
 using Core.Interfaces.ExternalServices;
 using Infrastructure.ExternalServices.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.Forms;
 using Presentation.Forms.ManagementForms;
-using ViewModels;
+using ViewModels.Views;
 
 namespace Presentation
 {
@@ -30,19 +28,20 @@ namespace Presentation
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            // تعيين HttpClient مع BaseAddress
-            services.AddScoped(sp => new HttpClient
+            services.AddHttpClient<ApiService>(client =>
             {
-                BaseAddress = new Uri("https://localhost:7068/")
+                client.BaseAddress = new Uri("https://localhost:7068/");
+
+                string token = "TOKEN";
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             });
+
 
             services.AddScoped<IValidationService, ValidationService>();
 
             // ======================
             // Api Services (Scoped)
             // ======================
-            services.AddTransient<ApiService>();
-
             services.AddTransient<HallApiService>();
             services.AddTransient<AdministratorApiService>();
             services.AddTransient<CourseOfferingApiService>();
@@ -56,6 +55,7 @@ namespace Presentation
             services.AddTransient<PersonApiService>();
             services.AddTransient<TimeSlotApiService>();
             services.AddTransient<StudentApiService>();
+            services.AddTransient<AccountApiService>();
 
             // ======================
             // View Models (Transient)

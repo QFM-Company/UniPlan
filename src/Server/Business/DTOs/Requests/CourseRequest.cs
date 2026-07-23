@@ -1,5 +1,4 @@
-﻿using Core.Interfaces.ExternalServices;
-using Infrastructure.ExternalServices.Validation.Attributes;
+﻿using Infrastructure.ExternalServices.Validation.Attributes;
 
 namespace Business.DTOs.Requests
 {

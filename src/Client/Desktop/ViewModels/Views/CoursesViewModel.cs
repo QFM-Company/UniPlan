@@ -4,9 +4,10 @@ using Client.Models.Responses;
 using Client.Services;
 using Core.Interfaces.ExternalServices;
 using System.Data;
+using ViewModels.Extensions;
 using ViewModels.Interfaces;
 
-namespace ViewModels
+namespace ViewModels.Views
 {
     public class CoursesViewModel : IViewModel
     {
@@ -22,14 +23,15 @@ namespace ViewModels
         private DataView _ToDataView(List<CourseResponse>? courses)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("معرف المقرر", typeof(int));
-            table.Columns.Add("اسم المقرر", typeof(string));
-            table.Columns.Add("رمز المقرر", typeof(string));
-            table.Columns.Add("عدد الساعات", typeof(int));
+            table.AddCourseColumns();
             table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (courses == null) return table.DefaultView;
-            foreach (var c in courses) table.Rows.Add(c.CourseID, c.CourseName, c.CourseCode, c.CreditHours);
+            if (courses == null) 
+                return table.DefaultView;
+
+            foreach (var c in courses)
+                table.Rows.Add(c.CourseID, c.CourseName, c.CreditHours, c.CourseCode);
+
             return table.DefaultView;
         }
 
@@ -41,24 +43,27 @@ namespace ViewModels
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var data = await _courseApi.GetCourseAsync(id);
+            var data = await _courseApi.GetCourseByIDAsync(id);
+
             var list = data == null ? new List<CourseResponse>() : new List<CourseResponse> { data };
             return _ToDataView(list);
         }
 
-        public async Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(Person model)
         {
             var req = (CourseRequest)model;
             _validationService.Validate(req);
-            req = await _courseApi.PostCourseAsync(req);
-            return req != null;
+
+            var res = await _courseApi.CreateCourseAsync(req);
+            return res != null;
         }
 
-        public async Task<bool> UpdateAsync(int id, BaseModel model)
+        public async Task<bool> UpdateAsync(int id, Person model)
         {
             var req = (CourseRequest)model;
             _validationService.Validate(req);
-            return await _courseApi.PutCourseAsync(id, req);
+
+            return await _courseApi.UpdateCourseAsync(id, req);
         }
 
         public async Task<bool> DeleteAsync(int id)

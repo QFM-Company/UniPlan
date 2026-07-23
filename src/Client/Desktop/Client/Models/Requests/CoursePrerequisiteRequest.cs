@@ -2,11 +2,12 @@
 
 namespace Client.Models.Requests
 {
-    public class CoursePrerequisiteRequest : BaseModel
+    public class CoursePrerequisiteRequest : Person
     {
         [Required<int>("معرف الكورس مطلوب")]
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int CourseID { get; set; }
+
         [Required<int>("معرف الكورس مطلوب")]
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int PreRequestCourseID { get; set; }

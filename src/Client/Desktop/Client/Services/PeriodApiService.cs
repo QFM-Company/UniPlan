@@ -18,19 +18,19 @@ namespace Client.Services
             return await _apiService.GetAsync<PeriodResponse>(pageNumber, pageSize);
         }
 
-        public async Task<PeriodResponse?> GetPeriodAsync(int id)
+        public async Task<PeriodResponse?> GetPeriodByIDAsync(int periodID)
         {
-            return await _apiService.GetAsync<PeriodResponse>(id);
+            return await _apiService.GetAsync<PeriodResponse>(periodID);
         }
 
-        public async Task<PeriodRequest?> PostPeriodAsync(PeriodRequest model)
+        public async Task<PeriodResponse?> CreatePeriodAsync(PeriodRequest period)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<PeriodRequest, PeriodResponse>(period);
         }
 
-        public async Task<bool> DeletePeriodAsync(int id)
+        public async Task<bool> DeletePeriodAsync(int periodID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(periodID);
         }
     }
 }

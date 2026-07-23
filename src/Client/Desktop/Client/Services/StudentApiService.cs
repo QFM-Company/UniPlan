@@ -17,14 +17,14 @@ namespace Client.Services
             return await _apiService.GetAsync<StudentResponse>(pageNumber, pageSize);
         }
 
-        public async Task<StudentResponse?> GetStudentAsync(int id)
+        public async Task<StudentResponse?> GetStudentByIDAsync(int studentID)
         {
-            return await _apiService.GetAsync<StudentResponse>(id);
+            return await _apiService.GetAsync<StudentResponse>(studentID);
         }
 
-        public async Task<bool> DeleteStudentAsync(int id)
+        public async Task<bool> DeleteStudentAsync(int studentID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(studentID);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.ComponentModel;
+using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,12 +18,40 @@ namespace Controls.UserControls
 
         private int _currentPage;
 
+        [Category("Control Options")]
+        [Description("Enables or disables the Delete button from the designer.")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool AddEnabled
+        {
+            get => btnAdd.Enabled; 
+            set => btnAdd.Enabled = value;
+        }
+
+        [Category("Control Options")]
+        [Description("Enables or disables the Update button from the designer.")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool UpdateEnabled
+        {
+            get { return btnUpdate.Enabled; }
+            set { btnUpdate.Enabled = value; }
+        }
+
+        [Category("Control Options")]
+        [Description("Enables or disables the Delete button from the designer.")]
+        [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool DeleteEnabled
+        {
+            get => btnDelete.Enabled;
+            set => btnDelete.Enabled = value;
+        }
+
         public DynamicDataGrid()
         {
             InitializeComponent();
             _currentPage = 1;
-
-            dataGrid.DataSource = _GetMessageView("يتم التحميل ...");
         }
 
         private DataView _GetMessageView(string message)
@@ -39,6 +68,8 @@ namespace Controls.UserControls
         {
             try
             {
+                dataGrid.DataSource = _GetMessageView("يتم التحميل");
+
                 if (OnLoadData != null)
                     dataGrid.DataSource = await OnLoadData.Invoke(pageNumber, pageSize);
             }
@@ -76,6 +107,34 @@ namespace Controls.UserControls
 
         private void dataGrid_DataSourceChanged(object sender, EventArgs e)
         {
+            DataTable? table = null;
+
+            if (dataGrid.DataSource is DataTable dt)
+                table = dt;
+
+            else if (dataGrid.DataSource is DataView dv)
+                table = dv.Table;
+
+            if (table != null)
+            {
+                foreach (DataGridViewColumn col in dataGrid.Columns)
+                {
+                    if (!string.IsNullOrEmpty(col.DataPropertyName) &&
+                        table.Columns.Contains(col.DataPropertyName))
+                    {
+                        var dataCol = table.Columns[col.DataPropertyName];
+
+                        if (dataCol == null)
+                            break;
+
+                        bool hidden = dataCol.ExtendedProperties.ContainsKey("IsHidden") &&
+                                      bool.Parse(dataCol?.ExtendedProperties["IsHidden"]?.ToString() ?? "true");
+
+                        col.Visible = !hidden;
+                    }
+                }
+            }
+
             if (_currentPage > 1)
             {
                 btnPervious.Enabled = true;
@@ -93,6 +152,16 @@ namespace Controls.UserControls
             {
                 btnNext.Enabled = true;
             }
+
+
+            var firstVisibleColumn = dataGrid.Columns
+                                    .Cast<DataGridViewColumn>()
+                                    .FirstOrDefault(c => c.Visible);
+
+            if (firstVisibleColumn != null)
+            {
+                dataGrid.CurrentCell = dataGrid.Rows[0].Cells[firstVisibleColumn.Index];
+            }
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
@@ -106,6 +175,7 @@ namespace Controls.UserControls
             {
                 if (OnGetByID != null && searchControl1.TextBox.TryGetInt(out int id))
                 {
+                    dataGrid.DataSource = _GetMessageView("يتم التحميل");
                     dataGrid.DataSource = await OnGetByID.Invoke(id);
                 }
             }

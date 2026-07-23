@@ -8,16 +8,18 @@ namespace ViewModels.Extensions
     {
         public static AdministratorResponse? ToAdministrator(this DataRowView row)
         {
-            if (row.Row.Table.Columns.Count == 0) return null;
+            if (row.Row.Table.Columns.Count <= 1)
+                return null;
+
             return new AdministratorResponse(
-                int.TryParse(row["معرف المسؤول"]?.ToString(), out var id) ? id : 0,
-                new PersonResponse(),
-                new AccountResponse(),
-                row["نشط"]?.ToString() == "نعم"
+                int.TryParse(row["معرف المدير"]?.ToString(), out var id) ? id : 0,
+                row.ToPerson(),
+                row.ToAccount(),
+                row["نشط"].ToString() == "نعم"
             );
         }
 
-        public static AdministratorResponse ToAdministrator(this BaseModel? model)
+        public static AdministratorResponse ToAdministrator(this Person? model)
         {
             return model as AdministratorResponse ?? new AdministratorResponse(0, new PersonResponse(), new AccountResponse(), false);
         }

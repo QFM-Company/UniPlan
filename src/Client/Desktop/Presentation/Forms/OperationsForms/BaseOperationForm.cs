@@ -5,10 +5,10 @@ namespace Presentation.Forms.OperationsForms
 {
     public partial class BaseOperationForm : Form
     {
-        public BaseModel? Model { get; set; }
+        public Person? Model { get; set; }
         public Mode Mode { get; set; }
 
-        public event Func<BaseModel, Mode, Task<bool>>? OnSaveClick;
+        public event Func<Person, Mode, Task<bool>>? OnSaveClick;
 
         public int Id { get; set; }
 

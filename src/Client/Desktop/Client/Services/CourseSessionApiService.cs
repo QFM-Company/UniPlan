@@ -18,24 +18,24 @@ namespace Client.Services
             return await _apiService.GetAsync<CourseSessionResponse>(pageNumber, pageSize);
         }
 
-        public async Task<CourseSessionResponse?> GetCourseSessionAsync(int id)
+        public async Task<CourseSessionResponse?> GetCourseSessionByIDAsync(int sessionID)
         {
-            return await _apiService.GetAsync<CourseSessionResponse>(id);
+            return await _apiService.GetAsync<CourseSessionResponse>(sessionID);
         }
 
-        public async Task<CourseSessionRequest?> PostCourseSessionAsync(CourseSessionRequest model)
+        public async Task<CourseSessionResponse?> CreateCourseSessionAsync(CourseSessionRequest session)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<CourseSessionRequest, CourseSessionResponse>(session);
         }
 
-        public async Task<bool> PutCourseSessionAsync(int id, CourseSessionRequest model)
+        public async Task<bool> UpdateCourseSessionAsync(int sessionID, CourseSessionRequest session)
         {
-            return await _apiService.PutAsync(id, model);
+            return await _apiService.PutAsync(sessionID, session);
         }
 
-        public async Task<bool> DeleteCourseSessionAsync(int id)
+        public async Task<bool> DeleteCourseSessionAsync(int sessionID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(sessionID);
         }
     }
 }

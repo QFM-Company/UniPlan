@@ -28,15 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AcademicTermsManagementForm));
             SuspendLayout();
+            // 
+            // dataGrid
+            // 
+            dataGrid.Size = new Size(919, 480);
+            dataGrid.UpdateEnabled = false;
             // 
             // AcademicTermsManagementForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(919, 563);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AcademicTermsManagementForm";
-            Text = "AcademicTermsManagementForm";
             ResumeLayout(false);
         }
 

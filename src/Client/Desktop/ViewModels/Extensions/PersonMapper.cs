@@ -8,7 +8,9 @@ namespace ViewModels.Extensions
     {
         public static PersonResponse? ToPerson(this DataRowView row)
         {
-            if (row.Row.Table.Columns.Count == 0) return null;
+            if (row.Row.Table.Columns.Count <= 1) 
+                return null;
+
             return new PersonResponse(
                 int.TryParse(row["معرف الشخص"]?.ToString(), out var id) ? id : 0,
                 row["الاسم الأول"]?.ToString() ?? string.Empty,
@@ -17,7 +19,7 @@ namespace ViewModels.Extensions
             );
         }
 
-        public static PersonResponse ToPerson(this BaseModel? model)
+        public static PersonResponse ToPerson(this Person? model)
         {
             return model as PersonResponse ?? new PersonResponse();
         }

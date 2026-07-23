@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class CourseRequest : BaseModel
+    public class CourseRequest : Person
     {
         [Required<string>("يجب ادخال اسم الكورس")]
         public string? CourseName { get; set; }

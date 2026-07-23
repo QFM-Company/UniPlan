@@ -30,13 +30,15 @@
         {
             SuspendLayout();
             // 
+            // dataGrid
+            // 
+            dataGrid.UpdateEnabled = false;
+            // 
             // PeriodsManagementForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(919, 563);
+            ClientSize = new Size(1009, 637);
             Name = "PeriodsManagementForm";
-            Text = "PeriodsManagementForm";
             ResumeLayout(false);
         }
 

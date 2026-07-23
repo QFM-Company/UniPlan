@@ -4,9 +4,10 @@ using Client.Models.Responses;
 using Client.Services;
 using Core.Interfaces.ExternalServices;
 using System.Data;
+using ViewModels.Extensions;
 using ViewModels.Interfaces;
 
-namespace ViewModels
+namespace ViewModels.Views
 {
     public class PeriodsViewModel : IViewModel
     {
@@ -22,14 +23,15 @@ namespace ViewModels
         private DataView _ToDataView(List<PeriodResponse>? periods)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("معرف الفترة", typeof(int));
-            table.Columns.Add("وقت البداية", typeof(string));
-            table.Columns.Add("وقت النهاية", typeof(string));
+            table.AddPeriodColumnsTyped(); 
             table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (periods == null) return table.DefaultView;
+            if (periods == null)
+                return table.DefaultView;
+
             foreach (var p in periods)
-                table.Rows.Add(p.PeriodID, p.StartTime.ToString(@"hh\:mm"), p.EndTime.ToString(@"hh\:mm"));
+                table.Rows.Add(p.PeriodID, p.StartTime, p.EndTime);
+
             return table.DefaultView;
         }
 
@@ -41,17 +43,19 @@ namespace ViewModels
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var data = await _periodApi.GetPeriodAsync(id);
+            var data = await _periodApi.GetPeriodByIDAsync(id);
             var list = data == null ? new List<PeriodResponse>() : new List<PeriodResponse> { data };
+
             return _ToDataView(list);
         }
 
-        public async Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(Person model)
         {
             var req = (PeriodRequest)model;
             _validationService.Validate(req);
-            req = await _periodApi.PostPeriodAsync(req);
-            return req != null;
+
+            var res = await _periodApi.CreatePeriodAsync(req);
+            return res != null;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -59,7 +63,7 @@ namespace ViewModels
             return await _periodApi.DeletePeriodAsync(id);
         }
 
-        public Task<bool> UpdateAsync(int id, BaseModel model)
+        public Task<bool> UpdateAsync(int id, Person model)
         {
             throw new NotImplementedException();
         }

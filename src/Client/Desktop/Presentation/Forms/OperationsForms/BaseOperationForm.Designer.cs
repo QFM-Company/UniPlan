@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseOperationForm));
             header1 = new Controls.UserControls.Header();
             panel1 = new Panel();
             btnSave = new Controls.Customs.UniPlanButton();
@@ -109,8 +110,12 @@
             Controls.Add(panel1);
             Controls.Add(header1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "BaseOperationForm";
+            RightToLeft = RightToLeft.No;
             StartPosition = FormStartPosition.CenterScreen;
+            Text = "UniPlan";
             Load += BaseOperationForm_Load;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);

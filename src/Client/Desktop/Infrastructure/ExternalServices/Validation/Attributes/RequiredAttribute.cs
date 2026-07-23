@@ -1,0 +1,33 @@
+﻿using System.Collections;
+
+namespace Infrastructure.ExternalServices.Validation.Attributes
+{
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class RequiredAttribute<T> : ValidationAttribute
+    {
+        public RequiredAttribute(string errorMeesage) : base(errorMeesage)
+        {
+        }
+
+        public override bool Check(object? obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (obj is string str && string.IsNullOrWhiteSpace(str))
+                return false;
+
+            if (obj is ICollection col && col != null)
+            {
+                return col.Count != 0;
+            }
+
+            if (obj is T value)
+            {
+                return !EqualityComparer<T>.Default.Equals(value, default(T));
+            }
+
+            return true;
+        }
+    }
+}

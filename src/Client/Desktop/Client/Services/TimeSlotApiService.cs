@@ -18,24 +18,24 @@ namespace Client.Services
             return await _apiService.GetAsync<TimeSlotResponse>(pageNumber, pageSize);
         }
 
-        public async Task<TimeSlotResponse?> GetTimeSlotAsync(int id)
+        public async Task<TimeSlotResponse?> GetTimeSlotByIDAsync(int timeSlotID)
         {
-            return await _apiService.GetAsync<TimeSlotResponse>(id);
+            return await _apiService.GetAsync<TimeSlotResponse>(timeSlotID);
         }
 
-        public async Task<TimeSlotRequest?> PostTimeSlotAsync(TimeSlotRequest model)
+        public async Task<TimeSlotResponse?> CreateTimeSlotAsync(TimeSlotRequest timeSlot)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<TimeSlotRequest, TimeSlotResponse>(timeSlot);
         }
 
-        public async Task<bool> PutTimeSlotAsync(int id, TimeSlotRequest model)
+        public async Task<bool> UpdateTimeSlotAsync(int timeSlotID, TimeSlotRequest timeSlot)
         {
-            return await _apiService.PutAsync(id, model);
+            return await _apiService.PutAsync(timeSlotID, timeSlot);
         }
 
-        public async Task<bool> DeleteTimeSlotAsync(int id)
+        public async Task<bool> DeleteTimeSlotAsync(int timeSlotID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(timeSlotID);
         }
     }
 }

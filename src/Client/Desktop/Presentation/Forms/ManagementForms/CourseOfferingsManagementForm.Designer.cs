@@ -36,7 +36,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(919, 563);
             Name = "CourseOfferingsManagementForm";
-            Text = "CourseOfferingsManagementForm";
             ResumeLayout(false);
         }
 

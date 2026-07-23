@@ -4,9 +4,10 @@ using Client.Models.Responses;
 using Client.Services;
 using Core.Interfaces.ExternalServices;
 using System.Data;
+using ViewModels.Extensions;
 using ViewModels.Interfaces;
 
-namespace ViewModels
+namespace ViewModels.Views
 {
     public class AdministratorsViewModel : IViewModel
     {
@@ -22,19 +23,28 @@ namespace ViewModels
         private DataView _ToDataView(List<AdministratorResponse>? admins)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("معرف المسؤول", typeof(int));
-            table.Columns.Add("الاسم الكامل", typeof(string));
-            table.Columns.Add("البريد الإلكتروني", typeof(string));
-            table.Columns.Add("نشط", typeof(string));
+            table.AddAdministratorColumns();
             table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (admins == null) return table.DefaultView;
+            if (admins == null) 
+                return table.DefaultView;
 
             foreach (var admin in admins)
             {
-                string fullName = admin.Person?.FullName ?? string.Empty;
-                string email = admin.Account?.Email ?? string.Empty;
-                table.Rows.Add(admin.AdminID, fullName, email, admin.IsActive ? "نعم" : "لا");
+                var p = admin.Person ?? new PersonResponse();
+                var acc = admin.Account ?? new AccountResponse();
+                table.Rows.Add(
+                    admin.AdminID,
+                    admin.IsActive ? "نعم" : "لا",
+                    p.PersonID,
+                    p.FirstName,
+                    p.MiddleName,
+                    p.LastName,
+                    "",
+                    acc.AccountID,
+                    acc.AccountName,
+                    acc.Email
+                );
             }
             return table.DefaultView;
         }
@@ -47,24 +57,28 @@ namespace ViewModels
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var data = await _adminApi.GetAdministratorAsync(id);
+            var data = await _adminApi.GetAdministratorByIDAsync(id);
+
             var list = data == null ? new List<AdministratorResponse>() : new List<AdministratorResponse> { data };
             return _ToDataView(list);
         }
 
-        public async Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(Person model)
         {
             var req = (AdministratorRequest)model;
+
             _validationService.Validate(req);
-            req = await _adminApi.PostAdministratorAsync(req);
-            return req != null;
+
+            var res = await _adminApi.CreateAdministratorAsync(req);
+            return res != null;
         }
 
-        public async Task<bool> UpdateAsync(int id, BaseModel model)
+        public async Task<bool> UpdateAsync(int id, Person model)
         {
             var req = (AdministratorRequest)model;
             _validationService.Validate(req);
-            return await _adminApi.PutAdministratorAsync(id, req);
+
+            return await _adminApi.UpdateAdministratorAsync(id, req);
         }
 
         public async Task<bool> DeleteAsync(int id)

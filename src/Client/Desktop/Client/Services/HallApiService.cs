@@ -19,24 +19,24 @@ namespace Client.Services
             return await _apiService.GetAsync<HallResponse>(pageNumber, pageSize);
         }
 
-        public async Task<HallResponse?> GetHallAsync(int id)
+        public async Task<HallResponse?> GetHallByIDAsync(int hallID)
         {
-            return await _apiService.GetAsync<HallResponse>(id);
+            return await _apiService.GetAsync<HallResponse>(hallID);
         }
 
-        public async Task<HallRequest?> PostHallAsync(HallRequest model)
+        public async Task<HallResponse?> CreateHallAsync(HallRequest hall)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<HallRequest, HallResponse>(hall);
         }
 
-        public async Task<bool> PutHallAsync(int id, HallRequest model)
+        public async Task<bool> UpdateHallAsync(int hallID, HallRequest hall)
         {
-            return await _apiService.PutAsync(id, model);
+            return await _apiService.PutAsync(hallID, hall);
         }
 
-        public async Task<bool> DeleteHallAsync(int id)
+        public async Task<bool> DeleteHallAsync(int hallID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(hallID);
         }
 
     }

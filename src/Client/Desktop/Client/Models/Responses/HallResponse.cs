@@ -1,6 +1,6 @@
 ﻿namespace Client.Models.Responses
 {
-    public class HallResponse : BaseModel
+    public class HallResponse : Person
     {
         public int HallID { get; set; }
 

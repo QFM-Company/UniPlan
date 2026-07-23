@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class LectureRequest : BaseModel
+    public class LectureRequest : Person
     {
         [Required<int>("نوع المحاضرة مطلوبة")]
         [AllowedValues("يجب أن تكون قيمة نوع المحاضرة 1 (النظري) أو 2 (العملي) أو 3 (TD) فقط", new object[] { 1, 2, 3 })]

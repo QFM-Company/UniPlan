@@ -1,6 +1,6 @@
 ﻿namespace Client.Models.Responses
 {
-    public class AccountResponse : BaseModel
+    public class AccountResponse : Person
     {
         public int AccountID { get; set; }
 

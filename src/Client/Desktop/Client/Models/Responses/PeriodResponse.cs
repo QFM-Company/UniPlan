@@ -1,6 +1,6 @@
 ﻿namespace Client.Models.Responses
 {
-    public class PeriodResponse : BaseModel
+    public class PeriodResponse : Person
     {
         public int PeriodID { get; set; }
         public TimeSpan StartTime { get; set; }

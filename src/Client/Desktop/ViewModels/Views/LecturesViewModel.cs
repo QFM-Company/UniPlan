@@ -4,9 +4,10 @@ using Client.Models.Responses;
 using Client.Services;
 using Core.Interfaces.ExternalServices;
 using System.Data;
+using ViewModels.Extensions;
 using ViewModels.Interfaces;
 
-namespace ViewModels
+namespace ViewModels.Views
 {
     public class LecturesViewModel : IViewModel
     {
@@ -22,17 +23,20 @@ namespace ViewModels
         private DataView _ToDataView(List<LectureResponse>? lectures)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("معرف المحاضرة", typeof(int));
-            table.Columns.Add("نوع المحاضرة", typeof(string));
-            table.Columns.Add("المدة", typeof(int));
-            table.Columns.Add("المقرر", typeof(string));
+            table.AddLectureColumns(); 
             table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
             if (lectures == null) return table.DefaultView;
+
             foreach (var l in lectures)
             {
-                string course = l.CourseInfo?.CourseName ?? string.Empty;
-                table.Rows.Add(l.LectureID, l.LectureType, l.DurationValue, course);
+                var c = l.CourseInfo ?? new CourseResponse(0, null, 0, null);
+                table.Rows.Add(
+                    l.LectureID,
+                    l.LectureType,
+                    l.DurationValue,
+                    c.CourseID, c.CourseName, c.CreditHours, c.CourseCode
+                );
             }
             return table.DefaultView;
         }
@@ -45,24 +49,27 @@ namespace ViewModels
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var data = await _lectureApi.GetLectureAsync(id);
+            var data = await _lectureApi.GetLectureByIDAsync(id);
+
             var list = data == null ? new List<LectureResponse>() : new List<LectureResponse> { data };
             return _ToDataView(list);
         }
 
-        public async Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(Person model)
         {
             var req = (LectureRequest)model;
             _validationService.Validate(req);
-            req = await _lectureApi.PostLectureAsync(req);
-            return req != null;
+
+            var res = await _lectureApi.CreateLectureAsync(req);
+            return res != null;
         }
 
-        public async Task<bool> UpdateAsync(int id, BaseModel model)
+        public async Task<bool> UpdateAsync(int id, Person model)
         {
             var req = (LectureRequest)model;
             _validationService.Validate(req);
-            return await _lectureApi.PutLectureAsync(id, req);
+
+            return await _lectureApi.UpdateLectureAsync(id, req);
         }
 
         public async Task<bool> DeleteAsync(int id)

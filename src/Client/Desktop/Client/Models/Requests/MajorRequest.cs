@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class MajorRequest : BaseModel
+    public class MajorRequest : Person
     {
         [Required<string>("اسم التخصص مطلوب")]
         [Length("يجب ألا يزيد طول الاسم عن 100 حرف", 100, 1)]

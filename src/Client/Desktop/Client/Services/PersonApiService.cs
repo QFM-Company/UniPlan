@@ -1,4 +1,5 @@
 ﻿using Client.Models.Requests;
+using Client.Models.Responses;
 
 namespace Client.Services
 {
@@ -12,9 +13,9 @@ namespace Client.Services
             _apiService.SubUri = "api/persons";
         }
 
-        public async Task<PersonRequest?> PostPersonAsync(PersonRequest model)
+        public async Task<PersonResponse?> CreatePersonAsync(PersonRequest person)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<PersonRequest, PersonResponse>(person);
         }
     }
 }

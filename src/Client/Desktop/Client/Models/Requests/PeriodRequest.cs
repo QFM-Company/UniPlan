@@ -3,7 +3,7 @@ using Infrastructure.ExternalServices.Validation.Enums;
 
 namespace Client.Models.Requests
 {
-    public class PeriodRequest : BaseModel
+    public class PeriodRequest : Person
     {
         [Required<TimeSpan>("الفترة مطلوبة")]
         public TimeSpan StartTime { get; set; }

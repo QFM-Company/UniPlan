@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class AccountRequest : BaseModel
+    public class AccountRequest : Person
     {
         [Required<string>("اسم المستخدم مطلوب")]
         [Length("يجب ألا يتجاوز اسم المستخدم 50 حرفًا", 50, 3)]
@@ -10,8 +10,7 @@ namespace Client.Models.Requests
 
         [Required<string>("كلمة المرور مطلوبة")]
         [Length("يجب أن تكون كلمة المرور بين 8 و 50 حرفًا", 50, 8)]
-        [Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$",
-            "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم ورمز خاص")]
+        [Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$", "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم")]
         public string Password { get; set; } = string.Empty;
 
         [Required<string>("البريد الإلكتروني مطلوب")]

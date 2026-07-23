@@ -1,7 +1,6 @@
 ﻿using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Business.Interfaces;
-using Core.Entities;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Interfaces.ExternalServices;

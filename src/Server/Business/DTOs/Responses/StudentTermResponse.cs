@@ -8,8 +8,6 @@
 
         public AcademicTermResponse? AcademicTerm { get; set; }
 
-
-
         public StudentTermResponse()
         {
             RegistrationID = -1;

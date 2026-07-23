@@ -36,7 +36,7 @@ namespace Presentation.Forms.OperationsForms
             hall.HallName = uniPlanTextBox1.Text.ToString() ?? string.Empty;
             hall.Building = uniPlanTextBox2.Text.ToString() ?? string.Empty;
 
-            Model = (BaseModel)hall;
+            Model = (Person)hall;
         }
 
         public override void LoadData()

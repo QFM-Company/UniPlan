@@ -30,13 +30,16 @@
         {
             SuspendLayout();
             // 
+            // dataGrid
+            // 
+            dataGrid.AddEnabled = false;
+            dataGrid.UpdateEnabled = false;
+            // 
             // StudentsManagementForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(919, 563);
+            ClientSize = new Size(1009, 637);
             Name = "StudentsManagementForm";
-            Text = "StudentsManagementForm";
             ResumeLayout(false);
         }
 

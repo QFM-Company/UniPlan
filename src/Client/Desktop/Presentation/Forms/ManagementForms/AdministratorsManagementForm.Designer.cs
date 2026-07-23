@@ -28,15 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdministratorsManagementForm));
             SuspendLayout();
+            // 
+            // dataGrid
+            // 
+            dataGrid.Size = new Size(919, 480);
             // 
             // AdministratorsManagementForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(919, 563);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AdministratorsManagementForm";
-            Text = "AdministratorsManagementForm";
             ResumeLayout(false);
         }
 

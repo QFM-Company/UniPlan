@@ -8,10 +8,10 @@
 
         public CourseResponse? PreRequestCourseInfo { get; set; }
 
-        public CoursePrerequisiteResponse(int preRequestID, CourseResponse? course, CourseResponse? preRequestCourse)
+        public CoursePrerequisiteResponse(int preRequestID, CourseResponse? mainCourseInfo, CourseResponse? preRequestCourse)
         {
             PreRequestID = preRequestID;
-            MainCourseInfo = course;
+            MainCourseInfo = mainCourseInfo;
             PreRequestCourseInfo = preRequestCourse;
         }
     }

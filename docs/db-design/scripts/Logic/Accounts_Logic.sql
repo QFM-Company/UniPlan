@@ -135,25 +135,6 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE SP_Accounts_Login
-    @AccountName nvarchar(50),
-    @Password nvarchar(255),
-    @AccountID int OUTPUT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        SELECT @AccountID = A.AccountID
-        FROM Accounts A
-        WHERE A.Password = @Password AND A.AccountName = @AccountName;
-    END TRY
-    BEGIN CATCH
-        THROW;
-    END CATCH
-END;
-GO
-
 CREATE OR ALTER PROCEDURE SP_Accounts_UpdatePassword
     @AccountID int,
     @NewPassword nvarchar(255),
@@ -192,6 +173,22 @@ BEGIN
     BEGIN TRY
         SELECT * FROM Accounts
         WHERE AccountID = @AccountID;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE SP_Accounts_GetByName
+    @AccountName nvarchar(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        SELECT * FROM Accounts
+        WHERE AccountName = @AccountName;
     END TRY
     BEGIN CATCH
         THROW;

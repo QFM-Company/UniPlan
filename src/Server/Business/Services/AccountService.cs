@@ -35,13 +35,11 @@ namespace Business.Services
         {
             _validationService.Validate(request);
 
+            Account? account = await _accountRepository.GetAccountByNameAsync(request.AccountName);
             request.Password = _passwordHasher.HashPassword(request.Password);
 
-            Account account = request.ToAccount();
-            account.AccountID = await _accountRepository.LoginAsync(account);
-
-            if (account.AccountID != -1)
-                return await GetAccountByIDAsync(account.AccountID);
+            if (_passwordHasher.VerifyPassword(request.Password, account?.Password ?? string.Empty))
+                return account?.ToResponse();
 
             return null;
         }
@@ -56,9 +54,9 @@ namespace Business.Services
             if (account != null)
             {
                 account.Password = _passwordHasher.HashPassword(account.Password);
-                request.OLdPassword = _passwordHasher.HashPassword(request.OLdPassword);
+                request.OLdPassword = _passwordHasher.HashPassword(request?.OLdPassword ?? string.Empty);
 
-                return await _accountRepository.UpdatePasswordAsync(account, request.OLdPassword);
+                return await _accountRepository.UpdatePasswordAsync(account, request?.OLdPassword ?? string.Empty);
             }
 
             return false;

@@ -22,7 +22,7 @@ namespace Business.Mapper
                 request.PeriodData.StartTime,
                 request.PeriodData.EndTime,
                 adminID,
-                request.Day
+                (DayOfWeek)request.Day
             );
         }
 
@@ -33,7 +33,7 @@ namespace Business.Mapper
             courseSession.CourseOffering = new CourseOffering();
             courseSession.StartTime = request.PeriodData.StartTime;
             courseSession.EndTime = request.PeriodData.EndTime;
-            courseSession.Day = request.Day;
+            courseSession.Day = (DayOfWeek)request.Day;
         }
 
         public static CourseSessionResponse ToResponse(this CourseSession courseSession)

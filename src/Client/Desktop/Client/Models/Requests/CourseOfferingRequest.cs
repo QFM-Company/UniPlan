@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class CourseOfferingRequest : BaseModel
+    public class CourseOfferingRequest : Person
     {
         [Required<int>("رقم القسم مطلوب")]
         [Range<int>("يجب أن يكون رقم القسم أكبر من 0", 1, int.MaxValue)]

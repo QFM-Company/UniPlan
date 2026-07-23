@@ -1,12 +1,16 @@
 ﻿namespace Client.Models.Responses
 {
-    public class CourseOfferingResponse : BaseModel
+    public class CourseOfferingResponse : Person
     {
         public int OfferingID { get; set; }
+
         public int SectionNumber { get; set; }
+
         public int CreatedByAdminID { get; set; }
-        public AcademicTermResponse TermInfo { get; set; }
-        public LectureResponse LectureInfo { get; set; }
+
+        public AcademicTermResponse? TermInfo { get; set; }
+
+        public LectureResponse? LectureInfo { get; set; }
 
         public CourseOfferingResponse()
         {
@@ -17,7 +21,7 @@
             LectureInfo = new LectureResponse();
         }
 
-        public CourseOfferingResponse(int offeringID, int sectionNumber, int createdByAdminID, AcademicTermResponse termInfo, LectureResponse lectureInfo)
+        public CourseOfferingResponse(int offeringID, int sectionNumber, int createdByAdminID, AcademicTermResponse? termInfo, LectureResponse? lectureInfo)
         {
             OfferingID = offeringID;
             SectionNumber = sectionNumber;

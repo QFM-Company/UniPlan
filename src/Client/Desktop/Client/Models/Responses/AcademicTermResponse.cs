@@ -1,6 +1,6 @@
 ﻿namespace Client.Models.Responses
 {
-    public class AcademicTermResponse : BaseModel
+    public class AcademicTermResponse : Person
     {
         public int TermID { get; set; }
 

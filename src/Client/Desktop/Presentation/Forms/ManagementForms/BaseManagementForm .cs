@@ -13,7 +13,7 @@ namespace Presentation.Forms
     {
         private readonly IViewModel _viewModel;
         private BaseOperationForm _operationForm;
-        protected BaseModel? _model;
+        protected Person? _model;
 
         private int _id;
 
@@ -59,7 +59,7 @@ namespace Presentation.Forms
             Refresh(sender);
         }
 
-        public async Task<bool> HandleSaveClick(BaseModel model, Mode mode)
+        public async Task<bool> HandleSaveClick(Person model, Mode mode)
         {
             try
             {

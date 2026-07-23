@@ -2,8 +2,8 @@
 using Client.Services;
 using Presentation.Forms.OperationsForms;
 using System.Data;
-using ViewModels;
 using ViewModels.Extensions;
+using ViewModels.Views;
 
 namespace Presentation.Forms
 {

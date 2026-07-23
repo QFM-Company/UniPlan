@@ -32,12 +32,7 @@
             // 
             // MajorsManagementForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(919, 563);
-            Margin = new Padding(2, 2, 2, 2);
             Name = "MajorsManagementForm";
-            Text = "MajorsManagement";
             ResumeLayout(false);
         }
 

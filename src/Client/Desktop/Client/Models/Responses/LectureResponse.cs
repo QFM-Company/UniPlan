@@ -1,6 +1,6 @@
 ﻿namespace Client.Models.Responses
 {
-    public class LectureResponse : BaseModel
+    public class LectureResponse : Person
     {
         public int LectureID { get; set; }
 
@@ -18,7 +18,7 @@
             CourseInfo = null;
         }
 
-        public LectureResponse(int lectureID, string lectureType, int durationValue, CourseResponse courseInfo)
+        public LectureResponse(int lectureID, string lectureType, int durationValue, CourseResponse? courseInfo)
         {
             LectureID = lectureID;
             LectureType = lectureType;

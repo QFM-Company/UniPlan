@@ -3,9 +3,13 @@
     public class CourseOfferingResponse
     {
         public int OfferingID { get; set; }
+
         public int SectionNumber { get; set; }
+
         public int CreatedByAdminID { get; set; }
+
         public AcademicTermResponse TermInfo { get; set; }
+
         public LectureResponse LectureInfo { get; set; }
 
         public CourseOfferingResponse()

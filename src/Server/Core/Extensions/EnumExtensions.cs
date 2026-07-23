@@ -29,5 +29,16 @@ namespace Core.Extensions
                 _ => string.Empty
             };
         }
+
+        public static string ToArabicString(this TermType term)
+        {
+            return term switch
+            {
+                TermType.First => "الأول",
+                TermType.Second => "الثاني",
+                TermType.Summer => "الصيفي",
+                _ => string.Empty
+            };
+        }
     }
 }

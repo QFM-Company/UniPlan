@@ -28,15 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MajorOperationForm));
             SuspendLayout();
+            // 
+            // panel2
+            // 
+            panel2.Size = new Size(596, 567);
             // 
             // MajorOperationForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(596, 780);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MajorOperationForm";
-            Text = "MajorOperationForm";
             ResumeLayout(false);
         }
 

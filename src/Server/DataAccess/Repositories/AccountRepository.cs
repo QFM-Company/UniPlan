@@ -19,46 +19,6 @@ namespace DataAccess.Repositories
             _logService = logService;
         }
 
-        public async Task<int> LoginAsync(Account account)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
-                using (SqlCommand command = new SqlCommand("SP_Accounts_Login", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    var accountID = new SqlParameter("@AccountID", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-
-
-                    command.Parameters.Add(accountID);
-
-                    command.Parameters.AddWithValue("@AccountName", account.AccountName);
-                    command.Parameters.AddWithValue("@Password", account.Password);
-
-
-                    await connection.OpenAsync();
-                    await command.ExecuteNonQueryAsync();
-
-
-                    if (accountID.Value != DBNull.Value && int.TryParse(accountID.Value.ToString(), out int aID))
-                    {
-                        return aID;
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                await _logService.LogAsync(ex);
-                throw;
-            }
-
-            return -1;
-        }
 
         public async Task<bool> UpdatePasswordAsync(Account account, string oldPassword)
         {
@@ -108,6 +68,39 @@ namespace DataAccess.Repositories
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@AccountID", accountID);
+
+                    await connection.OpenAsync();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (reader != null && await reader.ReadAsync())
+                        {
+                            account = reader.ToAccount();
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logService.LogAsync(ex);
+                throw;
+            }
+
+            return account;
+        }
+
+        public async Task<Account?> GetAccountByNameAsync(string accountName)
+        {
+            Account? account = null;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_dBHelpers.ConnectionString))
+                using (SqlCommand command = new SqlCommand("SP_Accounts_GetByName", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@AccountName", accountName);
 
                     await connection.OpenAsync();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())

@@ -9,9 +9,9 @@ namespace ViewModels.Interfaces
 
         Task<DataView> GetDataViewByID(int id);
 
-        Task<bool> CreateAsync(BaseModel model);
+        Task<bool> CreateAsync(Person model);
 
-        Task<bool> UpdateAsync(int id, BaseModel model);
+        Task<bool> UpdateAsync(int id, Person model);
 
         Task<bool> DeleteAsync(int id);
     }

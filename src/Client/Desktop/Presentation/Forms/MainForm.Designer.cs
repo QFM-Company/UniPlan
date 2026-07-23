@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             header1 = new Controls.UserControls.Header();
             panel1 = new Panel();
             button12 = new Button();
@@ -203,9 +204,11 @@
             ClientSize = new Size(991, 543);
             Controls.Add(panel1);
             Controls.Add(header1);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "MainForm";
+            Text = "UniPlan";
             panel1.ResumeLayout(false);
             ResumeLayout(false);
         }

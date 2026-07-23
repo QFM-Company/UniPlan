@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class HallRequest : BaseModel
+    public class HallRequest : Person
     {
         [Required<string>("اسم القاعة مطلوب")]
         [Length("يجب ألا يتجاوز اسم القاعة 50 حرفًا", 50, 1)]

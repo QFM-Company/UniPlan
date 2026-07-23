@@ -18,24 +18,24 @@ namespace Client.Services
             return await _apiService.GetAsync<MajorResponse>(pageNumber, pageSize);
         }
 
-        public async Task<MajorResponse?> GetMajorAsync(int id)
+        public async Task<MajorResponse?> GetMajorByIDAsync(int majorID)
         {
-            return await _apiService.GetAsync<MajorResponse>(id);
+            return await _apiService.GetAsync<MajorResponse>(majorID);
         }
 
-        public async Task<MajorRequest?> PostMajorAsync(MajorRequest model)
+        public async Task<MajorResponse?> CreateMajorAsync(MajorRequest major)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<MajorRequest, MajorResponse>(major);
         }
 
-        public async Task<bool> PutMajorAsync(int id, MajorRequest model)
+        public async Task<bool> UpdateMajorAsync(int majorID, MajorRequest major)
         {
-            return await _apiService.PutAsync(id, model);
+            return await _apiService.PutAsync(majorID, major);
         }
 
-        public async Task<bool> DeleteMajorAsync(int id)
+        public async Task<bool> DeleteMajorAsync(int majorID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(majorID);
         }
     }
 }

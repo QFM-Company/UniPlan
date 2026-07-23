@@ -4,9 +4,10 @@ using Client.Models.Responses;
 using Client.Services;
 using Core.Interfaces.ExternalServices;
 using System.Data;
+using ViewModels.Extensions;
 using ViewModels.Interfaces;
 
-namespace ViewModels
+namespace ViewModels.Views
 {
     public class CourseOfferingsViewModel : IViewModel
     {
@@ -22,20 +23,28 @@ namespace ViewModels
         private DataView _ToDataView(List<CourseOfferingResponse>? offerings)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("معرف الشعبة", typeof(int));
-            table.Columns.Add("رقم القسم", typeof(int));
-            table.Columns.Add("نوع المحاضرة", typeof(string));
-            table.Columns.Add("الفصل الأكاديمي", typeof(string));
+            table.AddCourseOfferingColumns(); 
             table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (offerings == null) return table.DefaultView;
+            if (offerings == null) 
+                return table.DefaultView;
 
             foreach (var of in offerings)
             {
-                string lectureType = of.LectureInfo?.LectureType ?? string.Empty;
-                string term = of.TermInfo != null ? $"{of.TermInfo.TermType} {of.TermInfo.TermYear}" : string.Empty;
-                table.Rows.Add(of.OfferingID, of.SectionNumber, lectureType, term);
+                var term = of.TermInfo ?? new AcademicTermResponse();
+                var lect = of.LectureInfo ?? new LectureResponse();
+                var course = lect.CourseInfo ?? new CourseResponse(0, null, 0, null);
+
+                table.Rows.Add(
+                    of.OfferingID,
+                    of.SectionNumber,
+                    of.CreatedByAdminID,
+                    term.TermID, term.TermType, term.TermYear,
+                    lect.LectureID, lect.LectureType, lect.DurationValue,
+                    course.CourseID, course.CourseName, course.CreditHours, course.CourseCode
+                );
             }
+
             return table.DefaultView;
         }
 
@@ -47,24 +56,27 @@ namespace ViewModels
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var data = await _offeringApi.GetCourseOfferingAsync(id);
+            var data = await _offeringApi.GetCourseOfferingByIDAsync(id);
+
             var list = data == null ? new List<CourseOfferingResponse>() : new List<CourseOfferingResponse> { data };
             return _ToDataView(list);
         }
 
-        public async Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(Person model)
         {
             var req = (CourseOfferingRequest)model;
             _validationService.Validate(req);
-            req = await _offeringApi.PostCourseOfferingAsync(req);
+
+            var res = await _offeringApi.CreateCourseOfferingAsync(req);
             return req != null;
         }
 
-        public async Task<bool> UpdateAsync(int id, BaseModel model)
+        public async Task<bool> UpdateAsync(int id, Person model)
         {
             var req = (CourseOfferingRequest)model;
             _validationService.Validate(req);
-            return await _offeringApi.PutCourseOfferingAsync(id, req);
+
+            return await _offeringApi.UpdateCourseOfferingAsync(id, req);
         }
 
         public async Task<bool> DeleteAsync(int id)

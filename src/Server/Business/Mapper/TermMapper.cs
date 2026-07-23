@@ -3,6 +3,7 @@ using Business.DTOs.Requests;
 using Business.DTOs.Responses;
 using Core.Entities;
 using Core.Enums;
+using Core.Extensions;
 
 namespace Business.Mapper
 {
@@ -15,7 +16,7 @@ namespace Business.Mapper
 
         public static AcademicTermResponse ToResponse(this AcademicTerm term)
         {
-            return new AcademicTermResponse(term.TermID, term.TermType.ToString(), term.TermYear);
+            return new AcademicTermResponse(term.TermID, term.TermType.ToArabicString(), term.TermYear);
         }
     }
 }

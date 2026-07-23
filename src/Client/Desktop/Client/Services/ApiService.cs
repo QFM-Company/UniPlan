@@ -1,5 +1,4 @@
-﻿using Client.Models;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace Client.Services
 {
@@ -15,7 +14,7 @@ namespace Client.Services
             SubUri = string.Empty;
         }
 
-        public async Task<List<T>?> GetAsync<T>(int pageNumber, int pageSize)
+        public async Task<List<TResponse>?> GetAsync<TResponse>(int pageNumber, int pageSize)
         {
             string requestUri = $"{SubUri}?pageNumber={pageNumber}&pageSize={pageSize}";
             var response = await _httpClient.GetAsync(requestUri);
@@ -23,27 +22,27 @@ namespace Client.Services
             if(!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"فشلت العملية\n{errorContent}");
+                throw new Exception(errorContent);
             }
 
-            return await response.Content.ReadFromJsonAsync<List<T>?>();
+            return await response.Content.ReadFromJsonAsync<List<TResponse>?>();
         }
 
-        public async Task<T?> GetAsync<T>(int id, string? actionName = null)
+        public async Task<TResponse?> GetAsync<TResponse>(int id, string? actionName = null)
         {
-            string requestUri = string.IsNullOrEmpty(actionName) ? $"{SubUri}/{id}" : $"{SubUri}/{actionName}/{id}";
+            string requestUri = string.IsNullOrEmpty(actionName) ? $"{SubUri}/{id}" : $"{SubUri}/{id}/{actionName}";
             var response = await _httpClient.GetAsync(requestUri);
 
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"فشلت العملية\n{errorContent}");
+                throw new Exception(errorContent);
             }
 
-            return await response.Content.ReadFromJsonAsync<T?>();
+            return await response.Content.ReadFromJsonAsync<TResponse?>();
         }
 
-        public async Task<T?> PostAsync<T>(T model, string? actionName = null)
+        public async Task<TResponse?> PostAsync<TRequest, TResponse>(TRequest model, string? actionName = null)
         {
             string requestUri = string.IsNullOrEmpty(actionName) ? $"{SubUri}" : $"{SubUri}/{actionName}";
             var response = await _httpClient.PostAsJsonAsync(requestUri, model);
@@ -51,21 +50,21 @@ namespace Client.Services
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"فشلت العملية\n{errorContent}");
+                throw new Exception(errorContent);
             }
 
-            return await response.Content.ReadFromJsonAsync<T>();
+            return await response.Content.ReadFromJsonAsync<TResponse>();
         }
 
-        public async Task<bool> PutAsync<T>(int id, T model ,string? actionName = null)
+        public async Task<bool> PutAsync<TRequest>(int id, TRequest model, string? actionName = null)
         {
-            string requestUri = string.IsNullOrEmpty(actionName) ? $"{SubUri}/{id}" : $"{SubUri}/{actionName}/{id}";
+            string requestUri = string.IsNullOrEmpty(actionName) ? $"{SubUri}/{id}" : $"{SubUri}/{id}/{actionName}";
             var response = await _httpClient.PutAsJsonAsync(requestUri, model);
 
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"فشلت العملية\n{errorContent}");
+                throw new Exception(errorContent);
             }
 
             return true;
@@ -73,13 +72,13 @@ namespace Client.Services
 
         public async Task<bool> DeleteAsync(int id, string? actionName = null)
         {
-            string requestUri = string.IsNullOrEmpty(actionName) ? $"{SubUri}/{id}" : $"{SubUri}/{actionName}/{id}";
+            string requestUri = string.IsNullOrEmpty(actionName) ? $"{SubUri}/{id}" : $"{SubUri}/{id}/{actionName}";
             var response = await _httpClient.DeleteAsync(requestUri);
 
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"فشلت العملية\n{errorContent}");
+                throw new Exception(errorContent);
             }
 
             return true;

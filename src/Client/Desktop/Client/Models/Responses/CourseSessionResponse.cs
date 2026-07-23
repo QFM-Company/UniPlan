@@ -1,12 +1,12 @@
 ﻿namespace Client.Models.Responses
 {
-    public class CourseSessionResponse : BaseModel
+    public class CourseSessionResponse : Person
     {
         public int SessionID { get; set; }
 
-        public CourseOfferingResponse CourseOffering { get; set; }
+        public CourseOfferingResponse? CourseOffering { get; set; }
 
-        public HallResponse Hall { get; set; }
+        public HallResponse? Hall { get; set; }
 
         public TimeSpan StartTime { get; set; }
 
@@ -16,7 +16,7 @@
 
         public string Day { get; set; }
 
-        public CourseSessionResponse(int sessionID, CourseOfferingResponse courseOffering, HallResponse hall, TimeSpan startTime, TimeSpan endTime, int? createdByAdminID, string day)
+        public CourseSessionResponse(int sessionID, CourseOfferingResponse? courseOffering, HallResponse? hall, TimeSpan startTime, TimeSpan endTime, int? createdByAdminID, string day)
         {
             SessionID = sessionID;
             CourseOffering = courseOffering;

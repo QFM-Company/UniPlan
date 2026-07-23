@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class CourseSessionRequest : BaseModel
+    public class CourseSessionRequest : Person
     {
 
 

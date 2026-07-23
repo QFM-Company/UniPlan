@@ -4,9 +4,10 @@ using Client.Models.Responses;
 using Client.Services;
 using Core.Interfaces.ExternalServices;
 using System.Data;
+using ViewModels.Extensions;
 using ViewModels.Interfaces;
 
-namespace ViewModels
+namespace ViewModels.Views
 {
     public class CourseSessionsViewModel : IViewModel
     {
@@ -22,20 +23,34 @@ namespace ViewModels
         private DataView _ToDataView(List<CourseSessionResponse>? sessions)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("معرف الجلسة", typeof(int));
-            table.Columns.Add("القاعة", typeof(string));
-            table.Columns.Add("اليوم", typeof(string));
-            table.Columns.Add("وقت البداية", typeof(string));
-            table.Columns.Add("وقت النهاية", typeof(string));
+            table.AddCourseSessionColumns();
             table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (sessions == null) return table.DefaultView;
+            if (sessions == null) 
+                return table.DefaultView;
 
             foreach (var s in sessions)
             {
-                string hall = s.Hall?.HallName ?? string.Empty;
-                table.Rows.Add(s.SessionID, hall, s.Day, s.StartTime.ToString(@"hh\:mm"), s.EndTime.ToString(@"hh\:mm"));
+                var off = s.CourseOffering ?? new CourseOfferingResponse();
+                var term = off.TermInfo ?? new AcademicTermResponse();
+                var lect = off.LectureInfo ?? new LectureResponse();
+                var course = lect.CourseInfo ?? new CourseResponse(0, null, 0, null);
+                var hall = s.Hall ?? new HallResponse();
+
+                table.Rows.Add(
+                    s.SessionID,
+                    s.StartTime,
+                    s.EndTime,
+                    s.CreatedByAdminID ?? 0,
+                    s.Day,
+                    off.OfferingID, off.SectionNumber, off.CreatedByAdminID,
+                    term.TermID, term.TermType, term.TermYear,
+                    lect.LectureID, lect.LectureType, lect.DurationValue,
+                    course.CourseID, course.CourseName, course.CreditHours, course.CourseCode,
+                    hall.HallID, hall.HallName, hall.Building, hall.Floor, hall.CreatedByAdminID
+                );
             }
+
             return table.DefaultView;
         }
 
@@ -47,24 +62,27 @@ namespace ViewModels
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var data = await _sessionApi.GetCourseSessionAsync(id);
+            var data = await _sessionApi.GetCourseSessionByIDAsync(id);
+
             var list = data == null ? new List<CourseSessionResponse>() : new List<CourseSessionResponse> { data };
             return _ToDataView(list);
         }
 
-        public async Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(Person model)
         {
             var req = (CourseSessionRequest)model;
             _validationService.Validate(req);
-            req = await _sessionApi.PostCourseSessionAsync(req);
-            return req != null;
+
+            var res = await _sessionApi.CreateCourseSessionAsync(req);
+            return res != null;
         }
 
-        public async Task<bool> UpdateAsync(int id, BaseModel model)
+        public async Task<bool> UpdateAsync(int id, Person model)
         {
             var req = (CourseSessionRequest)model;
             _validationService.Validate(req);
-            return await _sessionApi.PutCourseSessionAsync(id, req);
+
+            return await _sessionApi.UpdateCourseSessionAsync(id, req);
         }
 
         public async Task<bool> DeleteAsync(int id)

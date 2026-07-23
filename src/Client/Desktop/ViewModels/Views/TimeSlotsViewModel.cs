@@ -4,9 +4,10 @@ using Client.Models.Responses;
 using Client.Services;
 using Core.Interfaces.ExternalServices;
 using System.Data;
+using ViewModels.Extensions;
 using ViewModels.Interfaces;
 
-namespace ViewModels
+namespace ViewModels.Views
 {
     public class TimeSlotsViewModel : IViewModel
     {
@@ -22,19 +23,21 @@ namespace ViewModels
         private DataView _ToDataView(List<TimeSlotResponse>? slots)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("معرف القطعة الزمنية", typeof(int));
-            table.Columns.Add("اليوم", typeof(string));
-            table.Columns.Add("وقت البداية", typeof(string));
-            table.Columns.Add("وقت النهاية", typeof(string));
+            table.AddTimeSlotColumnsTyped(); 
             table.PrimaryKey = new DataColumn[] { table.Columns[0] };
 
-            if (slots == null) return table.DefaultView;
+            if (slots == null)
+                return table.DefaultView;
+
             foreach (var s in slots)
-            {
-                string start = s.Period?.StartTime.ToString(@"hh\:mm") ?? string.Empty;
-                string end = s.Period?.EndTime.ToString(@"hh\:mm") ?? string.Empty;
-                table.Rows.Add(s.SlotID, s.Day.ToString(), start, end);
-            }
+                table.Rows.Add(
+                    s.SlotID,
+                    s.Day.ToString(),
+                    s.Period?.PeriodID ?? 0,
+                    s.Period?.StartTime ?? TimeSpan.Zero,
+                    s.Period?.EndTime ?? TimeSpan.Zero
+                );
+
             return table.DefaultView;
         }
 
@@ -46,24 +49,27 @@ namespace ViewModels
 
         public async Task<DataView> GetDataViewByID(int id)
         {
-            var data = await _timeSlotApi.GetTimeSlotAsync(id);
+            var data = await _timeSlotApi.GetTimeSlotByIDAsync(id);
+
             var list = data == null ? new List<TimeSlotResponse>() : new List<TimeSlotResponse> { data };
             return _ToDataView(list);
         }
 
-        public async Task<bool> CreateAsync(BaseModel model)
+        public async Task<bool> CreateAsync(Person model)
         {
             var req = (TimeSlotRequest)model;
             _validationService.Validate(req);
-            req = await _timeSlotApi.PostTimeSlotAsync(req);
-            return req != null;
+
+            var res = await _timeSlotApi.CreateTimeSlotAsync(req);
+            return res != null;
         }
 
-        public async Task<bool> UpdateAsync(int id, BaseModel model)
+        public async Task<bool> UpdateAsync(int id, Person model)
         {
             var req = (TimeSlotRequest)model;
             _validationService.Validate(req);
-            return await _timeSlotApi.PutTimeSlotAsync(id, req);
+
+            return await _timeSlotApi.UpdateTimeSlotAsync(id, req);
         }
 
         public async Task<bool> DeleteAsync(int id)

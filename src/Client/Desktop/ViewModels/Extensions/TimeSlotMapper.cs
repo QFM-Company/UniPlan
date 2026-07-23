@@ -8,17 +8,20 @@ namespace ViewModels.Extensions
     {
         public static TimeSlotResponse? ToTimeSlot(this DataRowView row)
         {
-            if (row.Row.Table.Columns.Count == 0) return null;
+            if (row.Row.Table.Columns.Count <= 1) 
+                return null;
+
             return new TimeSlotResponse(
                 int.TryParse(row["معرف القطعة الزمنية"]?.ToString(), out var id) ? id : 0,
-                Enum.TryParse(row["اليوم"]?.ToString(), out DayOfWeek day) ? day : DayOfWeek.Monday,
-                new PeriodResponse(0, TimeSpan.Zero, TimeSpan.Zero)
+                row["اليوم"]?.ToString() ?? "الأحد",
+                row.ToPeriod()
             );
+
         }
 
-        public static TimeSlotResponse ToTimeSlot(this BaseModel? model)
+        public static TimeSlotResponse ToTimeSlot(this Person? model)
         {
-            return model as TimeSlotResponse ?? new TimeSlotResponse(0, DayOfWeek.Monday, null);
+            return model as TimeSlotResponse ?? new TimeSlotResponse(0, "الأحد", null);
         }
     }
 }

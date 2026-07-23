@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseManagementForm));
             header1 = new Controls.UserControls.Header();
             dataGrid = new Controls.UserControls.DynamicDataGrid();
             SuspendLayout();
@@ -39,31 +40,37 @@
             header1.Location = new Point(0, 0);
             header1.Margin = new Padding(1);
             header1.Name = "header1";
-            header1.Size = new Size(919, 83);
+            header1.Size = new Size(1009, 83);
             header1.TabIndex = 3;
             header1.Title = "UniPlan";
             // 
             // dataGrid
             // 
+            dataGrid.AddEnabled = true;
+            dataGrid.DeleteEnabled = true;
             dataGrid.Dock = DockStyle.Fill;
             dataGrid.Location = new Point(0, 83);
             dataGrid.Margin = new Padding(2);
             dataGrid.Name = "dataGrid";
-            dataGrid.Size = new Size(919, 480);
+            dataGrid.Size = new Size(1009, 554);
             dataGrid.TabIndex = 4;
+            dataGrid.UpdateEnabled = true;
             // 
             // BaseManagementForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
-            ClientSize = new Size(919, 563);
+            ClientSize = new Size(1009, 637);
             Controls.Add(dataGrid);
             Controls.Add(header1);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(2);
             Name = "BaseManagementForm";
             StartPosition = FormStartPosition.CenterScreen;
+            Text = "UniPlan";
+            WindowState = FormWindowState.Maximized;
             ResumeLayout(false);
         }
 

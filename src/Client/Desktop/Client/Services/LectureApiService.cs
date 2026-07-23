@@ -18,24 +18,24 @@ namespace Client.Services
             return await _apiService.GetAsync<LectureResponse>(pageNumber, pageSize);
         }
 
-        public async Task<LectureResponse?> GetLectureAsync(int id)
+        public async Task<LectureResponse?> GetLectureByIDAsync(int lectureID)
         {
-            return await _apiService.GetAsync<LectureResponse>(id);
+            return await _apiService.GetAsync<LectureResponse>(lectureID);
         }
 
-        public async Task<LectureRequest?> PostLectureAsync(LectureRequest model)
+        public async Task<LectureResponse?> CreateLectureAsync(LectureRequest lecture)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<LectureRequest, LectureResponse>(lecture);
         }
 
-        public async Task<bool> PutLectureAsync(int id, LectureRequest model)
+        public async Task<bool> UpdateLectureAsync(int lectureID, LectureRequest lecture)
         {
-            return await _apiService.PutAsync(id, model);
+            return await _apiService.PutAsync(lectureID, lecture);
         }
 
-        public async Task<bool> DeleteLectureAsync(int id)
+        public async Task<bool> DeleteLectureAsync(int lectureID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(lectureID);
         }
     }
 }

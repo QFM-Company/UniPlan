@@ -9,28 +9,17 @@ namespace Infrastructure.ExternalServices
 {
     public class PasswordHasher : IPasswordHasher
     {
-        [Obsolete("(Fares) This method is not secure enough, use PasswordHash instade")]
-        public string HashPassword(string password)
-        {
-            // we have a security problem here this hasher is not secure enough, we should use a more secure hashing algorithm like bcrypt or Argon2 : Fares :)
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-            }
-        }
-
-
         // OWASP recommended parameters for general web applications
         private const int DegreeOfParallelism = 4; // Number of threads
         private const int MemorySizeInKB = 65536;  // 64 MB RAM
         private const int Iterations = 3;          // Number of passes
         private const int HashLengthBytes = 32;    // Output size
 
+
         /// <summary>
         /// Hashes a password and returns a single self-contained string.
         /// </summary>
-        public static string PasswordHash(string password)
+        public string HashPassword(string password)
         {
             // 1. Generate a cryptographically secure 16-byte random salt
             byte[] salt = RandomNumberGenerator.GetBytes(16);
@@ -59,7 +48,7 @@ namespace Infrastructure.ExternalServices
         /// <summary>
         /// Automatically extracts parameters from the stored string to verify a password.
         /// </summary>
-        public static bool VerifyPassword(string password, string storedHashString)
+        public bool VerifyPassword(string password, string storedHashString)
         {
             try
             {

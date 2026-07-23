@@ -18,19 +18,19 @@ namespace Client.Services
             return await _apiService.GetAsync<AcademicTermResponse>(pageNumber, pageSize);
         }
 
-        public async Task<AcademicTermResponse?> GetAcademicTermAsync(int id)
+        public async Task<AcademicTermResponse?> GetAcademicTermByIDAsync(int termID)
         {
-            return await _apiService.GetAsync<AcademicTermResponse>(id);
+            return await _apiService.GetAsync<AcademicTermResponse>(termID);
         }
 
-        public async Task<AcademicTermRequest?> PostAcademicTermAsync(AcademicTermRequest model)
+        public async Task<AcademicTermResponse?> CreateAcademicTermAsync(AcademicTermRequest term)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<AcademicTermRequest, AcademicTermResponse>(term);
         }
 
-        public async Task<bool> DeleteAcademicTermAsync(int id)
+        public async Task<bool> DeleteAcademicTermAsync(int termID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(termID);
         }
     }
 }

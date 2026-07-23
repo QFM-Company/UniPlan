@@ -1,6 +1,6 @@
 ﻿namespace Client.Models.Responses
 {
-    public class MajorResponse : BaseModel
+    public class MajorResponse : Person
     {
         public int MajorID { get; set; }
 

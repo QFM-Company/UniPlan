@@ -2,7 +2,7 @@
 
 namespace Client.Models.Requests
 {
-    public class AcademicTermRequest : BaseModel
+    public class AcademicTermRequest : Person
     {
         [AllowedValues("يجب أن تكون قيمة الفصل الأكاديمي 1 (الأول) أو 2 (الثاني) أو 3 (الثالث) فقط", new object[] { 1, 2, 3 })]
         public int TermType { get; set; }

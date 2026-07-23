@@ -30,6 +30,7 @@ namespace Presentation.Forms.OperationsForms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HallOperationForm));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -52,6 +53,14 @@ namespace Presentation.Forms.OperationsForms
             panel2.Controls.Add(label2);
             panel2.Controls.Add(label1);
             panel2.Size = new Size(591, 510);
+            panel2.Controls.SetChildIndex(label1, 0);
+            panel2.Controls.SetChildIndex(label2, 0);
+            panel2.Controls.SetChildIndex(label3, 0);
+            panel2.Controls.SetChildIndex(label4, 0);
+            panel2.Controls.SetChildIndex(uniPlanTextBox1, 0);
+            panel2.Controls.SetChildIndex(uniPlanTextBox2, 0);
+            panel2.Controls.SetChildIndex(uniPlanTextBox3, 0);
+            panel2.Controls.SetChildIndex(uniPlanTextBox4, 0);
             // 
             // label1
             // 
@@ -138,8 +147,8 @@ namespace Presentation.Forms.OperationsForms
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(591, 723);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "HallOperationForm";
-            Text = "HallOperationForm";
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ResumeLayout(false);

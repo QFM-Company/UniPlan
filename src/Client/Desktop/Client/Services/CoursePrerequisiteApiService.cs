@@ -10,7 +10,7 @@ namespace Client.Services
         public CoursePrerequisiteApiService(ApiService apiService)
         {
             _apiService = apiService;
-            _apiService.SubUri = "api/courseprerequisites";
+            _apiService.SubUri = "api/coursePrequists";
         }
 
         public async Task<List<CoursePrerequisiteResponse>?> GetCoursePrerequisitesAsync(int pageNumber, int pageSize)
@@ -18,19 +18,19 @@ namespace Client.Services
             return await _apiService.GetAsync<CoursePrerequisiteResponse>(pageNumber, pageSize);
         }
 
-        public async Task<CoursePrerequisiteResponse?> GetCoursePrerequisiteAsync(int id)
+        public async Task<CoursePrerequisiteResponse?> GetCoursePrerequisiteByIDAsync(int prerequisiteID)
         {
-            return await _apiService.GetAsync<CoursePrerequisiteResponse>(id);
+            return await _apiService.GetAsync<CoursePrerequisiteResponse>(prerequisiteID);
         }
 
-        public async Task<CoursePrerequisiteRequest?> PostCoursePrerequisiteAsync(CoursePrerequisiteRequest model)
+        public async Task<CoursePrerequisiteResponse?> CreateCoursePrerequisiteAsync(CoursePrerequisiteRequest prerequisite)
         {
-            return await _apiService.PostAsync(model);
+            return await _apiService.PostAsync<CoursePrerequisiteRequest, CoursePrerequisiteResponse>(prerequisite);
         }
 
-        public async Task<bool> DeleteCoursePrerequisiteAsync(int id)
+        public async Task<bool> DeleteCoursePrerequisiteAsync(int prerequisiteID)
         {
-            return await _apiService.DeleteAsync(id);
+            return await _apiService.DeleteAsync(prerequisiteID);
         }
     }
 }

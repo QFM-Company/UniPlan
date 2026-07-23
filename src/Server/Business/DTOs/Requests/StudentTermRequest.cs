@@ -7,6 +7,7 @@ namespace Business.DTOs.Requests
         [Required<int>("معرف الطالب مطلوب")]
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int StudentID { get; set; }
+
         [Required<int>("معرف الفصل الدراسي مطلوب")]
         [Range<int>("يجب ان يكون المعرف اكبر تماما من 0", 1, int.MaxValue)]
         public int AcademicTermID { get; set; }
