@@ -25,7 +25,8 @@ BEGIN
         ;THROW 51501, 'StudentCourse validation failed', 1;
     END
 
-	-- ****** I should Add Logic to check if Course Has Prequists (Fares)
+	-- ****** I should Add Logic to check if the student able to take this subject (prequist , hours , major) (Fares)
+
 
     BEGIN TRY
         INSERT INTO [dbo].[StudentCourses]
@@ -42,6 +43,11 @@ BEGIN
         );
 
         SET @EnrollmentID = CONVERT(INT, SCOPE_IDENTITY());
+
+		if(@IsPassed = 1)
+		   update Students
+	    	set CompletedHours = CompletedHours + (select c.CreditHours from Courses c where c.CourseID = @CourseID)
+	    	where StudentID = @StudentID
     END TRY
     BEGIN CATCH
         THROW;
@@ -63,11 +69,33 @@ BEGIN
         ;THROW 51501, 'StudentCourse validation failed', 1;
     END
 
+	Declare @OldPassed int;
+
+	select @OldPassed = IsPassed from StudentCourses where EnrollmentID = @EnrollmentID;
+
+	Declare @CourseID int;
+
+	select @CourseID = CourseID from StudentCourses where EnrollmentID = @EnrollmentID;
+
+	Declare @StudentID int;
+
+	select @StudentID = StudentCourses.StudentID from StudentCourses where EnrollmentID = @EnrollmentID;
+
     BEGIN TRY
         UPDATE [dbo].[StudentCourses]
         SET
             IsPassed = @IsPassed
         WHERE EnrollmentID = @EnrollmentID;
+
+		if(@OldPassed = 1 And @IsPassed = 0)
+		   update Students
+	    	set CompletedHours = CompletedHours - (select c.CreditHours from Courses c where c.CourseID = @CourseID)
+	    	where StudentID = @StudentID
+
+		if(@OldPassed = 0 And @IsPassed = 1)
+		   update Students
+	    	set CompletedHours = CompletedHours + (select c.CreditHours from Courses c where c.CourseID = @CourseID)
+	    	where StudentID = @StudentID
 
         IF @@ROWCOUNT > 0
             SET @Result = 1;
@@ -88,9 +116,27 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+	Declare @OldPassed int;
+
+	select @OldPassed = IsPassed from StudentCourses where EnrollmentID = @EnrollmentID;
+
+	Declare @CourseID int;
+
+	select @CourseID = CourseID from StudentCourses where EnrollmentID = @EnrollmentID;
+
+	Declare @StudentID int;
+
+	select @StudentID = StudentCourses.StudentID from StudentCourses where EnrollmentID = @EnrollmentID;
+
+
     BEGIN TRY
         DELETE FROM [dbo].[StudentCourses]
         WHERE EnrollmentID = @EnrollmentID;
+
+		if(@OldPassed = 1)
+		 update Students
+	    	set CompletedHours = CompletedHours - (select c.CreditHours from Courses c where c.CourseID = @CourseID)
+	    	where StudentID = @StudentID
 
         IF @@ROWCOUNT > 0
             SET @Result = 1;
@@ -151,52 +197,83 @@ GO
 
 
 
-
-Create OR Alter Procedure SP_SyncPassedCourses
-@PassedCoursesIDs CourseIdListType readonly ,
-@StudentId int,
-@Result bit out
-As
-Begin 
+CREATE OR ALTER PROCEDURE SP_SyncPassedCourses
+    @PassedCoursesIDs CourseIdListType READONLY,
+    @StudentId INT,
+    @Result BIT OUT
+AS
+BEGIN
     SET NOCOUNT ON;
 
-	if not Exists(select 1 from Students 
-	where StudentID = @StudentId)
-	Begin
-        ;throw 50303, 'Student Dose Not Exist', 1;
-	End
+    -- التحقق من وجود الطالب
+    IF NOT EXISTS (SELECT 1 FROM Students WHERE StudentID = @StudentId)
+    BEGIN
+        ;THROW 50303, 'Student Does Not Exist', 1;
+    END
 
-	IF EXISTS (
-    SELECT 1 
-    FROM @PassedCoursesIDs p
-    LEFT JOIN dbo.Courses c ON p.CourseID = c.CourseID 
-    WHERE c.CourseID IS NULL)
+    -- التحقق من صحة المقررات المُمررة
+    IF EXISTS (
+        SELECT 1
+        FROM @PassedCoursesIDs p
+        LEFT JOIN Courses c ON p.CourseID = c.CourseID
+        WHERE c.CourseID IS NULL
+    )
     BEGIN
         ;THROW 50903, 'One or more provided Course IDs do not exist.', 1;
     END
 
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-	Begin Try
-	    
-		delete from StudentCourses 
+        -- حذف جميع مقررات الطالب السابقة (تمهيداً لإعادة تعيين الناجح منها)
+        DELETE FROM StudentCourses
+        WHERE StudentID = @StudentId;
+
+		update Students
+		set CompletedHours = 0
 		where StudentID = @StudentId;
 
+        -- تعريف متغيرات الحلقة
+        DECLARE @CurrentCourseID INT;
+        DECLARE @EnrollmentID INT; -- متغير خرج (لن نستخدمه)
 
-		-- ***** I should Find a Way To Use The Procedure To Check if there Are Prequists (Fares)
+        DECLARE course_cursor CURSOR LOCAL FAST_FORWARD FOR
+            SELECT DISTINCT CourseID FROM @PassedCoursesIDs;
 
-		insert into StudentCourses (StudentID , CourseID , IsPassed)
-		select distinct @StudentId , CourseID , 1 from @PassedCoursesIDs;
+        OPEN course_cursor;
+        FETCH NEXT FROM course_cursor INTO @CurrentCourseID;
 
-		set @Result = 1;
-	End Try
-	Begin Catch
-	    set @Result = 0;
-	    throw;
-	End Catch
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- استدعاء إجراء الإدراج لكل مقرر مع IsPassed = 1
+            EXEC SP_StudentCourses_Insert
+                @StudentID = @StudentId,
+                @CourseID = @CurrentCourseID,
+                @IsPassed = 1,
+                @EnrollmentID = @EnrollmentID OUTPUT;  -- يمكن تجاهل القيمة المُرجعة
+
+            FETCH NEXT FROM course_cursor INTO @CurrentCourseID;
+        END
+
+        CLOSE course_cursor;
+        DEALLOCATE course_cursor;
+
+        -- نجاح العملية بالكامل
+        SET @Result = 1;
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        -- فشل في إدراج أحد المقررات
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        SET @Result = 0;
+
+        -- إعادة رمي الخطأ ليظهر للمُستدعي
+        THROW;
+    END CATCH
 END
-
-go
-
+GO
 
 Create OR Alter Procedure SP_GetStudentOpenCourses
 @StudentID int
@@ -213,19 +290,38 @@ Begin
 
 	select @StudentMajorID = s.MajorID from Students s where StudentID = @StudentID;
 
-	Declare @MainMajorID int;
+     Declare @CompletedHours int;
 
-	select @MainMajorID = Majors.MajorID from Majors where MajorName = 'هندسة المعلوماتية - اختصاص عام';
+	 select @CompletedHours = CompletedHours from Students where StudentID = @StudentID;
+
+	   -- CTE للحصول على جميع التخصصات الأم بالإضافة إلى تخصص الطالب
+        WITH MajorHierarchy AS (
+            -- نقطة البداية: تخصص الطالب نفسه
+            SELECT MajorID, ParentMajorID
+            FROM Majors
+            WHERE MajorID = @StudentMajorID
+
+            UNION ALL
+
+            -- الصعود إلى الأب
+            SELECT m.MajorID, m.ParentMajorID
+            FROM Majors m
+            INNER JOIN MajorHierarchy mh ON m.MajorID = mh.ParentMajorID
+        )
 
 
-	-- ***** I should Solve the At Least Hours Problem Like The graduate Project needs 125 Hours (Fares)
 	-- ***** Make sure if he ended 4 subjects of متطلبات الكلية then don't return the others and 2 subjects of متطلبات الجامعة too (Fares)
+
 	select Co.* from
 	(
 	   select c.* from Courses c
-	   where c.CourseID not in (select CourseID from StudentCourses where StudentID = @StudentID) 
-	   And (c.CourseID in (select CourseID from MajorCourses where MajorID = @StudentMajorID)
-	   Or c.CourseID in (select CourseID from MajorCourses where MajorID = @MainMajorID))
+	   where (c.CourseID not in (select CourseID from StudentCourses where StudentID = @StudentID) 
+	   AND c.CourseID IN (
+               SELECT mc.CourseID
+               FROM MajorCourses mc
+               WHERE mc.MajorID IN (SELECT MajorID FROM MajorHierarchy)
+       ))
+	   And c.NeededHours <= @CompletedHours
 	) As Co
 	where Co.CourseID not in (select CourseID from CoursePrerequisites) or Co.CourseID not in
 	(
@@ -239,3 +335,4 @@ Begin
 	End Catch
 End
 go
+
