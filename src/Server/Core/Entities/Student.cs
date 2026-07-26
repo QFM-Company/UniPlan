@@ -12,17 +12,21 @@ namespace Core.Entities
 
         public Major? Major { get; set; }
 
+        public int CompletedHours { get; set; }
+
         public Student(int studentID)
         {
             StudentID = studentID;
+            CompletedHours = 0;
         }
 
-        public Student(int studentID, Person? person, Account? account, Major? major)
+        public Student(int studentID, Person? person, Account? account, Major? major , int completedHours)
         {
             StudentID = studentID;
             Person = person;
             Account = account;
             Major = major;
+            CompletedHours = completedHours;
         }
 
         public Student()
@@ -31,6 +35,7 @@ namespace Core.Entities
             Person = null;
             Account = null;
             Major = null;
+            CompletedHours = 0;
         }
     }
 }

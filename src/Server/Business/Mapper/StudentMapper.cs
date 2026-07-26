@@ -13,7 +13,7 @@ namespace Business.Mapper
             Person person = request.PersonData.ToPerson();
             Major major = new Major(request.MajorID);
 
-            return new Student(request.StudentID, person, account, major);
+            return new Student(request.StudentID, person, account, major , 0);
         }
 
         public static void UpdateStudent(this Student student, UpdateStudentRequest? request)
@@ -34,7 +34,7 @@ namespace Business.Mapper
             AccountResponse account = student.Account?.ToResponse() ?? new AccountResponse();
             MajorResponse major = student.Major?.ToResponse() ?? new MajorResponse();
 
-            return new StudentResponse(student.StudentID, person, account, major);
+            return new StudentResponse(student.StudentID, person, account, major , student.CompletedHours);
         }
     }
 }

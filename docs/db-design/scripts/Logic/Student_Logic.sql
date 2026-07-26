@@ -158,7 +158,8 @@ SELECT
     A.AccountName,
     A.Email,
     M.MajorID,
-    M.MajorName
+    M.MajorName,
+	S.CompletedHours
 FROM Students S
 INNER JOIN People P ON S.PersonID = P.PersonID
 INNER JOIN Accounts A ON S.AccountID = A.AccountID

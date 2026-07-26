@@ -13,8 +13,9 @@ namespace DataAccess.Mapping
             Major major = reader.ToMajor();
 
             reader.ReadInt("StudentID", out int studentID, 0);
+            reader.ReadInt("CompletedHours", out int completedHours, 0);
 
-            return new Student(studentID, person, account, major);
+            return new Student(studentID, person, account, major , completedHours);
         }
     }
 }
