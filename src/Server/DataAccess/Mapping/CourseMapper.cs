@@ -12,8 +12,9 @@ namespace DataAccess.Mapping
             reader.ReadString("CourseName", out string courseName, string.Empty);
             reader.ReadInt("CreditHours", out int creditHours, -1);
             reader.ReadString("CourseCode", out string courseCode, string.Empty);
+            reader.ReadInt("NeededHours", out int neededHours, -1);
 
-            return new Course(courseID, courseName, creditHours , courseCode);
+            return new Course(courseID, courseName, creditHours , courseCode , neededHours);
         }
 
         public static Course ToCourseBasicInfo(this SqlDataReader reader)

@@ -12,7 +12,9 @@ namespace Business.Mapper
                 courseID,
                 request.CourseName,
                 request.CreditHours ,
-                request.CourseCode
+                request.CourseCode ,
+                request.NeededHours
+
             );
         }
 
@@ -21,6 +23,7 @@ namespace Business.Mapper
             course.CreditHours = request.CreditHours;
             course.CourseName = request.CourseName;
             course.CourseCode = request.CourseCode;
+            course.NeededHours = request.NeededHours;
         }
 
         public static CourseResponse ToResponse(this Course course)
@@ -29,7 +32,8 @@ namespace Business.Mapper
                 course.CourseID,
                 course.CourseName,
                 course.CreditHours,
-                course.CourseCode
+                course.CourseCode,
+                course.NeededHours
             );
         }
 

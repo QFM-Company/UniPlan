@@ -94,6 +94,7 @@ CREATE OR ALTER PROCEDURE SP_Courses_Update
     @CourseName NVARCHAR(100),
 	@CourseCode NVARCHAR(8),
     @CreditHours INT,
+	@NeededHours INT,
     @Result BIT OUT
 AS
 BEGIN
@@ -128,7 +129,8 @@ BEGIN
         SET
             [CourseName] = @CourseName,
             [CreditHours] = @CreditHours,
-			[CourseCode] = @CourseCode
+			[CourseCode] = @CourseCode,
+			[NeededHours] = @NeededHours
         WHERE [CourseID] = @CourseID;
 
         IF @@ROWCOUNT > 0
